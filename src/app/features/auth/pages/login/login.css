@@ -1,0 +1,27 @@
+/* features/auth/pages/login/login.css */
+/* Estilos para melhorar a experiência do Linear */
+.input-focus {
+  transition: all 0.2s ease-in-out;
+}
+
+.input-focus:focus {
+  box-shadow: 0 0 0 3px rgba(94, 106, 210, 0.1);
+}
+
+/* Animações suaves */
+* {
+  transition-property: color, background-color, border-color, opacity;
+  transition-duration: 0.2s;
+  transition-timing-function: ease-in-out;
+}
+
+/* Melhorar a legibilidade do placeholder */
+::placeholder {
+  color: #999;
+  opacity: 1;
+}
+
+/* Estados de hover refinados */
+button:hover {
+  transform: translateY(-1px);
+}
