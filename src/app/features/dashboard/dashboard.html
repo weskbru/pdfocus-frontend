@@ -1,0 +1,150 @@
+<!-- src/app/features/dashboard/dashboard.html -->
+<div class="min-h-screen bg-gray-50">
+  <!-- Header -->
+  <header class="bg-white shadow-sm border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <!-- Logo e Título -->
+        <div class="flex items-center space-x-3">
+          <div class="w-8 h-8 bg-red-600 rounded-lg flex items-center justify-center">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+          </div>
+          <h1 class="text-xl font-bold text-gray-800">PDFocus</h1>
+        </div>
+
+        <!-- User Menu -->
+        <div class="flex items-center space-x-4">
+          <button class="p-2 text-gray-600 hover:text-gray-800 transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+            </svg>
+          </button>
+          
+          <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white text-sm font-semibold">
+            {{ userName.charAt(0) }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Welcome Section -->
+    <div class="mb-8">
+      <h2 class="text-2xl font-bold text-gray-800 mb-2">Bem-vindo de volta, {{ userName }}!</h2>
+      <p class="text-gray-600">Aqui está o resumo dos seus estudos</p>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <!-- Total de Materiais -->
+      <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-600">Total de Materiais</p>
+            <p class="text-2xl font-bold text-gray-800">{{ stats.totalMateriais }}</p>
+          </div>
+          <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+            <span class="text-2xl">📚</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resumos Criados -->
+      <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-600">Resumos Criados</p>
+            <p class="text-2xl font-bold text-gray-800">{{ stats.resumosCriados }}</p>
+          </div>
+          <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+            <span class="text-2xl">📝</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Total de Disciplinas -->
+      <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-600">Total de Disciplinas</p>
+            <p class="text-2xl font-bold text-gray-800">{{ stats.totalDisciplinas }}</p>
+          </div>
+          <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+            <span class="text-2xl">📂</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Armazenamento -->
+      <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-600">Armazenamento</p>
+            <p class="text-2xl font-bold text-gray-800">{{ stats.storageUsed }}</p>
+          </div>
+          <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+            <span class="text-2xl">💾</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <a *ngFor="let action of quickActions" 
+         [routerLink]="action.route"
+         class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow cursor-pointer block no-underline">
+        <div class="text-center">
+          <div class="w-16 h-16 {{ action.color }} rounded-xl flex items-center justify-center mx-auto mb-4">
+            <span class="text-2xl">{{ action.icon }}</span>
+          </div>
+          <h3 class="font-semibold text-gray-800">{{ action.label }}</h3>
+        </div>
+      </a>
+    </div>
+
+    <!-- Materiais Recentes -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h3 class="text-lg font-semibold text-gray-800">Materiais Recentes</h3>
+      </div>
+      
+      <div class="divide-y divide-gray-100">
+        <div *ngFor="let material of recentMateriais" class="px-6 py-4 hover:bg-gray-50 transition-colors">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+              <div class="w-10 h-10 {{ getMaterialColor(material.type) }} rounded-lg flex items-center justify-center">
+                <span class="text-sm">{{ getMaterialIcon(material.type) }}</span>
+              </div>
+              <div>
+                <h4 class="font-medium text-gray-800">{{ material.name }}</h4>
+                <p class="text-sm text-gray-600">
+                  {{ material.disciplina }} • {{ material.date }} • {{ material.size }}
+                </p>
+              </div>
+            </div>
+            
+            <div class="flex space-x-2">
+              <button class="p-2 text-gray-400 hover:text-blue-600 transition-colors" title="Visualizar">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                </svg>
+              </button>
+              
+              <button class="p-2 text-gray-400 hover:text-green-600 transition-colors" title="Download">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

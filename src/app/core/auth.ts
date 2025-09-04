@@ -61,4 +61,9 @@ export class AuthService {
   obterToken(): string | null {
     return localStorage.getItem(this.TOKEN_KEY);
   }
+
+  logout(): void {
+  // Simplesmente remove a chave do token do localStorage
+  localStorage.removeItem(this.TOKEN_KEY);
+}
 }
