@@ -1,4 +1,3 @@
-<!-- src/app/features/dashboard/dashboard.html -->
 <div class="min-h-screen bg-gray-50">
   <!-- Header -->
   <header class="bg-white shadow-sm border-b border-gray-200">
@@ -16,15 +15,14 @@
 
         <!-- User Menu -->
         <div class="flex items-center space-x-4">
-          <button class="p-2 text-gray-600 hover:text-gray-800 transition-colors">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
-            </svg>
-          </button>
-          
-          <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white text-sm font-semibold">
+          <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white text-sm font-semibold uppercase">
             {{ userName.charAt(0) }}
           </div>
+          <button (click)="fazerLogout()" class="p-2 text-gray-600 hover:text-red-600 transition-colors" title="Sair">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+            </svg>
+          </button>
         </div>
       </div>
     </div>
@@ -35,62 +33,27 @@
     <!-- Welcome Section -->
     <div class="mb-8">
       <h2 class="text-2xl font-bold text-gray-800 mb-2">Bem-vindo de volta, {{ userName }}!</h2>
-      <p class="text-gray-600">Aqui está o resumo dos seus estudos</p>
+      <p class="text-gray-600">Aqui está o resumo dos seus estudos.</p>
     </div>
 
     <!-- Stats Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-      <!-- Total de Materiais -->
-      <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-sm font-medium text-gray-600">Total de Materiais</p>
-            <p class="text-2xl font-bold text-gray-800">{{ stats.totalMateriais }}</p>
-          </div>
-          <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-            <span class="text-2xl">📚</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Resumos Criados -->
-      <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-sm font-medium text-gray-600">Resumos Criados</p>
-            <p class="text-2xl font-bold text-gray-800">{{ stats.resumosCriados }}</p>
-          </div>
-          <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-            <span class="text-2xl">📝</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Total de Disciplinas -->
-      <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-        <div class="flex items-center justify-between">
-          <div>
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
             <p class="text-sm font-medium text-gray-600">Total de Disciplinas</p>
             <p class="text-2xl font-bold text-gray-800">{{ stats.totalDisciplinas }}</p>
-          </div>
-          <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-            <span class="text-2xl">📂</span>
-          </div>
         </div>
-      </div>
-
-      <!-- Armazenamento -->
-      <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-        <div class="flex items-center justify-between">
-          <div>
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+            <p class="text-sm font-medium text-gray-600">Resumos Criados</p>
+            <p class="text-2xl font-bold text-gray-800">{{ stats.resumosCriados }}</p>
+        </div>
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+            <p class="text-sm font-medium text-gray-600">Total de Materiais</p>
+            <p class="text-2xl font-bold text-gray-800">{{ stats.totalMateriais }}</p>
+        </div>
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
             <p class="text-sm font-medium text-gray-600">Armazenamento</p>
-            <p class="text-2xl font-bold text-gray-800">{{ stats.storageUsed }}</p>
-          </div>
-          <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-            <span class="text-2xl">💾</span>
-          </div>
+            <p class="text-2xl font-bold text-gray-800">N/A</p>
         </div>
-      </div>
     </div>
 
     <!-- Quick Actions -->
@@ -117,34 +80,37 @@
         <div *ngFor="let material of recentMateriais" class="px-6 py-4 hover:bg-gray-50 transition-colors">
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-4">
-              <div class="w-10 h-10 {{ getMaterialColor(material.type) }} rounded-lg flex items-center justify-center">
-                <span class="text-sm">{{ getMaterialIcon(material.type) }}</span>
+              <!-- Passa o NOME do arquivo para as funções de ajuda -->
+              <div class="w-10 h-10 {{ getMaterialColor(material.nome) }} rounded-lg flex items-center justify-center">
+                <span class="text-sm">{{ getMaterialIcon(material.nome) }}</span>
               </div>
               <div>
-                <h4 class="font-medium text-gray-800">{{ material.name }}</h4>
+                <!-- Usa os nomes de propriedade corretos da nossa interface -->
+                <h4 class="font-medium text-gray-800">{{ material.nome }}</h4>
                 <p class="text-sm text-gray-600">
-                  {{ material.disciplina }} • {{ material.date }} • {{ material.size }}
+                  {{ material.nomeDisciplina }} • {{ material.dataUploadFormatada }} • {{ material.tamanhoFormatado }}
                 </p>
               </div>
             </div>
             
             <div class="flex space-x-2">
               <button class="p-2 text-gray-400 hover:text-blue-600 transition-colors" title="Visualizar">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                </svg>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
               </button>
-              
               <button class="p-2 text-gray-400 hover:text-green-600 transition-colors" title="Download">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                </svg>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
               </button>
             </div>
           </div>
         </div>
+
+        <!-- Mensagem para quando não há materiais -->
+        <div *ngIf="recentMateriais.length === 0" class="px-6 py-8 text-center text-gray-500">
+          <p>Você ainda não adicionou nenhum material.</p>
+        </div>
+
       </div>
     </div>
   </main>
 </div>
+

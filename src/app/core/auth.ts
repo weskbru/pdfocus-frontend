@@ -1,41 +1,45 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 // --- Interfaces para Tipagem (DTOs do Frontend) ---
-// Estas interfaces definem os "contratos" de dados entre o nosso frontend e o backend.
-
-/** DTO para o corpo da requisição de REGISTRO */
 export interface CadastrarUsuarioCommand {
   nome: string;
   email: string;
   senha: string;
 }
 
-/** DTO para a resposta do REGISTRO */
 export interface UsuarioResponse {
   id: string;
   nome: string;
   email: string;
 }
 
-/** DTO para o corpo da requisição de LOGIN */
 export interface AutenticarUsuarioCommand {
   email: string;
   senha: string;
 }
 
-/** DTO para a resposta do LOGIN (contém o token) */
 export interface AuthenticationResponse {
   token: string;
 }
+
+/**
+ * DTO para a resposta do endpoint /usuarios/me.
+ * Corresponde ao UsuarioDetalhesResponse do backend.
+ */
+export interface UsuarioDetalhesResponse {
+  nome: string;
+  email: string;
+}
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private readonly apiUrl = 'http://localhost:8080';
+  private readonly apiUrl = 'http://localhost:8080'; // Lembre-se de usar a porta correta!
   private readonly TOKEN_KEY = 'auth_token';
 
   constructor(private http: HttpClient) { }
@@ -52,7 +56,26 @@ export class AuthService {
     return this.http.post<AuthenticationResponse>(endpoint, credenciais);
   }
 
-  // --- MÉTODOS DE GERENCIAMENTO DE TOKEN ---
+  /**
+   * Busca os detalhes do utilizador atualmente autenticado.
+   *
+   * @returns um Observable com os dados do utilizador.
+   */
+  buscarUsuarioLogado(): Observable<UsuarioDetalhesResponse> {
+    const endpoint = `${this.apiUrl}/usuarios/me`;
+    
+    // Para endpoints protegidos, precisamos de enviar o token no cabeçalho.
+    const token = this.obterToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    // Faz a chamada GET, passando os cabeçalhos de autorização.
+    return this.http.get<UsuarioDetalhesResponse>(endpoint, { headers: headers });
+  }
+
+
+  // --- MÉTODOS DE GESTÃO DE TOKEN ---
 
   guardarToken(token: string): void {
     localStorage.setItem(this.TOKEN_KEY, token);
@@ -63,7 +86,7 @@ export class AuthService {
   }
 
   logout(): void {
-  // Simplesmente remove a chave do token do localStorage
-  localStorage.removeItem(this.TOKEN_KEY);
+    localStorage.removeItem(this.TOKEN_KEY);
+  }
 }
-}
+
