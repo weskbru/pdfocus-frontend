@@ -1,0 +1,104 @@
+<!-- Layout principal centralizado -->
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+  <div class="w-full max-w-2xl">
+
+    <!-- Card do Formulário -->
+    <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-8">
+      
+      <!-- Cabeçalho com Logo -->
+      <div class="text-center mb-8">
+        <div class="flex justify-center mb-4">
+          <div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center shadow-md">
+            <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+          </div>
+        </div>
+        <!-- TÍTULO DINÂMICO -->
+        <h1 class="text-2xl font-bold text-gray-800 mb-2">{{ isEditMode ? 'Editar Disciplina' : 'Nova Disciplina' }}</h1>
+        <p class="text-gray-600">{{ isEditMode ? 'Altere os detalhes da sua disciplina abaixo.' : 'Organize seus estudos criando uma nova disciplina.' }}</p>
+      </div>
+
+      <form [formGroup]="disciplinaForm" (ngSubmit)="onSubmit()" novalidate class="space-y-6">
+        
+        <!-- Mensagem de Erro da API -->
+        <div *ngIf="errorMessage" class="p-4 bg-red-50 border border-red-200 rounded-lg">
+          <div class="flex items-center">
+            <svg class="w-5 h-5 text-red-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <span class="text-red-700 text-sm">{{ errorMessage }}</span>
+          </div>
+        </div>
+
+        <!-- Campo Nome da Disciplina -->
+        <div>
+          <label for="nome" class="block text-sm font-medium text-gray-700 mb-2">📚 Nome da Disciplina</label>
+          <input 
+            id="nome" type="text" formControlName="nome" placeholder="Ex: Cálculo I, Direito Constitucional"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-400 transition-all duration-200 placeholder-gray-400"
+            [ngClass]="{ 'border-red-500 focus:ring-red-500': nome?.invalid && nome?.touched }">
+          <div *ngIf="nome?.invalid && (nome?.dirty || nome?.touched)" class="mt-2 text-red-600 text-sm flex items-center">
+            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <span *ngIf="nome?.errors?.['required']">O nome da disciplina é obrigatório</span>
+            <span *ngIf="nome?.errors?.['minlength']">Mínimo 3 caracteres</span>
+          </div>
+        </div>
+        
+        <!-- Campo Descrição com Botão de IA -->
+        <div>
+          <div class="flex justify-between items-center mb-2">
+            <label for="descricao" class="block text-sm font-medium text-gray-700">📝 Descrição (Opcional)</label>
+            <!-- BOTÃO PARA GERAR DESCRIÇÃO COM IA -->
+            <button 
+              type="button" 
+              (click)="gerarDescricaoIA()" 
+              [disabled]="!disciplinaForm.get('nome')?.valid || isLoading || isGeneratingDescription"
+              class="px-3 py-1 text-xs font-medium text-blue-700 bg-blue-100 rounded-full hover:bg-blue-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center">
+              <span *ngIf="!isGeneratingDescription">✨ Gerar com IA</span>
+              <span *ngIf="isGeneratingDescription" class="flex items-center">
+                <svg class="animate-spin -ml-1 mr-1 h-3 w-3 text-blue-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                A gerar...
+              </span>
+            </button>
+          </div>
+          <textarea 
+            id="descricao" formControlName="descricao" rows="4" placeholder="Adicione uma breve descrição ou clique em 'Gerar com IA' após inserir um nome."
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-400 transition-all duration-200 placeholder-gray-400 resize-none"></textarea>
+          <p class="mt-1 text-sm text-gray-500">Descreva os principais tópicos ou objetivos desta disciplina.</p>
+        </div>
+
+        <!-- Botões de Ação -->
+        <div class="flex items-center justify-end space-x-3 pt-6 border-t border-gray-100">
+          <button 
+            type="button" 
+            (click)="voltarParaDisciplinas()"
+            class="px-6 py-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 transition-all duration-200 hover:shadow-sm">
+            Cancelar
+          </button>
+          <button 
+            type="submit" 
+            [disabled]="disciplinaForm.invalid || isLoading || isGeneratingDescription"
+            class="px-6 py-3 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-blue-700 border border-transparent rounded-lg hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center shadow-md hover:shadow-lg">
+            
+            <svg *ngIf="isLoading" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            
+            <span>{{ isLoading ? (isEditMode ? 'A salvar alterações...' : 'A criar disciplina...') : (isEditMode ? 'Salvar Alterações' : 'Criar Disciplina') }}</span>
+          </button>
+        </div>
+      </form>
+
+      <!-- Link para voltar -->
+      <div class="text-center mt-6 pt-4 border-t border-gray-100">
+        <button 
+          (click)="voltarParaDashboard()"
+          class="text-blue-600 hover:text-blue-800 text-sm font-medium transition-colors focus:outline-none flex items-center justify-center mx-auto">
+          <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+          </svg>
+          Voltar para o Dashboard
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
