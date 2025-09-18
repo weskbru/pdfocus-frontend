@@ -3,32 +3,56 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from '../../core/auth';
 
-// --- DTOs para comunicação com a API de Disciplinas ---
-
+// --- DTOs existentes ---
 export interface DisciplinaResponse {
   id: string;
   nome: string;
   descricao: string;
 }
-
 export interface CriarDisciplinaCommand {
   nome: string;
   descricao: string;
 }
-
-/**
- * DTO para o comando de atualização. É idêntico ao de criação,
- * mas o separamos por clareza e para futuras expansões.
- */
 export interface AtualizarDisciplinaCommand {
   nome: string;
   descricao: string;
 }
 
+// --- NOVAS INTERFACES PARA A PÁGINA DE DETALHES ---
+
+/**
+ * Representa um resumo na lista de detalhes da disciplina.
+ * Corresponde ao ResumoSimples do backend.
+ */
+export interface ResumoSimples {
+  id: string;
+  titulo: string;
+}
+
+/**
+ * Representa um material na lista de detalhes da disciplina.
+ * Corresponde ao MaterialSimples do backend.
+ */
+export interface MaterialSimples {
+  id: string;
+  nomeArquivo: string;
+}
+
+/**
+ * Representa a resposta completa do "dossier" da disciplina.
+ * Corresponde ao DetalheDisciplinaResponse do backend.
+ */
+export interface DetalheDisciplinaResponse {
+  id: string;
+  nome: string;
+  descricao: string;
+  resumos: ResumoSimples[];
+  materiais: MaterialSimples[];
+}
+
 
 /**
  * Serviço responsável por todas as operações de CRUD relacionadas a Disciplinas.
- * Ele encapsula a comunicação com a API RESTful do backend.
  */
 @Injectable({
   providedIn: 'root'
@@ -44,7 +68,6 @@ export class DisciplinaService {
 
   /**
    * Método privado auxiliar para criar os cabeçalhos de autorização.
-   * Ajuda a evitar a repetição de código (DRY).
    */
   private getAuthHeaders(): HttpHeaders {
     const token = this.authService.obterToken();
@@ -59,13 +82,21 @@ export class DisciplinaService {
   }
 
   /**
-   * Busca uma única disciplina pelo seu ID.
-   * Essencial para preencher o formulário de edição com os dados existentes.
-   * @param id O UUID da disciplina a ser buscada.
+   * Busca os dados básicos de uma única disciplina (usado para edição).
    */
   buscarDisciplinaPorId(id: string): Observable<DisciplinaResponse> {
     const endpoint = `${this.apiUrl}/${id}`;
     return this.http.get<DisciplinaResponse>(endpoint, { headers: this.getAuthHeaders() });
+  }
+
+  /**
+   * ADICIONE ESTE NOVO MÉTODO:
+   * Busca o "dossier completo" de uma disciplina, incluindo seus resumos e materiais.
+   * @param id O UUID da disciplina a ser buscada.
+   */
+  buscarDetalhesDisciplina(id: string): Observable<DetalheDisciplinaResponse> {
+    const endpoint = `${this.apiUrl}/${id}`;
+    return this.http.get<DetalheDisciplinaResponse>(endpoint, { headers: this.getAuthHeaders() });
   }
 
   /**
@@ -77,8 +108,6 @@ export class DisciplinaService {
 
   /**
    * Envia os dados atualizados de uma disciplina para a API.
-   * @param id O UUID da disciplina a ser atualizada.
-   * @param dadosDisciplina O objeto com os novos dados.
    */
   atualizarDisciplina(id: string, dadosDisciplina: AtualizarDisciplinaCommand): Observable<DisciplinaResponse> {
     const endpoint = `${this.apiUrl}/${id}`;
