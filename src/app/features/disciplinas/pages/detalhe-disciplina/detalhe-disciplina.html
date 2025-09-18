@@ -1,0 +1,114 @@
+<!-- A estrutura principal mantém a consistência visual com o resto da aplicação. -->
+<div class="min-h-screen bg-gray-50">
+  <!-- 1. Header Consistente -->
+  <header class="bg-white shadow-sm border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <div class="flex items-center space-x-3">
+          <div class="w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center shadow-sm">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+          </div>
+          <h1 class="font-heading text-xl font-semibold text-gray-800">{{ disciplina.nome }}</h1>
+        </div>
+        <div class="flex items-center space-x-3">
+          <button routerLink="/disciplinas" class="p-2 text-gray-500 hover:text-blue-600 transition-colors" title="Voltar para Minhas Disciplinas">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m8 8l-6-6 6-6"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Conteúdo Principal -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    
+    <!-- Estado de Carregamento -->
+    <div *ngIf="isLoading" class="text-center py-16">
+      <svg class="animate-spin h-8 w-8 text-blue-600 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+      <p class="mt-4 text-gray-500">A carregar detalhes da disciplina...</p>
+    </div>
+
+    <!-- Conteúdo quando os dados estão prontos -->
+    <div *ngIf="!isLoading" class="grid grid-cols-1 lg:grid-cols-3 gap-8 fade-in">
+
+      <!-- Coluna Esquerda -->
+      <div class="lg:col-span-2 space-y-8">
+
+        <!-- Resumos -->
+        <section>
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-semibold text-gray-800">Meus Resumos</h2>
+            <button class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 flex items-center shadow-sm transition-transform hover:scale-105">
+              <i class="fas fa-plus mr-2"></i> Novo Resumo
+            </button>
+          </div>
+          <div *ngIf="resumos.length === 0" class="bg-white rounded-lg border border-gray-200 p-6 text-center text-gray-500">
+            <i class="fas fa-book-open text-blue-500 text-3xl mb-3"></i>
+            <p class="mb-2">Você ainda não adicionou resumos.</p>
+            <button class="text-blue-600 hover:underline text-sm">Crie o primeiro resumo</button>
+          </div>
+          <div class="space-y-4" *ngIf="resumos.length > 0">
+            <div *ngFor="let resumo of resumos" class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 flex justify-between items-center hover:shadow-md transition-all hover:scale-[1.01]">
+              <p class="font-medium text-gray-700">{{ resumo.titulo }}</p>
+              <div class="flex items-center space-x-2">
+                <span class="text-xs text-gray-400">Atualizado {{ resumo.dataAtualizacao }}</span>
+                <button aria-label="Editar resumo" class="p-2 text-gray-400 hover:text-blue-600 transition"><i class="fas fa-edit"></i></button>
+                <button aria-label="Excluir resumo" class="p-2 text-gray-400 hover:text-red-600 transition"><i class="fas fa-trash"></i></button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Materiais -->
+        <section>
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-semibold text-gray-800">Meus Materiais</h2>
+            <button class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 flex items-center shadow-sm transition-transform hover:scale-105">
+              <i class="fas fa-upload mr-2"></i> Adicionar Material
+            </button>
+          </div>
+          <div *ngIf="materiais.length === 0" class="bg-white rounded-lg border border-gray-200 p-6 text-center text-gray-500">
+            <i class="fas fa-file-pdf text-red-500 text-3xl mb-3"></i>
+            <p class="mb-2">Nenhum material enviado ainda.</p>
+            <button class="text-blue-600 hover:underline text-sm">Envie seu primeiro PDF</button>
+          </div>
+          <div class="space-y-4" *ngIf="materiais.length > 0">
+            <div *ngFor="let material of materiais" class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 flex justify-between items-center hover:shadow-md transition-all hover:scale-[1.01]">
+              <div class="flex items-center">
+                <i class="{{ getMaterialIcon(material.tipo) }} text-xl mr-3"></i>
+                <p class="font-medium text-gray-700">{{ material.nome }}</p>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="text-xs text-gray-400">{{ material.tamanho }}</span>
+                <button aria-label="Baixar material" class="p-2 text-gray-400 hover:text-green-600 transition"><i class="fas fa-download"></i></button>
+                <button aria-label="Excluir material" class="p-2 text-gray-400 hover:text-red-600 transition"><i class="fas fa-trash"></i></button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Coluna Direita -->
+      <aside class="space-y-6">
+        <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
+          <h3 class="text-lg font-semibold text-gray-800 border-b pb-3 mb-3">Sobre esta Disciplina</h3>
+          <p class="text-sm text-gray-600">{{ disciplina.descricao }}</p>
+        </div>
+        <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
+          <h3 class="text-lg font-semibold text-gray-800 mb-3">Estatísticas</h3>
+          <div class="space-y-3">
+            <div class="flex justify-between items-center text-sm">
+              <span class="text-gray-600">Total de Resumos:</span>
+              <span class="font-bold text-gray-800">{{ disciplina.totalResumos }}</span>
+            </div>
+            <div class="flex justify-between items-center text-sm">
+              <span class="text-gray-600">Total de Materiais:</span>
+              <span class="font-bold text-gray-800">{{ disciplina.totalMateriais }}</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+</div>
+

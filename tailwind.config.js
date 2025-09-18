@@ -14,7 +14,11 @@ module.exports = {
         'linear-primary': '#5e6ad2',
         'linear-primary-hover': '#4f5bb5',
         'linear-ring': '#5e6ad240',
-      }
+      },
+      fontFamily: {
+        sans: ["Inter", "sans-serif"],
+        heading: ["Poppins", "sans-serif"], // opcional
+      },
     },
   },
   plugins: [],
