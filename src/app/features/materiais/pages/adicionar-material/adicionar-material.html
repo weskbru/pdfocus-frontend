@@ -1,0 +1,72 @@
+<!-- Layout principal centralizado -->
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+  <div class="w-full max-w-lg">
+
+    <!-- Card do Formulário -->
+    <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-8">
+      
+      <!-- Cabeçalho com Logo -->
+      <div class="text-center mb-8">
+        <div class="flex justify-center mb-4">
+          <div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center shadow-md">
+            <i class="fas fa-upload text-white text-2xl"></i>
+          </div>
+        </div>
+        <h1 class="text-2xl font-bold text-gray-800 mb-2">Adicionar Novo Material</h1>
+        <p class="text-gray-600">Envie um PDF, slide ou outro documento para a sua disciplina.</p>
+      </div>
+
+      <form (ngSubmit)="onSubmit()" novalidate class="space-y-6">
+        
+        <!-- Mensagem de Erro -->
+        <div *ngIf="errorMessage" class="p-4 bg-red-50 border border-red-200 rounded-lg">
+          <div class="flex items-center">
+            <svg class="w-5 h-5 text-red-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <span class="text-red-700 text-sm">{{ errorMessage }}</span>
+          </div>
+        </div>
+
+        <!-- Área de Upload -->
+        <div>
+          <label for="file-upload" class="relative cursor-pointer bg-white rounded-lg border-2 border-dashed border-gray-300 flex flex-col items-center justify-center p-8 text-center hover:border-blue-500 transition-colors">
+            <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+              <i class="fas fa-file-alt text-3xl text-gray-400"></i>
+            </div>
+            <p class="text-blue-600 font-semibold">Clique para escolher um ficheiro</p>
+            <p class="text-xs text-gray-500 mt-1">PDF, DOCX, PPTX (MAX. 10MB)</p>
+            <input id="file-upload" name="file-upload" type="file" class="sr-only" (change)="onArquivoSelecionado($event)">
+          </label>
+        </div>
+
+        <!-- Indicação do Ficheiro Selecionado -->
+        <div *ngIf="arquivoSelecionado" class="bg-gray-100 p-3 rounded-lg text-sm flex items-center justify-between">
+          <span class="font-medium text-gray-700 truncate">{{ arquivoSelecionado.name }}</span>
+          <span class="text-gray-500 flex-shrink-0 ml-2">{{ (arquivoSelecionado.size / 1024 / 1024).toFixed(2) }} MB</span>
+        </div>
+
+        <!-- Botões de Ação -->
+        <div class="flex items-center justify-end space-x-3 pt-6 border-t border-gray-100">
+          <button 
+            type="button" 
+            (click)="cancelar()"
+            class="px-6 py-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 transition-all duration-200 hover:shadow-sm">
+            Cancelar
+          </button>
+
+          <button 
+            type="submit" 
+            [disabled]="!arquivoSelecionado || isLoading"
+            class="px-6 py-3 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-blue-700 border border-transparent rounded-lg hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center shadow-md hover:shadow-lg">
+            
+            <svg *ngIf="isLoading" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            
+            <span>{{ isLoading ? 'A enviar...' : 'Enviar Material' }}</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

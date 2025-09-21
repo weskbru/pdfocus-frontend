@@ -18,7 +18,17 @@ export interface AtualizarDisciplinaCommand {
   descricao: string;
 }
 
-// --- NOVAS INTERFACES PARA A PÁGINA DE DETALHES ---
+
+/**
+ * DTO para a resposta da API ao adicionar um novo material.
+ * Supondo que o backend retorna os detalhes do material criado.
+ */
+export interface MaterialResponse {
+  id: string;
+  nomeOriginal: string;
+  tipoArquivo: string;
+  tamanho: number;
+}
 
 /**
  * Representa um resumo na lista de detalhes da disciplina.
@@ -66,6 +76,7 @@ export class DisciplinaService {
     private authService: AuthService
   ) { }
 
+  
   /**
    * Método privado auxiliar para criar os cabeçalhos de autorização.
    */
@@ -90,7 +101,6 @@ export class DisciplinaService {
   }
 
   /**
-   * ADICIONE ESTE NOVO MÉTODO:
    * Busca o "dossier completo" de uma disciplina, incluindo seus resumos e materiais.
    * @param id O UUID da disciplina a ser buscada.
    */
@@ -121,5 +131,40 @@ export class DisciplinaService {
     const endpoint = `${this.apiUrl}/${id}`;
     return this.http.delete<void>(endpoint, { headers: this.getAuthHeaders() });
   }
+
+  /**
+   * Envia um novo material (arquivo) para a API para ser associado a uma disciplina.
+   *
+   * @param disciplinaId O ID da disciplina à qual o material pertence.
+   * @param arquivo O objeto de arquivo selecionado pelo utilizador.
+   * @returns um Observable com os detalhes do material recém-criado.
+   */
+  adicionarMaterial(disciplinaId: string, arquivo: File): Observable<any> {
+  // CORREÇÃO: Endpoint correto no plural
+  const endpoint = `http://localhost:8080/materiais`;
+
+  console.log('✅ DEBUG - Endpoint correto:', endpoint);
+  console.log('✅ DEBUG - Disciplina ID:', disciplinaId);
+  console.log('✅ DEBUG - Arquivo:', arquivo.name, arquivo.size, arquivo.type);
+
+  // CORREÇÃO: Campos exatos que o backend espera
+  const formData = new FormData();
+  formData.append('arquivo', arquivo); // Campo "arquivo" (não "file")
+  formData.append('disciplinaId', disciplinaId); // Campo "disciplinaId"
+
+  // Debug: verificar se o FormData foi criado corretamente
+  console.log('✅ DEBUG - Campos do FormData:');
+  formData.forEach((value, key) => {
+    console.log(`✅ ${key}:`, value);
+  });
+
+  return this.http.post(endpoint, formData, {
+    headers: this.getAuthHeaders(),
+    reportProgress: true,
+    observe: 'events'
+  });
+}
+
+
 }
 

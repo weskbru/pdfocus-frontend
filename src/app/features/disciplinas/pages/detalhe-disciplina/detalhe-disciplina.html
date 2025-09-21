@@ -8,7 +8,6 @@
           <div class="w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center shadow-sm">
             <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
           </div>
-          <!-- CORREÇÃO: Usamos *ngIf para garantir que 'disciplina' existe antes de aceder ao 'nome' -->
           <h1 *ngIf="disciplina" class="font-heading text-xl font-semibold text-gray-800">{{ disciplina.nome }}</h1>
         </div>
         <div class="flex items-center space-x-3">
@@ -29,12 +28,17 @@
       <p class="mt-4 text-gray-500">A carregar detalhes da disciplina...</p>
     </div>
 
+    <!-- Estado de Erro -->
+    <div *ngIf="errorMessage && !isLoading" class="p-4 bg-red-50 border border-red-200 rounded-lg text-center">
+        <p class="text-red-700 text-sm font-medium">{{ errorMessage }}</p>
+    </div>
+
     <!-- Conteúdo quando os dados estão prontos -->
-    <!-- CORREÇÃO: Adicionamos *ngIf="disciplina" para só renderizar quando o "baú" chegar -->
-    <div *ngIf="!isLoading && disciplina" class="grid grid-cols-1 lg:grid-cols-3 gap-8 fade-in">
+    <div *ngIf="!isLoading && !errorMessage && disciplina" class="grid grid-cols-1 lg:grid-cols-3 gap-8 fade-in">
 
       <!-- Coluna Esquerda -->
       <div class="lg:col-span-2 space-y-8">
+
         <!-- Resumos -->
         <section>
           <div class="flex justify-between items-center mb-4">
@@ -43,7 +47,6 @@
               <i class="fas fa-plus mr-2"></i> Novo Resumo
             </button>
           </div>
-          <!-- CORREÇÃO: Usamos disciplina.resumos em vez de apenas resumos -->
           <div *ngIf="disciplina.resumos.length === 0" class="bg-white rounded-lg border border-gray-200 p-6 text-center text-gray-500">
             <i class="fas fa-book-open text-blue-500 text-3xl mb-3"></i>
             <p class="mb-2">Você ainda não adicionou resumos.</p>
@@ -64,15 +67,14 @@
         <section>
           <div class="flex justify-between items-center mb-4">
             <h2 class="text-xl font-semibold text-gray-800">Meus Materiais</h2>
-            <button class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 flex items-center shadow-sm transition-transform hover:scale-105">
+            <button (click)="abrirModalUpload()" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 flex items-center shadow-sm transition-transform hover:scale-105">
               <i class="fas fa-upload mr-2"></i> Adicionar Material
             </button>
           </div>
-          <!-- CORREÇÃO: Usamos disciplina.materiais em vez de apenas materiais -->
           <div *ngIf="disciplina.materiais.length === 0" class="bg-white rounded-lg border border-gray-200 p-6 text-center text-gray-500">
             <i class="fas fa-file-pdf text-red-500 text-3xl mb-3"></i>
             <p class="mb-2">Nenhum material enviado ainda.</p>
-            <button class="text-blue-600 hover:underline text-sm">Envie seu primeiro PDF</button>
+            <button (click)="abrirModalUpload()" class="text-blue-600 hover:underline text-sm">Envie seu primeiro PDF</button>
           </div>
           <div class="space-y-4" *ngIf="disciplina.materiais.length > 0">
             <div *ngFor="let material of disciplina.materiais" class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 flex justify-between items-center hover:shadow-md transition-all hover:scale-[1.01]">
@@ -111,5 +113,78 @@
       </aside>
     </div>
   </main>
+
+  <!-- Modal de Upload com Overlay -->
+<div *ngIf="modalUploadAberto" 
+     class="fixed inset-0 bg-black/5 backdrop-blur-sm z-40 flex items-center justify-center p-4 transition-opacity duration-300">
+     
+    <!-- Card do Modal -->
+    <div class="relative bg-white rounded-xl shadow-2xl w-full max-w-md animate-modal-in" (click)="$event.stopPropagation()">
+      
+      <!-- Header do Modal -->
+      <div class="px-6 py-4 border-b border-gray-200/70 flex justify-between items-center">
+        <h3 class="text-lg font-semibold text-gray-900">Adicionar Material</h3>
+        <button (click)="fecharModalUpload()" class="text-gray-400 hover:text-gray-600">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <!-- Conteúdo do Modal -->
+      <div class="p-6">
+        <!-- Área de Upload -->
+        <label for="file-upload-modal" 
+               class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-blue-400 hover:bg-blue-50/30 transition-colors flex flex-col items-center justify-center">
+          <i class="fas fa-cloud-upload-alt text-blue-500 text-3xl mb-4"></i>
+          <p class="text-gray-700 font-medium mb-2">Arraste um ficheiro aqui</p>
+          <p class="text-gray-500 text-sm mb-4">ou clique para selecionar</p>
+          <input id="file-upload-modal" type="file" class="hidden" (change)="onFileSelected($event)">
+          <span class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+            Selecionar Ficheiro
+          </span>
+          <p class="text-gray-400 text-xs mt-3">PDF, DOCX, PPTX (até 100MB)</p>
+        </label>
+
+        <!-- Preview do Ficheiro -->
+        <div *ngIf="arquivoSelecionado" class="mt-6 p-4 bg-gray-50/80 rounded-lg border border-gray-200">
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center space-x-3">
+              <i class="{{ getMaterialIcon(arquivoSelecionado) }} text-xl"></i>
+              <div>
+                <p class="font-medium text-gray-900">{{ arquivoSelecionado.name }}</p>
+                <p class="text-sm text-gray-500">{{ formatFileSize(arquivoSelecionado.size) }}</p>
+              </div>
+            </div>
+            <button (click)="removerArquivoSelecionado()" class="text-gray-400 hover:text-red-500">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <button 
+            (click)="fazerUploadMaterial()" 
+            class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+            [disabled]="isUploading">
+            <span *ngIf="!isUploading">Fazer Upload</span>
+            <span *ngIf="isUploading">A enviar...</span>
+          </button>
+        </div>
+        
+        <!-- Mensagem de Erro do Upload -->
+        <div *ngIf="uploadErrorMessage" class="mt-4 text-red-600 text-sm text-center">
+            {{ uploadErrorMessage }}
+        </div>
+      </div>
+    </div>
+</div>
+
+<!-- Definição da Animação do Modal -->
+<style>
+  @keyframes modal-in {
+    0% { opacity: 0; transform: scale(0.95); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  .animate-modal-in {
+    animation: modal-in 0.25s ease-out forwards;
+  }
+</style>
+
 </div>
 
