@@ -18,13 +18,19 @@ export class DetalheDisciplina implements OnInit {
   disciplina: DetalheDisciplinaResponse | null = null;
   isLoading = true;
   errorMessage: string | null = null;
-  
-  // Propriedades para o modal de upload (simplificadas)
+
+  // Propriedades para o modal de upload
   modalUploadAberto = false;
   isUploading = false;
   arquivoSelecionado: File | null = null;
   uploadErrorMessage: string | null = null;
-  
+
+  // Propriedades para o modal de confirmação de exclusão
+  modalExclusaoAberto = false;
+  materialParaExcluir: MaterialSimples | null = null;
+  isExcluindo = false;
+  exclusaoErrorMessage: string | null = null;
+
   private disciplinaId: string | null = null;
 
   constructor(
@@ -60,7 +66,7 @@ export class DetalheDisciplina implements OnInit {
     });
   }
 
-  // --- LÓGICA DO MODAL DE UPLOAD (SIMPLIFICADA) ---
+  // --- LÓGICA DO MODAL DE UPLOAD ---
 
   abrirModalUpload(): void {
     this.modalUploadAberto = true;
@@ -90,7 +96,7 @@ export class DetalheDisciplina implements OnInit {
   removerArquivoSelecionado(): void {
     this.arquivoSelecionado = null;
   }
-  
+
   fazerUploadMaterial(): void {
     if (!this.disciplinaId || !this.arquivoSelecionado) return;
 
@@ -98,7 +104,6 @@ export class DetalheDisciplina implements OnInit {
     this.uploadErrorMessage = null;
 
     this.disciplinaService.adicionarMaterial(this.disciplinaId, this.arquivoSelecionado).subscribe({
-      // A subscrição agora é simples: só nos importamos com o sucesso ou o erro.
       next: (materialCriado) => {
         this.isUploading = false;
         this.fecharModalUpload();
@@ -112,15 +117,112 @@ export class DetalheDisciplina implements OnInit {
     });
   }
 
+  // --- LÓGICA DE EXCLUSÃO DE MATERIAL ---
+
+  abrirModalExclusao(material: MaterialSimples): void {
+    this.materialParaExcluir = material;
+    this.modalExclusaoAberto = true;
+    this.exclusaoErrorMessage = null;
+  }
+
+  fecharModalExclusao(): void {
+    this.modalExclusaoAberto = false;
+    this.materialParaExcluir = null;
+    this.isExcluindo = false;
+    this.exclusaoErrorMessage = null;
+  }
+
+  confirmarExclusao(): void {
+    if (!this.materialParaExcluir || !this.disciplinaId) return;
+
+    this.isExcluindo = true;
+    this.exclusaoErrorMessage = null;
+
+    this.disciplinaService.deletarMaterial(this.materialParaExcluir.id).subscribe({
+      next: () => {
+        this.isExcluindo = false;
+        this.fecharModalExclusao();
+        this.carregarDetalhesDaDisciplina(this.disciplinaId!); // Recarrega os dados
+      },
+      error: (err) => {
+        this.isExcluindo = false;
+        this.exclusaoErrorMessage = 'Ocorreu um erro ao excluir o material. Tente novamente.';
+        console.error('Erro ao excluir material:', err);
+      }
+    });
+  }
+
+  /**
+  * ADICIONE ESTE NOVO MÉTODO:
+  * Inicia o processo de download de um ficheiro de material.
+  * @param material O objeto MaterialSimples que o utilizador quer descarregar.
+  */
+  baixarMaterial(material: MaterialSimples): void {
+    this.disciplinaService.downloadMaterial(material.id).subscribe({
+      next: (blob) => {
+        // Cria um URL temporário para o blob (os dados do ficheiro).
+        const url = window.URL.createObjectURL(blob);
+
+        // Cria um elemento de link <a> invisível.
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = material.nomeArquivo; // Define o nome original do ficheiro.
+
+        // Adiciona o link ao corpo do documento, simula um clique e remove-o.
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        // Liberta a memória usada pelo URL temporário.
+        window.URL.revokeObjectURL(url);
+      },
+      error: (err) => {
+        this.errorMessage = "Não foi possível descarregar o material. Tente novamente.";
+        console.error("Erro no download:", err);
+      }
+    });
+  }
+
+  /**
+ * Abre o material em uma nova aba do navegador.
+ *
+ * @param material O objeto MaterialSimples que o usuário quer visualizar.
+ */
+visualizarMaterial(material: MaterialSimples): void {
+  this.disciplinaService.visualizarMaterial(material.id).subscribe({
+    next: (blob) => {
+      // Cria um blob URL a partir do blob recebido
+      const blobUrl = URL.createObjectURL(blob);
+      
+      // Abre o PDF em uma nova janela/aba
+      const newWindow = window.open(blobUrl, '_blank');
+      
+      // Foca na nova janela (pode ser bloqueado pelo navegador)
+      if (newWindow) {
+        newWindow.focus();
+      }
+      
+      // Limpa o blob URL após um tempo (opcional)
+      setTimeout(() => {
+        URL.revokeObjectURL(blobUrl);
+      }, 1000);
+    },
+    error: (err) => {
+      this.errorMessage = "Não foi possível visualizar o material. Tente novamente.";
+      console.error("Erro ao visualizar material:", err);
+    }
+  });
+}
+
   // --- FUNÇÕES DE AJUDA ---
   formatFileSize(bytes: number): string {
-      if (bytes === 0) return '0 Bytes';
-      const k = 1024;
-      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-      const i = Math.floor(Math.log(bytes) / Math.log(k));
-      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   }
-  
+
   getMaterialIcon(file: File | MaterialSimples): string {
     const name = 'name' in file ? file.name : file.nomeArquivo;
     const extensao = name.split('.').pop()?.toLowerCase();
@@ -132,4 +234,3 @@ export class DetalheDisciplina implements OnInit {
     }
   }
 }
-
