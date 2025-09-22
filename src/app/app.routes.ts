@@ -56,6 +56,16 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
 
+  // --- ROTA DE MATERIAIS (Protegida) ---
+  {
+    //  NOVA ROTA DE UPLOAD:
+    // O :disciplinaId é um parâmetro que conterá o UUID da disciplina.
+    path: 'disciplinas/detalhe/:disciplinaId/adicionar-material', 
+    loadComponent: () => import('./features/materiais/pages/adicionar-material/adicionar-material')
+      .then(m => m.AdicionarMaterial),
+    canActivate: [authGuard]
+  },
+
   // Rotas de redirecionamento (devem ficar por último)
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: '**', redirectTo: '/dashboard' }
