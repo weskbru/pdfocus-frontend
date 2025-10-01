@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpEvent } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams, HttpEvent } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
@@ -32,6 +32,8 @@ export interface MaterialResponse {
 export interface ResumoSimples { 
   id: string; 
   titulo: string; 
+  materialId: string;
+  dataCriacao: string;
 }
 
 export interface MaterialSimples { 
@@ -44,13 +46,21 @@ export interface DetalheDisciplinaResponse {
   nome: string; 
   descricao: string; 
   resumos: ResumoSimples[]; 
-  materiais: MaterialSimples[]; 
+  materiais: Page<MaterialSimples>;
 }
 
 export interface UploadProgress {
   loaded: number;
   total: number;
   progress: number;
+}
+
+export interface Page<T> {
+  content: T[];
+  totalPages: number;
+  totalElements: number;
+  number: number; 
+  size: number;
 }
 
 /**
@@ -136,15 +146,25 @@ export class DisciplinaService {
   }
 
   /**
-   * Busca o "dossier completo" de uma disciplina, incluindo seus resumos e materiais.
-   * @param id - UUID da disciplina a ser buscada
-   * @returns Observable com DetalheDisciplinaResponse
+   * ✅ 5. MÉTODO ATUALIZADO PARA SUPORTAR PAGINAÇÃO
+   * Busca o "dossier completo" de uma disciplina, incluindo uma página específica de materiais.
+   * @param id - UUID da disciplina a ser buscada.
+   * @param page - O número da página de materiais a ser buscada (base 0).
+   * @param size - O número de itens por página.
+   * @returns Observable com DetalheDisciplinaResponse.
    */
-  buscarDetalhesDisciplina(id: string): Observable<DetalheDisciplinaResponse> {
+  buscarDetalhesDisciplina(id: string, page: number = 0, size: number = 10): Observable<DetalheDisciplinaResponse> {
     const endpoint = `${this.disciplinasUrl}/${id}`;
     
+    // Cria os parâmetros de query para a paginação (ex: ?page=0&size=10)
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+    
+    // A requisição agora inclui os parâmetros de paginação
     return this.http.get<DetalheDisciplinaResponse>(endpoint, { 
-      headers: this.getAuthHeaders() 
+      headers: this.getAuthHeaders(),
+      params: params // Adiciona os parâmetros à requisição
     }).pipe(
       catchError(this.handleError)
     );

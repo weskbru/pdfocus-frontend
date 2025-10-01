@@ -3,21 +3,47 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { DisciplinaService, DetalheDisciplinaResponse, ResumoSimples, MaterialSimples, MaterialResponse } from '../../disciplina.service';
 
+// IMPORTS DO FONT AWESOME
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { IconDefinition, faChevronDown, faFilePdf, faPlus, faUpload, faFileWord, faFilePowerpoint, faFile, faEye, faDownload, faTrash, faEdit, faExclamationTriangle, faSpinner, faPlusCircle, faCloudUploadAlt, faTimes, faSearch, faFilter } from '@fortawesome/free-solid-svg-icons';
+
 /**
  * Componente responsável por exibir os detalhes de uma única disciplina.
  */
 @Component({
   selector: 'app-detalhe-disciplina',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FontAwesomeModule],
   templateUrl: './detalhe-disciplina.html',
   styleUrls: ['./detalhe-disciplina.css']
 })
 export class DetalheDisciplina implements OnInit {
 
+  // ÍCONES DISPONIBILIZADOS PARA O TEMPLATE HTML
+  faUpload = faUpload;
+  faPlus = faPlus;
+  faChevronDown = faChevronDown;
+  faCloudUploadAlt = faCloudUploadAlt;
+  faTimes = faTimes;
+  faSpinner = faSpinner;
+  faExclamationTriangle = faExclamationTriangle;
+  faPlusCircle = faPlusCircle;
+  faSearch = faSearch;
+  faFilter = faFilter;
+  faFilePdf = faFilePdf;
+  faDownload = faDownload;
+  faTrash = faTrash;
+  faEye = faEye;
+
   disciplina: DetalheDisciplinaResponse | null = null;
   isLoading = true;
   errorMessage: string | null = null;
+
+  // PROPRIEDADES DE PAGINAÇÃO (ADICIONAR)
+  paginaAtual: number = 0;
+  itensPorPagina: number = 10;
+  totalPaginas: number = 0;
+  totalItens: number = 0;
 
   // Propriedades para o modal de upload
   modalUploadAberto = false;
@@ -33,6 +59,25 @@ export class DetalheDisciplina implements OnInit {
 
   private disciplinaId: string | null = null;
 
+  // GETTER PARA OS MATERIAIS (IMPORTANTE!)
+  get materiais() {
+    return this.disciplina?.materiais?.content || [];
+  }
+
+  // GETTER PARA OS RESUMOS
+  get resumos() {
+    return this.disciplina?.resumos || [];
+  }
+
+  // GETTER PARA VERIFICAR SE TEM MATERIAIS
+  get temMateriais(): boolean {
+    return this.materiais.length > 0;
+  }
+
+  // GETTER PARA VERIFICAR SE TEM RESUMOS
+  get temResumos(): boolean {
+    return this.resumos.length > 0;
+  }
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -49,13 +94,16 @@ export class DetalheDisciplina implements OnInit {
     }
   }
 
+  // ATUALIZAR ESTE MÉTODO PARA USAR PAGINAÇÃO
   carregarDetalhesDaDisciplina(id: string): void {
     this.isLoading = true;
     this.errorMessage = null;
 
-    this.disciplinaService.buscarDetalhesDisciplina(id).subscribe({
+    this.disciplinaService.buscarDetalhesDisciplina(id, this.paginaAtual, this.itensPorPagina).subscribe({
       next: (dados) => {
         this.disciplina = dados;
+        this.totalPaginas = dados.materiais.totalPages;
+        this.totalItens = dados.materiais.totalElements;
         this.isLoading = false;
       },
       error: (err) => {
@@ -64,6 +112,51 @@ export class DetalheDisciplina implements OnInit {
         console.error('Erro ao buscar detalhes da disciplina:', err);
       }
     });
+  }
+
+  // MÉTODOS DE PAGINAÇÃO (ADICIONAR)
+  proximaPagina(): void {
+    if (this.paginaAtual < this.totalPaginas - 1) {
+      this.paginaAtual++;
+      this.carregarDetalhesDaDisciplina(this.disciplinaId!);
+    }
+  }
+
+  paginaAnterior(): void {
+    if (this.paginaAtual > 0) {
+      this.paginaAtual--;
+      this.carregarDetalhesDaDisciplina(this.disciplinaId!);
+    }
+  }
+
+  mudarItensPorPagina(novoTamanho: number): void {
+    this.itensPorPagina = novoTamanho;
+    this.paginaAtual = 0;
+    this.carregarDetalhesDaDisciplina(this.disciplinaId!);
+  }
+
+  // MÉTODOS AUXILIARES PARA OS DADOS (ADICIONAR)
+  getQuantidadeResumos(material: MaterialSimples): number {
+    if (!this.disciplina?.resumos) return 0;
+    return this.disciplina.resumos.filter(resumo => resumo.materialId === material.id).length;
+  }
+
+  getDataUltimoResumo(material: MaterialSimples): string {
+    const resumosMaterial = this.getResumosDoMaterial(material);
+    if (resumosMaterial.length === 0) {
+      return 'Nenhum resumo';
+    }
+
+    const ultimoResumo = resumosMaterial.sort((a, b) =>
+      new Date(b.dataCriacao).getTime() - new Date(a.dataCriacao).getTime()
+    )[0];
+
+    return new Date(ultimoResumo.dataCriacao).toLocaleDateString('pt-BR');
+  }
+
+  getResumosDoMaterial(material: MaterialSimples): ResumoSimples[] {
+    if (!this.disciplina?.resumos) return [];
+    return this.disciplina.resumos.filter(resumo => resumo.materialId === material.id);
   }
 
   // --- LÓGICA DO MODAL DE UPLOAD ---
@@ -153,10 +246,9 @@ export class DetalheDisciplina implements OnInit {
   }
 
   /**
-  * ADICIONE ESTE NOVO MÉTODO:
-  * Inicia o processo de download de um ficheiro de material.
-  * @param material O objeto MaterialSimples que o utilizador quer descarregar.
-  */
+   * Inicia o processo de download de um ficheiro de material.
+   * @param material O objeto MaterialSimples que o utilizador quer descarregar.
+   */
   baixarMaterial(material: MaterialSimples): void {
     this.disciplinaService.downloadMaterial(material.id).subscribe({
       next: (blob) => {
@@ -184,35 +276,34 @@ export class DetalheDisciplina implements OnInit {
   }
 
   /**
- * Abre o material em uma nova aba do navegador.
- *
- * @param material O objeto MaterialSimples que o usuário quer visualizar.
- */
-visualizarMaterial(material: MaterialSimples): void {
-  this.disciplinaService.visualizarMaterial(material.id).subscribe({
-    next: (blob) => {
-      // Cria um blob URL a partir do blob recebido
-      const blobUrl = URL.createObjectURL(blob);
-      
-      // Abre o PDF em uma nova janela/aba
-      const newWindow = window.open(blobUrl, '_blank');
-      
-      // Foca na nova janela (pode ser bloqueado pelo navegador)
-      if (newWindow) {
-        newWindow.focus();
+   * Abre o material em uma nova aba do navegador.
+   * @param material O objeto MaterialSimples que o usuário quer visualizar.
+   */
+  visualizarMaterial(material: MaterialSimples): void {
+    this.disciplinaService.visualizarMaterial(material.id).subscribe({
+      next: (blob) => {
+        // Cria um blob URL a partir do blob recebido
+        const blobUrl = URL.createObjectURL(blob);
+
+        // Abre o PDF em uma nova janela/aba
+        const newWindow = window.open(blobUrl, '_blank');
+
+        // Foca na nova janela (pode ser bloqueado pelo navegador)
+        if (newWindow) {
+          newWindow.focus();
+        }
+
+        // Limpa o blob URL após um tempo (opcional)
+        setTimeout(() => {
+          URL.revokeObjectURL(blobUrl);
+        }, 1000);
+      },
+      error: (err) => {
+        this.errorMessage = "Não foi possível visualizar o material. Tente novamente.";
+        console.error("Erro ao visualizar material:", err);
       }
-      
-      // Limpa o blob URL após um tempo (opcional)
-      setTimeout(() => {
-        URL.revokeObjectURL(blobUrl);
-      }, 1000);
-    },
-    error: (err) => {
-      this.errorMessage = "Não foi possível visualizar o material. Tente novamente.";
-      console.error("Erro ao visualizar material:", err);
-    }
-  });
-}
+    });
+  }
 
   // --- FUNÇÕES DE AJUDA ---
   formatFileSize(bytes: number): string {
@@ -223,14 +314,25 @@ visualizarMaterial(material: MaterialSimples): void {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   }
 
-  getMaterialIcon(file: File | MaterialSimples): string {
-    const name = 'name' in file ? file.name : file.nomeArquivo;
+  getMaterialIcon(fileOrMaterial: File | MaterialSimples): IconDefinition {
+    const name = 'name' in fileOrMaterial ? fileOrMaterial.name : fileOrMaterial.nomeArquivo;
     const extensao = name.split('.').pop()?.toLowerCase();
     switch (extensao) {
-      case 'pdf': return 'fas fa-file-pdf text-red-500';
-      case 'pptx': case 'ppt': return 'fas fa-file-powerpoint text-orange-500';
-      case 'docx': case 'doc': return 'fas fa-file-word text-blue-500';
-      default: return 'fas fa-file';
+      case 'pdf': return faFilePdf;
+      case 'pptx': case 'ppt': return faFilePowerpoint;
+      case 'docx': case 'doc': return faFileWord;
+      default: return faFile;
+    }
+  }
+
+  getMaterialIconClass(fileOrMaterial: File | MaterialSimples): string {
+    const name = 'name' in fileOrMaterial ? fileOrMaterial.name : fileOrMaterial.nomeArquivo;
+    const extensao = name.split('.').pop()?.toLowerCase();
+    switch (extensao) {
+      case 'pdf': return 'text-red-500';
+      case 'pptx': case 'ppt': return 'text-orange-500';
+      case 'docx': case 'doc': return 'text-blue-500';
+      default: return 'text-gray-500';
     }
   }
 }
