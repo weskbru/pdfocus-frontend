@@ -66,6 +66,14 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
 
+    {
+    // Rota para visualização detalhada de um resumo
+    path: 'resumos/:id', 
+    loadComponent: () => import('./features/resumos/components/resumo-detalhe/resumo-detalhe')
+      .then(m => m.ResumoDetalhe),
+    canActivate: [authGuard]
+  },
+
   // Rotas de redirecionamento (devem ficar por último)
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: '**', redirectTo: '/dashboard' }

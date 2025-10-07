@@ -1,0 +1,49 @@
+/* Animação para o modal */
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-modal-in {
+  animation: modal-in 0.3s ease-out;
+}
+
+/* Estilos para a seleção de materiais */
+.material-item {
+  transition: all 0.2s ease-in-out;
+}
+
+.material-item:hover {
+  border-color: #93c5fd;
+  background-color: rgba(219, 234, 254, 0.3);
+}
+
+.material-item.selected {
+  border-color: #3b82f6;
+  background-color: #dbeafe;
+}
+
+/* Scrollbar personalizada para a área de conteúdo */
+.modal-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}

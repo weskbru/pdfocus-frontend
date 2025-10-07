@@ -1,0 +1,81 @@
+<!-- Modal Overlay -->
+<div *ngIf="isOpen" 
+     class="fixed inset-0 bg-black/5 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-opacity duration-300"
+     (click)="onFecharModal()">
+
+  <!-- Modal Content -->
+  <div class="relative bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[80vh] overflow-hidden animate-modal-in"
+       (click)="$event.stopPropagation()">
+
+    <!-- Header -->
+    <div class="px-6 py-4 border-b border-gray-200/70 flex justify-between items-center">
+      <div>
+        <h3 class="text-lg font-semibold text-gray-900">Selecionar Material</h3>
+        <p class="text-sm text-gray-500">Escolha o material para criar o resumo</p>
+      </div>
+      <button (click)="onFecharModal()" 
+              class="text-gray-400 hover:text-gray-600 transition-colors">
+        <fa-icon [icon]="faTimes"></fa-icon>
+      </button>
+    </div>
+
+    <!-- Content -->
+    <div class="p-6 overflow-y-auto max-h-[60vh]">
+      
+      <!-- Lista de Materiais -->
+      <div class="space-y-3">
+        
+        <!-- Empty State -->
+        <div *ngIf="materiais.length === 0" 
+             class="text-center py-8 text-gray-500">
+          <fa-icon [icon]="faFile" class="text-4xl mb-4"></fa-icon>
+          <p>Nenhum material disponível</p>
+          <p class="text-sm mt-2">Adicione materiais antes de criar resumos</p>
+        </div>
+
+        <!-- Materiais -->
+        <div *ngFor="let material of materiais" 
+             class="border border-gray-200 rounded-lg p-4 cursor-pointer transition-all duration-200 hover:border-blue-300 hover:bg-blue-50/30"
+             [class.border-blue-500]="materialSelecionadoInterno?.id === material.id"
+             [class.bg-blue-50]="materialSelecionadoInterno?.id === material.id"
+             (click)="selecionarMaterial(material)">
+
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+              <!-- Ícone do Material -->
+              <fa-icon [icon]="getMaterialIcon(material)" 
+                       [class]="getMaterialIconClass(material) + ' text-lg'"></fa-icon>
+              
+              <!-- Informações do Material -->
+              <div>
+                <p class="font-medium text-gray-900">{{ material.nomeArquivo }}</p>
+                <p class="text-sm text-gray-500">Clique para selecionar</p>
+              </div>
+            </div>
+
+            <!-- Indicador de Seleção -->
+            <div *ngIf="materialSelecionadoInterno?.id === material.id" 
+                 class="flex items-center space-x-2">
+              <fa-icon [icon]="faCheck" class="text-green-500"></fa-icon>
+              <span class="text-sm text-green-600 font-medium">Selecionado</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="px-6 py-4 border-t border-gray-200/70 bg-gray-50 flex justify-end space-x-3">
+      <button (click)="onFecharModal()"
+              class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+        Cancelar
+      </button>
+      <button (click)="confirmarSelecao()"
+              [disabled]="!materialSelecionadoInterno"
+              class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors">
+        <fa-icon [icon]="faCheck" class="mr-2"></fa-icon>
+        Continuar
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,19 +1,29 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { DisciplinaService, DetalheDisciplinaResponse, ResumoSimples, MaterialSimples, MaterialResponse } from '../../disciplina.service';
+import {
+  DisciplinaService,
+  DetalheDisciplinaResponse,
+  ResumoSimples,
+  MaterialSimples,
+  MaterialResponse,
+  ResumoResponse,
+  CriarResumoDeMaterialCommand
+} from '../../disciplina.service';
 
 // IMPORTS DO FONT AWESOME
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { IconDefinition, faChevronDown, faFilePdf, faPlus, faUpload, faFileWord, faFilePowerpoint, faFile, faEye, faDownload, faTrash, faEdit, faExclamationTriangle, faSpinner, faPlusCircle, faCloudUploadAlt, faTimes, faSearch, faFilter } from '@fortawesome/free-solid-svg-icons';
 
+// ✅ IMPORT DO NOVO MODAL
+import { SelecionarMaterialModal } from '../../../resumos/components/selecionar-material-modal/selecionar-material-modal';
 /**
  * Componente responsável por exibir os detalhes de uma única disciplina.
  */
 @Component({
   selector: 'app-detalhe-disciplina',
   standalone: true,
-  imports: [CommonModule, RouterModule, FontAwesomeModule],
+  imports: [CommonModule, RouterModule, FontAwesomeModule, SelecionarMaterialModal],
   templateUrl: './detalhe-disciplina.html',
   styleUrls: ['./detalhe-disciplina.css']
 })
@@ -58,6 +68,10 @@ export class DetalheDisciplina implements OnInit {
   exclusaoErrorMessage: string | null = null;
 
   private disciplinaId: string | null = null;
+
+  //PROPRIEDADES PARA O MODAL DE SELEÇÃO DE MATERIAL
+  modalSelecaoMaterialAberto = false;
+  materialParaResumo: MaterialSimples | null = null;
 
   // GETTER PARA OS MATERIAIS (IMPORTANTE!)
   get materiais() {
@@ -134,6 +148,161 @@ export class DetalheDisciplina implements OnInit {
     this.paginaAtual = 0;
     this.carregarDetalhesDaDisciplina(this.disciplinaId!);
   }
+
+  // ✅ NOVOS MÉTODOS PARA O FLUXO DE CRIAÇÃO DE RESUMO
+
+  /**
+   * Abre o modal de seleção de material para criar resumo
+   */
+  abrirModalSelecaoMaterial(): void {
+    this.modalSelecaoMaterialAberto = true;
+    this.materialParaResumo = null;
+  }
+
+
+  /**
+   * Fecha o modal de seleção de material
+   */
+  fecharModalSelecaoMaterial(): void {
+    this.modalSelecaoMaterialAberto = false;
+    this.materialParaResumo = null;
+  }
+
+  /**
+   * Chamado quando um material é selecionado no modal
+   * @param material Material selecionado pelo usuário
+   */
+  onMaterialSelecionado(material: MaterialSimples): void {
+    this.materialParaResumo = material;
+    this.modalSelecaoMaterialAberto = false;
+
+    // ✅ AGORA GERAMOS O RESUMO AUTOMATICAMENTE
+    this.gerarResumoAutomatico(material);
+  }
+
+  /**
+   * Gera resumo automático usando o backend
+   */
+  // NO COMPONENTE, ADICIONE LOGS PARA DEBUG:
+  gerarResumoAutomatico(material: MaterialSimples): void {
+    this.isLoading = true;
+    this.errorMessage = null;
+
+    const comandoParaApi: CriarResumoDeMaterialCommand = {
+      materialId: material.id,
+      disciplinaId: this.disciplinaId!
+    };
+
+    // ✅ 1. CRIAR RESUMO OTIMISTA
+    const resumoOptimista: ResumoSimples = {
+      id: `temp-${Date.now()}`,
+      titulo: `Gerando resumo para ${material.nomeArquivo}...`,
+      materialId: material.id,
+      dataCriacao: new Date().toISOString()
+    };
+
+    // ✅ 2. ATUALIZAÇÃO IMUTÁVEL DA LISTA
+    this.atualizarListaResumosOptimista(resumoOptimista);
+
+    // ✅ 3. CHAMADA PARA API
+    this.disciplinaService.gerarResumoAutomatico(comandoParaApi).subscribe({
+      next: (resumoReal: ResumoResponse) => {
+        this.isLoading = false;
+
+        // ✅ 4. SUBSTITUIR RESUMO OTIMISTA PELO REAL
+        this.substituirResumoOptimista(resumoOptimista.id, resumoReal);
+
+        this.mostrarMensagemSucesso(`Resumo para "${material.nomeArquivo}" criado com sucesso!`);
+      },
+      error: (err) => {
+        this.isLoading = false;
+
+        // ✅ 5. REMOVER RESUMO OTIMISTA EM CASO DE ERRO
+        this.removerResumoOptimista(resumoOptimista.id);
+
+        console.error('❌ ERRO DETALHADO:', err);
+        this.errorMessage = 'Erro ao gerar resumo automático. Tente novamente.';
+      }
+    });
+  }
+  /**
+   * Método auxiliar: Adiciona resumo otimista à lista
+   */
+  private atualizarListaResumosOptimista(resumoOptimista: ResumoSimples): void {
+    if (!this.disciplina) return;
+
+    // ✅ ATUALIZAÇÃO IMUTÁVEL - Angular detecta a mudança
+    this.disciplina = {
+      ...this.disciplina,
+      resumos: [resumoOptimista, ...this.disciplina.resumos]
+    };
+  }
+
+  /**
+ * Navega para a página de detalhes do resumo
+ */
+  abrirResumo(resumo: ResumoSimples): void {
+    // ✅ Verifica se é um resumo temporário (ainda gerando)
+    if (resumo.id.startsWith('temp-')) {
+      return;
+    }
+
+    // ✅ Navega para a página dedicada do resumo
+    this.router.navigate(['/resumos', resumo.id]);
+  }
+
+  /**
+     * Método auxiliar: Substitui resumo otimista pelo real
+     */
+  private substituirResumoOptimista(idTemporario: string, resumoReal: ResumoResponse): void {
+    if (!this.disciplina) return;
+
+    // ✅ CONVERTE ResumoResponse PARA ResumoSimples
+    const resumoSimples: ResumoSimples = {
+      id: resumoReal.id,
+      titulo: resumoReal.titulo,
+      materialId: resumoReal.materialId,
+      dataCriacao: resumoReal.dataCriacao
+    };
+
+    // ✅ SUBSTITUI IMUTAVELMENTE
+    this.disciplina = {
+      ...this.disciplina,
+      resumos: this.disciplina.resumos.map(resumo =>
+        resumo.id === idTemporario ? resumoSimples : resumo
+      )
+    };
+  }
+
+  /**
+  * Método auxiliar: Remove resumo otimista em caso de erro
+  */
+  private removerResumoOptimista(idTemporario: string): void {
+    if (!this.disciplina) return;
+
+    this.disciplina = {
+      ...this.disciplina,
+      resumos: this.disciplina.resumos.filter(resumo => resumo.id !== idTemporario)
+    };
+  }
+  /**
+   * Mostra mensagem de sucesso (simples por enquanto)
+   */
+  mostrarMensagemSucesso(mensagem: string): void {
+    // Implementação simples - você pode melhorar com toast/snackbar depois
+    alert(mensagem);
+  }
+
+  /**
+   * Abre o modal de criação de resumo (próxima etapa)
+   * @param material Material selecionado para criar o resumo
+   */
+  abrirModalCriacaoResumo(material: MaterialSimples): void {
+    // ✅ Este método será implementado quando criarmos o GerarResumoModal
+    console.log('Abrir modal de criação de resumo para:', material.nomeArquivo);
+    // TODO: Implementar abertura do modal de criação de resumo
+  }
+
 
   // MÉTODOS AUXILIARES PARA OS DADOS (ADICIONAR)
   getQuantidadeResumos(material: MaterialSimples): number {
