@@ -7,11 +7,11 @@
 
     <div class="px-6 py-4 border-b border-gray-200/70 flex justify-between items-center">
       <div>
-        <h3 class="text-lg font-semibold text-gray-900">Criar novo resumo</h3>
+        <h3 class="text-lg font-semibold text-gray-600">Criar novo resumo</h3>
         <p class="text-sm text-gray-500">Selecione o material que deseja resumir</p>
       </div>
       <button (click)="onFecharModal()" 
-              class="text-gray-400 hover:text-gray-600 transition-colors">
+              class="text-gray-600 hover:text-gray-600 transition-colors">
         <fa-icon [icon]="faTimes"></fa-icon>
       </button>
     </div>
@@ -20,11 +20,11 @@
       <div class="space-y-4">
         
         <div>
-          <label for="disciplina-select" class="block text-sm font-medium text-gray-700 mb-1">
+          <label for="disciplina-select" class="block text-sm font-medium text-gray-600 mb-1">
             Passo 1: Escolha a disciplina
           </label>
           <select id="disciplina-select"
-                  class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  class="block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                   [(ngModel)]="selectedDisciplinaId"
                   (ngModelChange)="onDisciplinaChange()">
             

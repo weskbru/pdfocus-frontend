@@ -6,6 +6,7 @@ import { DashboardService, DashboardEstatisticasResponse, MaterialRecenteRespons
 
 // Importa o novo modal de resumo criado para este dashboard
 import { NovoResumoDashboardModalComponent } from './components/novo-resumo-modal/novo-resumo-modal'; 
+import { AdicionarMaterialModalComponent } from './components/adicionar-material-modal/adicionar-material-modal';
 
 /**
  * Componente principal do Dashboard.
@@ -18,7 +19,8 @@ import { NovoResumoDashboardModalComponent } from './components/novo-resumo-moda
   imports: [
     CommonModule, 
     RouterModule, 
-    NovoResumoDashboardModalComponent // O modal é importado como um componente standalone
+    NovoResumoDashboardModalComponent,
+    AdicionarMaterialModalComponent
   ], 
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.css']
@@ -37,7 +39,7 @@ export class Dashboard implements OnInit {
   public quickActions = [
     { label: 'Nova Disciplina', icon: '📚', color: 'bg-blue-100', route: '/disciplinas/nova' },
     { label: 'Novo Resumo', icon: '📝', color: 'bg-green-100', route: null }, // 'null' indica que a ação abre um modal
-    { label: 'Adicionar Material', icon: '📎', color: 'bg-purple-100', route: '/materiais/novo' },
+    { label: 'Adicionar Material', icon: '📎', color: 'bg-purple-100', route: null },
     { label: 'Ver Disciplinas', icon: '📂', color: 'bg-orange-100', route: '/disciplinas' }
   ];
 
@@ -46,6 +48,9 @@ export class Dashboard implements OnInit {
 
   /** Controla a visibilidade (aberto/fechado) do modal de novo resumo. */
   public isNovoResumoModalOpen = false;
+
+/** Controla a visibilidade do modal de adicionar material. */
+  public isAdicionarMaterialModalOpen = false;
 
   // --- Construtor ---
   constructor(
@@ -79,10 +84,17 @@ export class Dashboard implements OnInit {
       // Se a ação TEM uma rota, navega para ela.
       this.router.navigate([action.route]);
     } else if (action.label === 'Novo Resumo') {
-      // Se NÃO tem rota E é "Novo Resumo", abre o modal.
+      // Se NÃO tem rota E é "Novo Resumo", abre o modal de resumo.
       this.isNovoResumoModalOpen = true;
+    } 
+    // <-- MUDANÇA 5: Adicionar o 'else if' para o novo modal
+    else if (action.label === 'Adicionar Material') {
+      // Se NÃO tem rota E é "Adicionar Material", abre o modal de upload.
+      this.isAdicionarMaterialModalOpen = true;
     }
   }
+
+
 
   /**
    * Realiza o logout do usuário e o redireciona para a página de login.
