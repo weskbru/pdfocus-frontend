@@ -1,0 +1,41 @@
+<div *ngIf="isOpen"
+    class="fixed inset-0 bg-black/5 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-opacity duration-300"
+    (click)="onClose()">
+
+    <div class="relative bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden animate-modal-in"
+        (click)="$event.stopPropagation()">
+
+        <div class="px-6 py-4 border-b border-gray-200/70 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
+                    <fa-icon [icon]="faExclamationTriangle" class="text-yellow-600"></fa-icon>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900">{{ title }}</h3>
+                </div>
+            </div>
+            <button type="button" (click)="onClose()" class="text-gray-400 hover:text-gray-600 transition-colors"
+                aria-label="Fechar modal">
+                <fa-icon [icon]="faTimes"></fa-icon>
+            </button>
+        </div>
+
+        <div class="p-6">
+            <p class="text-gray-700 text-center">{{ message }}</p>
+        </div>
+
+        <div class="px-6 py-4 border-t border-gray-200/70 bg-gray-50 flex justify-end space-x-3">
+            <button type="button" (click)="onClose()"
+                class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                Cancelar
+            </button>
+
+            <button type="button" (click)="onAction()"
+                class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors flex items-center">
+                <fa-icon [icon]="faPlus" class="mr-2"></fa-icon>
+                Criar Disciplina Agora
+            </button>
+        </div>
+
+    </div>
+</div>

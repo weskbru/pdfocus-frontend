@@ -1,4 +1,4 @@
-<div *ngIf="isOpen" 
+<div *ngIf="isOpen"
      class="fixed inset-0 bg-black/5 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-opacity duration-300"
      (click)="onFecharModal()">
 
@@ -17,7 +17,7 @@
             <p class="text-sm text-gray-500">Organize seus estudos criando uma nova disciplina.</p>
           </div>
         </div>
-        <button type="button" (click)="onFecharModal()" 
+        <button type="button" (click)="onFecharModal()"
                 [disabled]="isSubmitting"
                 class="text-gray-400 hover:text-gray-600 transition-colors"
                 aria-label="Fechar modal">
@@ -39,8 +39,7 @@
             </label>
             <input id="disciplina-nome"
                    type="text"
-                   class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                   [(ngModel)]="nome"
+                   class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400" [(ngModel)]="nome"
                    name="nome"
                    placeholder="Ex: Cálculo I, Direito Constitucional"
                    [disabled]="isSubmitting"
@@ -52,18 +51,18 @@
               <label for="disciplina-descricao" class="block text-sm font-medium text-gray-700">
                 Descrição (Opcional)
               </label>
-              <button type="button" 
+              <button type="button"
                       class="px-2 py-1 text-xs font-medium text-blue-600 bg-blue-50 rounded-md hover:bg-blue-100 disabled:opacity-50 disabled:cursor-not-allowed"
                       title="Funcionalidade futura"
-                      disabled> <fa-icon [icon]="faMagic" class="mr-1"></fa-icon>
+                      disabled>
+                <fa-icon [icon]="faMagic" class="mr-1"></fa-icon>
                 Gerar com IA
               </button>
             </div>
-            
+
             <textarea id="disciplina-descricao"
                       rows="3"
-                      class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                      [(ngModel)]="descricao"
+                      class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400" [(ngModel)]="descricao"
                       name="descricao"
                       [disabled]="isSubmitting"
                       placeholder="Descreva os principais tópicos ou objetivos desta disciplina."></textarea>
@@ -78,13 +77,13 @@
                 class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50">
           Cancelar
         </button>
-        
+
         <button type="submit"
-                [disabled]="!nome || isSubmitting" 
+                [disabled]="!nome || isSubmitting"
                 class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors flex items-center">
-          
+
           <fa-icon *ngIf="isSubmitting" [icon]="faSpinner" class="animate-spin -ml-1 mr-2"></fa-icon>
-          
+
           <span>{{ isSubmitting ? 'Criando...' : 'Criar Disciplina' }}</span>
         </button>
       </div>

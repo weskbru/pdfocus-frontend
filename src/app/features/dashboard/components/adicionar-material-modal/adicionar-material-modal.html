@@ -1,4 +1,4 @@
-<div *ngIf="isOpen" 
+<div *ngIf="isOpen"
      class="fixed inset-0 bg-black/5 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-opacity duration-300"
      (click)="onFecharModal()">
 
@@ -7,10 +7,10 @@
 
     <div class="px-6 py-4 border-b border-gray-200/70 flex justify-between items-center">
       <div>
-        <h3 class="text-lg font-semibold text-gray-600">Adicionar novo material</h3>
+        <h3 class="text-lg font-semibold text-gray-900">Adicionar novo material</h3>
         <p class="text-sm text-gray-500">Selecione a disciplina e envie seu arquivo.</p>
       </div>
-      <button (click)="onFecharModal()" 
+      <button (click)="onFecharModal()"
               class="text-gray-400 hover:text-gray-600 transition-colors"
               [disabled]="isUploading"
               aria-label="Fechar modal">
@@ -20,16 +20,16 @@
 
     <div class="p-6 overflow-y-auto">
       <div class="space-y-4">
-        
+
         <div>
-          <label for="disciplina-upload-select" class="block text-sm font-medium text-gray-600 mb-1">
+          <label for="disciplina-upload-select" class="block text-sm font-medium text-gray-700 mb-1">
             Passo 1: Escolha a disciplina
           </label>
           <select id="disciplina-upload-select"
-                  class="block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                   [(ngModel)]="selectedDisciplinaId"
                   [disabled]="isUploading">
-            
+
             <option [ngValue]="null" disabled>
               {{ isLoadingDisciplinas ? 'Carregando disciplinas...' : 'Selecione uma disciplina' }}
             </option>
@@ -43,25 +43,25 @@
           <label for="file-upload-modal" class="block text-sm font-medium text-gray-700 mb-1">
             Passo 2: Escolha o arquivo
           </label>
-          
+
           <label *ngIf="!selectedFile"
                  id="file-upload-modal-label"
                  class="relative cursor-pointer bg-white rounded-lg border-2 border-dashed border-gray-300 flex flex-col items-center justify-center p-6 text-center hover:border-blue-500 transition-colors"
                  [class.opacity-50]="!selectedDisciplinaId"
                  [class.cursor-not-allowed]="!selectedDisciplinaId">
-            
+
             <fa-icon [icon]="faCloudUploadAlt" class="text-blue-500 text-3xl mb-3"></fa-icon>
             <p class="text-blue-600 font-semibold">Clique para escolher um ficheiro</p>
             <p class="text-xs text-gray-500 mt-1">PDF, DOCX, PPTX</p>
-            
-            <input id="file-upload-modal" 
-                   type="file" 
-                   class="sr-only" 
+
+            <input id="file-upload-modal"
+                   type="file"
+                   class="sr-only"
                    (change)="onFileSelected($event)"
                    [disabled]="!selectedDisciplinaId || isUploading"
                    accept=".pdf,.docx,.pptx">
           </label>
-          
+
           <div *ngIf="selectedFile" class="mt-2 p-3 bg-gray-50 rounded-lg border border-gray-200">
             <div class="flex items-center justify-between">
               <div class="flex items-center space-x-3 min-w-0">
@@ -71,7 +71,7 @@
                   <p class="text-xs text-gray-500">{{ formatFileSize(selectedFile.size) }}</p>
                 </div>
               </div>
-              <button *ngIf="!isUploading" (click)="removerArquivoSelecionado()" 
+              <button *ngIf="!isUploading" (click)="removerArquivoSelecionado()"
                       class="text-gray-400 hover:text-red-500 transition-colors flex-shrink-0 ml-2">
                 <fa-icon [icon]="faTimes"></fa-icon>
               </button>
@@ -79,7 +79,7 @@
             </div>
 
             <div *ngIf="isUploading" class="mt-2 w-full bg-gray-200 rounded-full h-1.5">
-              <div class="bg-blue-600 h-1.5 rounded-full" 
+              <div class="bg-blue-600 h-1.5 rounded-full"
                    [style.width.%]="uploadProgress">
               </div>
             </div>
@@ -89,7 +89,7 @@
             <fa-icon [icon]="faCheck" class="mr-2"></fa-icon>
             <span>Material enviado com sucesso!</span>
           </div>
-          
+
           <div *ngIf="uploadError" class="mt-2 text-red-600 text-sm flex items-center">
             <fa-icon [icon]="faExclamationTriangle" class="mr-2"></fa-icon>
             <span>{{ uploadError }}</span>
@@ -105,13 +105,13 @@
               class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50">
         {{ uploadSuccess ? 'Fechar' : 'Cancelar' }}
       </button>
-      
+
       <button (click)="fazerUpload()"
-              [disabled]="!selectedDisciplinaId || !selectedFile || isUploading || uploadSuccess" 
+              [disabled]="!selectedDisciplinaId || !selectedFile || isUploading || uploadSuccess"
               class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors flex items-center">
-        
+
         <fa-icon *ngIf="isUploading" [icon]="faSpinner" class="animate-spin -ml-1 mr-2"></fa-icon>
-        
+
         <span>{{ isUploading ? ('Enviando ' + uploadProgress + '%') : 'Fazer Upload' }}</span>
       </button>
     </div>

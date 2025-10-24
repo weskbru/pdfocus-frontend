@@ -8,7 +8,7 @@ import { DashboardService, DashboardEstatisticasResponse, MaterialRecenteRespons
 import { NovoResumoDashboardModalComponent } from './components/novo-resumo-modal/novo-resumo-modal';
 import { AdicionarMaterialModalComponent } from './components/adicionar-material-modal/adicionar-material-modal';
 import { CriarDisciplinaModalComponent } from './components/criar-disciplina-modal/criar-disciplina-modal';
-
+import { InfoModalComponent } from './components/info-modal/info-modal';
 /**
  * Componente principal do Dashboard.
  * Exibe um resumo das estatísticas do usuário, ações rápidas e materiais recentes.
@@ -22,7 +22,8 @@ import { CriarDisciplinaModalComponent } from './components/criar-disciplina-mod
     RouterModule,
     NovoResumoDashboardModalComponent,
     AdicionarMaterialModalComponent,
-    CriarDisciplinaModalComponent
+    CriarDisciplinaModalComponent,
+    InfoModalComponent
   ],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.css']
@@ -48,12 +49,17 @@ export class Dashboard implements OnInit {
   /** Lista de materiais adicionados recentemente. */
   public recentMateriais: MaterialRecenteResponse[] = [];
 
+
+  // --- Flags de Controle dos Modais ---
   /** Controla a visibilidade (aberto/fechado) do modal de novo resumo. */
   public isNovoResumoModalOpen = false;
   /** Controla a visibilidade do modal de criar disciplina. */
   public isCriarDisciplinaModalOpen = false;
   /** Controla a visibilidade do modal de adicionar material. */
   public isAdicionarMaterialModalOpen = false;
+  public isInfoModalOpen = false;
+  public infoModalTitle = '';
+  public infoModalMessage = '';
 
   // --- Construtor ---
   constructor(
@@ -85,19 +91,44 @@ export class Dashboard implements OnInit {
   handleActionClick(action: { label: string, route: string | null }): void {
 
     if (action.route) {
-      // Caso 1: Ação tem uma rota (ex: "Ver Disciplinas")
       this.router.navigate([action.route]);
     } else if (action.label === 'Nova Disciplina') {
-      // Caso 2: É "Nova Disciplina", abre o modal de criação
       this.isCriarDisciplinaModalOpen = true;
-    } else if (action.label === 'Novo Resumo') {
-      // Caso 3: É "Novo Resumo", abre o modal de resumo
-      this.isNovoResumoModalOpen = true;
-    } else if (action.label === 'Adicionar Material') {
-      // Caso 4: É "Adicionar Material", abre o modal de upload
-      this.isAdicionarMaterialModalOpen = true;
     }
+    // ---Lógica do "Novo Resumo" atualizada ---
+    else if (action.label === 'Novo Resumo') {
+      // VERIFICA SE EXISTEM DISCIPLINAS
+      if (this.stats.totalDisciplinas > 0) {
+        // Se sim, abre o modal de novo resumo normalmente
+        this.isNovoResumoModalOpen = true;
+      } else {
+        // Se não, configura e abre o MODAL DE AVISO
+        this.infoModalTitle = 'Crie uma Disciplina Primeiro';
+        this.infoModalMessage = 'Você precisa ter pelo menos uma disciplina criada para poder adicionar um resumo.';
+        this.isInfoModalOpen = true;
+      }
+    } 
+    else if (action.label === 'Adicionar Material') {
+       // A lógica aqui pode precisar da mesma verificação se fizer sentido
+       if (this.stats.totalDisciplinas > 0) {
+           this.isAdicionarMaterialModalOpen = true; // Abre modal de upload
+       } else {
+           // Se não, configura e abre o MODAL DE AVISO (reaproveitando)
+           this.infoModalTitle = 'Crie uma Disciplina Primeiro';
+           this.infoModalMessage = 'Você precisa ter pelo menos uma disciplina criada para poder adicionar um material.';
+           this.isInfoModalOpen = true;
+       }
+    }
+  }
 
+  // --- função para lidar com a ação do modal de aviso ---
+  /**
+   * Chamado quando o usuário clica no botão principal do modal de aviso.
+   * Fecha o modal de aviso e abre o modal de criar disciplina.
+   */
+  handleInfoModalAction(): void {
+    this.isInfoModalOpen = false; // Fecha o aviso
+    this.isCriarDisciplinaModalOpen = true; // Abre o de criar disciplina
   }
 
   /**
