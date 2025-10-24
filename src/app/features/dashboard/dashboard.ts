@@ -5,8 +5,9 @@ import { AuthService } from '../../core/auth';
 import { DashboardService, DashboardEstatisticasResponse, MaterialRecenteResponse } from './dashboard.service';
 
 // Importa o novo modal de resumo criado para este dashboard
-import { NovoResumoDashboardModalComponent } from './components/novo-resumo-modal/novo-resumo-modal'; 
+import { NovoResumoDashboardModalComponent } from './components/novo-resumo-modal/novo-resumo-modal';
 import { AdicionarMaterialModalComponent } from './components/adicionar-material-modal/adicionar-material-modal';
+import { CriarDisciplinaModalComponent } from './components/criar-disciplina-modal/criar-disciplina-modal';
 
 /**
  * Componente principal do Dashboard.
@@ -17,11 +18,12 @@ import { AdicionarMaterialModalComponent } from './components/adicionar-material
   selector: 'app-dashboard',
   standalone: true,
   imports: [
-    CommonModule, 
-    RouterModule, 
+    CommonModule,
+    RouterModule,
     NovoResumoDashboardModalComponent,
-    AdicionarMaterialModalComponent
-  ], 
+    AdicionarMaterialModalComponent,
+    CriarDisciplinaModalComponent
+  ],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.css']
 })
@@ -34,11 +36,11 @@ export class Dashboard implements OnInit {
 
   /** Objeto com as estatísticas (disciplinas, resumos, materiais). */
   public stats: DashboardEstatisticasResponse = { totalDisciplinas: 0, resumosCriados: 0, totalMateriais: 0 };
-  
+
   /** Lista de ações rápidas exibidas nos cards. */
   public quickActions = [
-    { label: 'Nova Disciplina', icon: '📚', color: 'bg-blue-100', route: '/disciplinas/nova' },
-    { label: 'Novo Resumo', icon: '📝', color: 'bg-green-100', route: null }, // 'null' indica que a ação abre um modal
+    { label: 'Nova Disciplina', icon: '📚', color: 'bg-blue-100', route: null },// 'null' indica que a ação abre um modal
+    { label: 'Novo Resumo', icon: '📝', color: 'bg-green-100', route: null },
     { label: 'Adicionar Material', icon: '📎', color: 'bg-purple-100', route: null },
     { label: 'Ver Disciplinas', icon: '📂', color: 'bg-orange-100', route: '/disciplinas' }
   ];
@@ -48,8 +50,9 @@ export class Dashboard implements OnInit {
 
   /** Controla a visibilidade (aberto/fechado) do modal de novo resumo. */
   public isNovoResumoModalOpen = false;
-
-/** Controla a visibilidade do modal de adicionar material. */
+  /** Controla a visibilidade do modal de criar disciplina. */
+  public isCriarDisciplinaModalOpen = false;
+  /** Controla a visibilidade do modal de adicionar material. */
   public isAdicionarMaterialModalOpen = false;
 
   // --- Construtor ---
@@ -80,21 +83,22 @@ export class Dashboard implements OnInit {
    * @param action O objeto da ação clicada (do array 'quickActions').
    */
   handleActionClick(action: { label: string, route: string | null }): void {
+
     if (action.route) {
-      // Se a ação TEM uma rota, navega para ela.
+      // Caso 1: Ação tem uma rota (ex: "Ver Disciplinas")
       this.router.navigate([action.route]);
+    } else if (action.label === 'Nova Disciplina') {
+      // Caso 2: É "Nova Disciplina", abre o modal de criação
+      this.isCriarDisciplinaModalOpen = true;
     } else if (action.label === 'Novo Resumo') {
-      // Se NÃO tem rota E é "Novo Resumo", abre o modal de resumo.
+      // Caso 3: É "Novo Resumo", abre o modal de resumo
       this.isNovoResumoModalOpen = true;
-    } 
-    // <-- MUDANÇA 5: Adicionar o 'else if' para o novo modal
-    else if (action.label === 'Adicionar Material') {
-      // Se NÃO tem rota E é "Adicionar Material", abre o modal de upload.
+    } else if (action.label === 'Adicionar Material') {
+      // Caso 4: É "Adicionar Material", abre o modal de upload
       this.isAdicionarMaterialModalOpen = true;
     }
+
   }
-
-
 
   /**
    * Realiza o logout do usuário e o redireciona para a página de login.
@@ -112,8 +116,8 @@ export class Dashboard implements OnInit {
   private carregarDadosDoUsuario(): void {
     this.authService.buscarUsuarioLogado().subscribe({
       next: (dadosDoUsuario) => { this.userName = dadosDoUsuario.nome; },
-      error: (err) => { 
-        console.error('Erro ao buscar dados do usuário:', err); 
+      error: (err) => {
+        console.error('Erro ao buscar dados do usuário:', err);
         this.fazerLogout(); // Desloga o usuário se houver erro (ex: token expirado)
       }
     });

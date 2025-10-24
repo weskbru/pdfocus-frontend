@@ -24,22 +24,6 @@ export const routes: Routes = [
       canActivate: [authGuard]
   },
 
-  // Rotas de redirecionamento (devem ficar por último para funcionar corretamente)
-  {
-    path: 'disciplinas/nova',
-    loadComponent: () => import('./features/disciplinas/pages/disciplina-form/disciplina-form')
-      .then(m => m.DisciplinaForm),
-    canActivate: [authGuard] // Protegemos a rota para que só utilizadores logados possam criar disciplinas
-  },
-
-  {
-    // O `:id` é um parâmetro que conterá o UUID da disciplina.
-    path: 'disciplinas/editar/:id', 
-    loadComponent: () => import('./features/disciplinas/pages/disciplina-form/disciplina-form')
-      .then(m => m.DisciplinaForm),
-    canActivate: [authGuard]
-  },
-
   // Rota para a página de listagem de disciplinas (também protegida)
    {
     path: 'disciplinas',

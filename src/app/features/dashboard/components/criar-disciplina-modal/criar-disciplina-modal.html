@@ -1,0 +1,93 @@
+<div *ngIf="isOpen" 
+     class="fixed inset-0 bg-black/5 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-opacity duration-300"
+     (click)="onFecharModal()">
+
+  <div class="relative bg-white rounded-xl shadow-2xl w-full max-w-lg overflow-hidden animate-modal-in"
+       (click)="$event.stopPropagation()">
+
+    <form (ngSubmit)="onSubmit()">
+
+      <div class="px-6 py-4 border-b border-gray-200/70 flex justify-between items-center">
+        <div class="flex items-center space-x-3">
+          <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+            <fa-icon [icon]="faPencilAlt" class="text-blue-600"></fa-icon>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold text-gray-900">Nova Disciplina</h3>
+            <p class="text-sm text-gray-500">Organize seus estudos criando uma nova disciplina.</p>
+          </div>
+        </div>
+        <button type="button" (click)="onFecharModal()" 
+                [disabled]="isSubmitting"
+                class="text-gray-400 hover:text-gray-600 transition-colors"
+                aria-label="Fechar modal">
+          <fa-icon [icon]="faTimes"></fa-icon>
+        </button>
+      </div>
+
+      <div class="p-6 overflow-y-auto">
+        <div class="space-y-4">
+
+          <div *ngIf="errorMessage" class="p-3 bg-red-50 border border-red-200 rounded-lg flex items-center text-sm">
+            <fa-icon [icon]="faExclamationTriangle" class="text-red-600 mr-2"></fa-icon>
+            <span class="text-red-800">{{ errorMessage }}</span>
+          </div>
+
+          <div>
+            <label for="disciplina-nome" class="block text-sm font-medium text-gray-700 mb-1">
+              Nome da Disciplina <span class="text-red-500">*</span>
+            </label>
+            <input id="disciplina-nome"
+                   type="text"
+                   class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                   [(ngModel)]="nome"
+                   name="nome"
+                   placeholder="Ex: Cálculo I, Direito Constitucional"
+                   [disabled]="isSubmitting"
+                   required>
+          </div>
+
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <label for="disciplina-descricao" class="block text-sm font-medium text-gray-700">
+                Descrição (Opcional)
+              </label>
+              <button type="button" 
+                      class="px-2 py-1 text-xs font-medium text-blue-600 bg-blue-50 rounded-md hover:bg-blue-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                      title="Funcionalidade futura"
+                      disabled> <fa-icon [icon]="faMagic" class="mr-1"></fa-icon>
+                Gerar com IA
+              </button>
+            </div>
+            
+            <textarea id="disciplina-descricao"
+                      rows="3"
+                      class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      [(ngModel)]="descricao"
+                      name="descricao"
+                      [disabled]="isSubmitting"
+                      placeholder="Descreva os principais tópicos ou objetivos desta disciplina."></textarea>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="px-6 py-4 border-t border-gray-200/70 bg-gray-50 flex justify-end space-x-3">
+        <button type="button" (click)="onFecharModal()"
+                [disabled]="isSubmitting"
+                class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50">
+          Cancelar
+        </button>
+        
+        <button type="submit"
+                [disabled]="!nome || isSubmitting" 
+                class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors flex items-center">
+          
+          <fa-icon *ngIf="isSubmitting" [icon]="faSpinner" class="animate-spin -ml-1 mr-2"></fa-icon>
+          
+          <span>{{ isSubmitting ? 'Criando...' : 'Criar Disciplina' }}</span>
+        </button>
+      </div>
+
+    </form> </div>
+</div>
