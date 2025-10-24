@@ -7,7 +7,9 @@
         <div class="flex items-center space-x-3">
           <div class="w-8 h-8 bg-red-600 rounded-lg flex items-center justify-center">
             <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+              </path>
             </svg>
           </div>
           <h1 class="text-xl font-bold text-gray-800">PDFocus</h1>
@@ -15,12 +17,14 @@
 
         <!-- User Menu -->
         <div class="flex items-center space-x-4">
-          <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white text-sm font-semibold uppercase">
+          <div
+            class="w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white text-sm font-semibold uppercase">
             {{ userName.charAt(0) }}
           </div>
           <button (click)="fazerLogout()" class="p-2 text-gray-600 hover:text-red-600 transition-colors" title="Sair">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
             </svg>
           </button>
         </div>
@@ -38,36 +42,35 @@
 
     <!-- Stats Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-            <p class="text-sm font-medium text-gray-600">Total de Disciplinas</p>
-            <p class="text-2xl font-bold text-gray-800">{{ stats.totalDisciplinas }}</p>
-        </div>
-        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-            <p class="text-sm font-medium text-gray-600">Resumos Criados</p>
-            <p class="text-2xl font-bold text-gray-800">{{ stats.resumosCriados }}</p>
-        </div>
-        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-            <p class="text-sm font-medium text-gray-600">Total de Materiais</p>
-            <p class="text-2xl font-bold text-gray-800">{{ stats.totalMateriais }}</p>
-        </div>
-        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-            <p class="text-sm font-medium text-gray-600">Armazenamento</p>
-            <p class="text-2xl font-bold text-gray-800">N/A</p>
-        </div>
+      <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+        <p class="text-sm font-medium text-gray-600">Total de Disciplinas</p>
+        <p class="text-2xl font-bold text-gray-800">{{ stats.totalDisciplinas }}</p>
+      </div>
+      <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+        <p class="text-sm font-medium text-gray-600">Resumos Criados</p>
+        <p class="text-2xl font-bold text-gray-800">{{ stats.resumosCriados }}</p>
+      </div>
+      <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+        <p class="text-sm font-medium text-gray-600">Total de Materiais</p>
+        <p class="text-2xl font-bold text-gray-800">{{ stats.totalMateriais }}</p>
+      </div>
+      <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+        <p class="text-sm font-medium text-gray-600">Armazenamento</p>
+        <p class="text-2xl font-bold text-gray-800">N/A</p>
+      </div>
     </div>
 
     <!-- Quick Actions -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-      <a *ngFor="let action of quickActions" 
-         [routerLink]="action.route"
-         class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow cursor-pointer block no-underline">
+      <div *ngFor="let action of quickActions" (click)="handleActionClick(action)"
+        class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow cursor-pointer block no-underline">
         <div class="text-center">
           <div class="w-16 h-16 {{ action.color }} rounded-xl flex items-center justify-center mx-auto mb-4">
             <span class="text-2xl">{{ action.icon }}</span>
           </div>
           <h3 class="font-semibold text-gray-800">{{ action.label }}</h3>
         </div>
-      </a>
+      </div>
     </div>
 
     <!-- Materiais Recentes -->
@@ -75,7 +78,7 @@
       <div class="px-6 py-4 border-b border-gray-200">
         <h3 class="text-lg font-semibold text-gray-800">Materiais Recentes</h3>
       </div>
-      
+
       <div class="divide-y divide-gray-100">
         <div *ngFor="let material of recentMateriais" class="px-6 py-4 hover:bg-gray-50 transition-colors">
           <div class="flex items-center justify-between">
@@ -92,25 +95,34 @@
                 </p>
               </div>
             </div>
-            
+
             <div class="flex space-x-2">
               <button class="p-2 text-gray-400 hover:text-blue-600 transition-colors" title="Visualizar">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                  </path>
+                </svg>
               </button>
               <button class="p-2 text-gray-400 hover:text-green-600 transition-colors" title="Download">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                </svg>
               </button>
             </div>
           </div>
         </div>
-
         <!-- Mensagem para quando não há materiais -->
         <div *ngIf="recentMateriais.length === 0" class="px-6 py-8 text-center text-gray-500">
           <p>Você ainda não adicionou nenhum material.</p>
         </div>
-
       </div>
     </div>
   </main>
+  <!-- Modal novo resumo -->
+  <app-novo-resumo-modal [isOpen]="isNovoResumoModalOpen" (fecharModal)="isNovoResumoModalOpen = false">
+  </app-novo-resumo-modal>
 </div>
-
