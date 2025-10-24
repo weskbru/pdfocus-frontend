@@ -1,56 +1,83 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpEvent } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams, HttpEvent } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { AuthService } from '../../core/auth';
 
 // Interfaces para melhor organização (normalmente em arquivos separados)
-export interface DisciplinaResponse { 
-  id: string; 
-  nome: string; 
-  descricao: string; 
+export interface DisciplinaResponse {
+  id: string;
+  nome: string;
+  descricao: string;
 }
 
-export interface CriarDisciplinaCommand { 
-  nome: string; 
-  descricao: string; 
+export interface CriarDisciplinaCommand {
+  materialId: string;
+  disciplinaId: string;
+  titulo?: string;
+  conteudo?: string;
 }
 
-export interface AtualizarDisciplinaCommand { 
-  nome: string; 
-  descricao: string; 
+export interface AtualizarDisciplinaCommand {
+  nome: string;
+  descricao: string;
 }
 
-export interface MaterialResponse { 
-  id: string; 
-  nomeOriginal: string; 
-  tipoArquivo: string; 
-  tamanho: number; 
+export interface MaterialResponse {
+  id: string;
+  nomeOriginal: string;
+  tipoArquivo: string;
+  tamanho: number;
 }
 
-export interface ResumoSimples { 
-  id: string; 
-  titulo: string; 
+export interface ResumoSimples {
+  id: string;
+  titulo: string;
+  materialId: string;
+  dataCriacao: string;
 }
 
-export interface MaterialSimples { 
-  id: string; 
-  nomeArquivo: string; 
+export interface CriarResumoDeMaterialCommand {
+  materialId: string;
+  disciplinaId: string; // ✅ Adicione esta linha
+  titulo?: string;       // ✅ Adicione esta linha (opcional)
+  conteudo?: string;     // ✅ Adicione esta linha (opcional)
 }
 
-export interface DetalheDisciplinaResponse { 
-  id: string; 
-  nome: string; 
-  descricao: string; 
-  resumos: ResumoSimples[]; 
-  materiais: MaterialSimples[]; 
+export interface MaterialSimples {
+  id: string;
+  nomeArquivo: string;
+}
+
+export interface DetalheDisciplinaResponse {
+  id: string;
+  nome: string;
+  descricao: string;
+  resumos: ResumoSimples[];
+  materiais: Page<MaterialSimples>;
 }
 
 export interface UploadProgress {
   loaded: number;
   total: number;
   progress: number;
+}
+
+export interface Page<T> {
+  content: T[];
+  totalPages: number;
+  totalElements: number;
+  number: number;
+  size: number;
+}
+
+export interface ResumoResponse {
+  id: string;
+  titulo: string;
+  conteudo: string;
+  materialId: string;
+  dataCriacao: string;
 }
 
 /**
@@ -76,8 +103,8 @@ export class DisciplinaService {
    */
   private getAuthHeaders(): HttpHeaders {
     const token = this.authService.obterToken();
-    return new HttpHeaders({ 
-      'Authorization': `Bearer ${token}` 
+    return new HttpHeaders({
+      'Authorization': `Bearer ${token}`
     });
   }
 
@@ -88,21 +115,21 @@ export class DisciplinaService {
    */
   private handleError(error: any): Observable<never> {
     console.error('Erro na requisição:', error);
-    
+
     let errorMessage = 'Ocorreu um erro desconhecido';
-    
+
     if (error.error instanceof ErrorEvent) {
       // Erro do lado do cliente
       errorMessage = `Erro: ${error.error.message}`;
     } else {
       // Erro do lado do servidor
       errorMessage = `Erro ${error.status}: ${error.message}`;
-      
+
       if (error.error && error.error.message) {
         errorMessage = error.error.message;
       }
     }
-    
+
     return throwError(() => new Error(errorMessage));
   }
 
@@ -113,8 +140,8 @@ export class DisciplinaService {
    * @returns Observable com array de DisciplinaResponse
    */
   buscarDisciplinas(): Observable<DisciplinaResponse[]> {
-    return this.http.get<DisciplinaResponse[]>(this.disciplinasUrl, { 
-      headers: this.getAuthHeaders() 
+    return this.http.get<DisciplinaResponse[]>(this.disciplinasUrl, {
+      headers: this.getAuthHeaders()
     }).pipe(
       catchError(this.handleError)
     );
@@ -127,24 +154,34 @@ export class DisciplinaService {
    */
   buscarDisciplinaPorId(id: string): Observable<DisciplinaResponse> {
     const endpoint = `${this.disciplinasUrl}/${id}`;
-    
-    return this.http.get<DisciplinaResponse>(endpoint, { 
-      headers: this.getAuthHeaders() 
+
+    return this.http.get<DisciplinaResponse>(endpoint, {
+      headers: this.getAuthHeaders()
     }).pipe(
       catchError(this.handleError)
     );
   }
 
   /**
-   * Busca o "dossier completo" de uma disciplina, incluindo seus resumos e materiais.
-   * @param id - UUID da disciplina a ser buscada
-   * @returns Observable com DetalheDisciplinaResponse
+   * ✅ 5. MÉTODO ATUALIZADO PARA SUPORTAR PAGINAÇÃO
+   * Busca o "dossier completo" de uma disciplina, incluindo uma página específica de materiais.
+   * @param id - UUID da disciplina a ser buscada.
+   * @param page - O número da página de materiais a ser buscada (base 0).
+   * @param size - O número de itens por página.
+   * @returns Observable com DetalheDisciplinaResponse.
    */
-  buscarDetalhesDisciplina(id: string): Observable<DetalheDisciplinaResponse> {
+  buscarDetalhesDisciplina(id: string, page: number = 0, size: number = 10): Observable<DetalheDisciplinaResponse> {
     const endpoint = `${this.disciplinasUrl}/${id}`;
-    
-    return this.http.get<DetalheDisciplinaResponse>(endpoint, { 
-      headers: this.getAuthHeaders() 
+
+    // Cria os parâmetros de query para a paginação (ex: ?page=0&size=10)
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+
+    // A requisição agora inclui os parâmetros de paginação
+    return this.http.get<DetalheDisciplinaResponse>(endpoint, {
+      headers: this.getAuthHeaders(),
+      params: params // Adiciona os parâmetros à requisição
     }).pipe(
       catchError(this.handleError)
     );
@@ -157,8 +194,8 @@ export class DisciplinaService {
    */
   criarDisciplina(dadosDisciplina: CriarDisciplinaCommand): Observable<DisciplinaResponse> {
     return this.http.post<DisciplinaResponse>(
-      this.disciplinasUrl, 
-      dadosDisciplina, 
+      this.disciplinasUrl,
+      dadosDisciplina,
       { headers: this.getAuthHeaders() }
     ).pipe(
       catchError(this.handleError)
@@ -173,10 +210,10 @@ export class DisciplinaService {
    */
   atualizarDisciplina(id: string, dadosDisciplina: AtualizarDisciplinaCommand): Observable<DisciplinaResponse> {
     const endpoint = `${this.disciplinasUrl}/${id}`;
-    
+
     return this.http.put<DisciplinaResponse>(
-      endpoint, 
-      dadosDisciplina, 
+      endpoint,
+      dadosDisciplina,
       { headers: this.getAuthHeaders() }
     ).pipe(
       catchError(this.handleError)
@@ -190,9 +227,9 @@ export class DisciplinaService {
    */
   deletarDisciplina(id: string): Observable<void> {
     const endpoint = `${this.disciplinasUrl}/${id}`;
-    
-    return this.http.delete<void>(endpoint, { 
-      headers: this.getAuthHeaders() 
+
+    return this.http.delete<void>(endpoint, {
+      headers: this.getAuthHeaders()
     }).pipe(
       catchError(this.handleError)
     );
@@ -227,9 +264,9 @@ export class DisciplinaService {
    */
   deletarMaterial(id: string): Observable<void> {
     const endpoint = `${this.materiaisUrl}/${id}`;
-    
-    return this.http.delete<void>(endpoint, { 
-      headers: this.getAuthHeaders() 
+
+    return this.http.delete<void>(endpoint, {
+      headers: this.getAuthHeaders()
     }).pipe(
       catchError(this.handleError)
     );
@@ -242,9 +279,9 @@ export class DisciplinaService {
    */
   buscarMaterialPorId(id: string): Observable<MaterialResponse> {
     const endpoint = `${this.materiaisUrl}/${id}`;
-    
-    return this.http.get<MaterialResponse>(endpoint, { 
-      headers: this.getAuthHeaders() 
+
+    return this.http.get<MaterialResponse>(endpoint, {
+      headers: this.getAuthHeaders()
     }).pipe(
       catchError(this.handleError)
     );
@@ -266,7 +303,7 @@ export class DisciplinaService {
    */
   downloadMaterial(id: string): Observable<Blob> {
     const endpoint = `${this.materiaisUrl}/${id}/download`;
-    
+
     return this.http.get(endpoint, {
       headers: this.getAuthHeaders(),
       responseType: 'blob'
@@ -275,25 +312,46 @@ export class DisciplinaService {
     );
   }
 
- /**
-   * Busca um arquivo de material para ser visualizado inline no navegador.
-   *
-   * @param id - O UUID do material.
-   * @returns um Observable com o blob do arquivo.
-   */
-visualizarMaterial(id: string): Observable<Blob> {
+  /**
+    * Busca um arquivo de material para ser visualizado inline no navegador.
+    *
+    * @param id - O UUID do material.
+    * @returns um Observable com o blob do arquivo.
+    */
+  visualizarMaterial(id: string): Observable<Blob> {
     const endpoint = `${this.materiaisUrl}/${id}/visualizar`;
-    
+
     // Cria headers com o token de autenticação
     const headers = this.getAuthHeaders();
-    
+
     return this.http.get(endpoint, {
       headers: headers,
       responseType: 'blob'
     }).pipe(
       catchError(this.handleError)
     );
-}
+  }
 
+  gerarResumoAutomatico(comando: CriarResumoDeMaterialCommand): Observable<ResumoResponse> {
+    const endpoint = `${this.apiBaseUrl}/resumos/gerar-automatico`; // O seu endpoint pode ser apenas /resumos
+
+    console.log('Enviando requisição para gerar resumo com o comando:', comando); // DEBUG
+
+    return this.http.post<ResumoResponse>(endpoint, comando, {
+      headers: this.getAuthHeaders()
+    }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  buscarResumoPorId(id: string): Observable<ResumoResponse> {
+    const endpoint = `${this.apiBaseUrl}/resumos/${id}`;
+
+    return this.http.get<ResumoResponse>(endpoint, {
+      headers: this.getAuthHeaders()
+    }).pipe(
+      catchError(this.handleError)
+    );
+  }
 
 }

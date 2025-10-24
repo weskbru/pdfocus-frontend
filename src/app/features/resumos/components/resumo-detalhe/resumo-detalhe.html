@@ -1,0 +1,53 @@
+<div class="min-h-screen bg-gray-50 py-8">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <!-- Header -->
+    <div class="mb-6">
+      <button 
+        routerLink="/disciplinas" 
+        class="inline-flex items-center text-sm text-blue-600 hover:text-blue-800 mb-4">
+        ← Voltar para disciplinas
+      </button>
+      
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div class="flex justify-between items-start">
+          <div>
+            <h1 class="text-2xl font-bold text-gray-900">{{ resumo?.titulo || 'Carregando...' }}</h1>
+            <p class="text-gray-500 mt-2" *ngIf="resumo">
+              Criado em: {{ resumo.dataCriacao | date:'dd/MM/yyyy \'às\' HH:mm' }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="text-center py-12">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+      <p class="text-gray-600 mt-4">Carregando resumo...</p>
+    </div>
+
+    <!-- Conteúdo do Resumo -->
+    <div *ngIf="resumo && !isLoading" class="bg-white rounded-lg shadow-sm border border-gray-200">
+      <div class="p-6">
+        <div class="prose max-w-none">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Conteúdo do Resumo</h3>
+          <div class="whitespace-pre-wrap text-gray-700 leading-relaxed">
+            {{ resumo.conteudo }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="errorMessage && !isLoading" class="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+      <p class="text-red-700">{{ errorMessage }}</p>
+      <button 
+        routerLink="/disciplinas" 
+        class="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+        Voltar para Disciplinas
+      </button>
+    </div>
+
+  </div>
+</div>

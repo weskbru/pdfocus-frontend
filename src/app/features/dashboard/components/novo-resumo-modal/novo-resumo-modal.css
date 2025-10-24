@@ -1,0 +1,23 @@
+/* Define a animação de "entrada" do modal.
+  Ela faz o modal ir de:
+  - opacidade 0 (invisível) e um pouco menor (scale(0.95))
+  - para opacidade 1 (visível) e tamanho normal (scale(1))
+*/
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Aplica a animação à classe que usamos no nosso HTML.
+  Qualquer elemento com a classe ".animate-modal-in"
+  terá esta animação de 0.2 segundos.
+*/
+.animate-modal-in {
+  animation: modal-in 0.2s ease-out;
+}

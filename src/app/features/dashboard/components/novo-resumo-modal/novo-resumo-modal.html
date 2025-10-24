@@ -1,0 +1,90 @@
+<div *ngIf="isOpen" 
+     class="fixed inset-0 bg-black/5 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-opacity duration-300"
+     (click)="onFecharModal()">
+
+  <div class="relative bg-white rounded-xl shadow-2xl w-full max-w-lg overflow-hidden animate-modal-in"
+       (click)="$event.stopPropagation()">
+
+    <div class="px-6 py-4 border-b border-gray-200/70 flex justify-between items-center">
+      <div>
+        <h3 class="text-lg font-semibold text-gray-600">Criar novo resumo</h3>
+        <p class="text-sm text-gray-500">Selecione o material que deseja resumir</p>
+      </div>
+      <button (click)="onFecharModal()" 
+              class="text-gray-600 hover:text-gray-600 transition-colors">
+        <fa-icon [icon]="faTimes"></fa-icon>
+      </button>
+    </div>
+
+    <div class="p-6 overflow-y-auto">
+      <div class="space-y-4">
+        
+        <div>
+          <label for="disciplina-select" class="block text-sm font-medium text-gray-600 mb-1">
+            Passo 1: Escolha a disciplina
+          </label>
+          <select id="disciplina-select"
+                  class="block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  [(ngModel)]="selectedDisciplinaId"
+                  (ngModelChange)="onDisciplinaChange()">
+            
+            <option [ngValue]="null" disabled>
+              {{ isLoadingDisciplinas ? 'Carregando disciplinas...' : 'Selecione uma disciplina' }}
+            </option>
+            
+            <option *ngFor="let d of disciplinas" [value]="d.id">
+              {{ d.nome }}
+            </option>
+          </select>
+        </div>
+
+        <div *ngIf="!semMateriais">
+          <label for="material-select" class="block text-sm font-medium text-gray-700 mb-1">
+            Passo 2: Escolha o material
+          </label>
+          <select id="material-select"
+                  class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  [(ngModel)]="selectedMaterialId"
+                  [disabled]="!selectedDisciplinaId || isLoadingMateriais">
+            
+            <option [ngValue]="null" disabled>
+              {{ isLoadingMateriais ? 'Carregando materiais...' : 'Selecione um material' }}
+            </option>
+
+            <option *ngFor="let m of materiais" [value]="m.id">
+              {{ m.nomeArquivo }}
+            </option>
+          </select>
+        </div>
+
+        <div *ngIf="semMateriais" class="text-center bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+          <h4 class="font-medium text-yellow-800">Nenhum material encontrado</h4>
+          <p class="text-sm text-yellow-700 mt-1 mb-3">
+            Você precisa adicionar um material a esta disciplina antes de poder criar um resumo.
+          </p>
+          
+          <button (click)="irParaDisciplina()"
+                  class="px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors">
+            <fa-icon [icon]="faPlus" class="mr-2"></fa-icon>
+            Adicionar Material
+          </button>
+        </div>
+        
+      </div>
+    </div>
+
+    <div class="px-6 py-4 border-t border-gray-200/70 bg-gray-50 flex justify-end space-x-3">
+      <button (click)="onFecharModal()"
+              class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+        Cancelar
+      </button>
+      
+      <button (click)="confirmarSelecao()"
+              [disabled]="!selectedMaterialId" 
+              class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors">
+        <fa-icon [icon]="faCheck" class="mr-2"></fa-icon>
+        Iniciar Resumo
+      </button>
+    </div>
+  </div>
+</div>
