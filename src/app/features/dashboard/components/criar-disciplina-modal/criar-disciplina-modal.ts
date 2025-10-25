@@ -37,7 +37,7 @@ export class CriarDisciplinaModalComponent implements OnChanges {
   @Output() fecharModal = new EventEmitter<void>();
   /** Emite quando uma disciplina é ATUALIZADA com sucesso. */
   @Output() disciplinaAtualizada = new EventEmitter<DisciplinaResponse>(); // Envia a disciplina atualizada
-
+  @Output() disciplinaCriada = new EventEmitter<DisciplinaResponse>();
   // --- Estado do Formulário ---
   public nome = '';
   public descricao = '';
@@ -142,17 +142,16 @@ export class CriarDisciplinaModalComponent implements OnChanges {
           console.error("Erro ao atualizar disciplina:", err);
         }
       });
-    } else {
-      // --- LÓGICA DE CRIAÇÃO (Existente) ---
-      const payload: CriarDisciplinaCommand = { // Use a interface correta
-        nome: this.nome,
-        descricao: this.descricao
-      };
+    } else {// --- LÓGICA DE CRIAÇÃO---
+      const payload: CriarDisciplinaCommand = { nome: this.nome, descricao: this.descricao };
       this.disciplinaService.criarDisciplina(payload).subscribe({
         next: (novaDisciplina) => {
           this.isSubmitting = false;
-          this.router.navigate(['/disciplinas']); // Redireciona para a lista
-          this.onFecharModal(); // Fecha o modal
+          // --- MUDANÇA: Emitir o evento ANTES de navegar ---
+          this.disciplinaCriada.emit(novaDisciplina);
+          // --- Fim da Mudança ---
+          this.router.navigate(['/disciplinas']); // Mantém a navegação
+          this.onFecharModal();
         },
         error: (err) => {
           this.isSubmitting = false;

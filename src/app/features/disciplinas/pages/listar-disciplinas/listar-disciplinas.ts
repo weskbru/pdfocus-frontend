@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common'; // Para *ngIf, *ngFor
 import { Router, RouterModule } from '@angular/router'; // Para navegação e routerLink
+import { FormsModule } from '@angular/forms';
 
 // --- Imports do FontAwesome ---
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
@@ -8,7 +9,7 @@ import { faCrown, faPlus, faFolderOpen, faFilter, faSortAlphaDown, faSearch, faB
 
 // --- Import do Modal (Ajuste o caminho se necessário) ---
 // Assumindo que o modal está em 'features/dashboard/components/...' e esta página está em 'features/disciplinas/pages/...'
-import { CriarDisciplinaModalComponent } from '../../../dashboard/components/criar-disciplina-modal/criar-disciplina-modal'; 
+import { CriarDisciplinaModalComponent } from '../../../dashboard/components/criar-disciplina-modal/criar-disciplina-modal';
 
 import { DisciplinaService, DisciplinaResponse } from '../../disciplina.service'; // Seu serviço
 
@@ -21,6 +22,7 @@ import { DisciplinaService, DisciplinaResponse } from '../../disciplina.service'
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     RouterModule,
     FontAwesomeModule,             // Módulo do FontAwesome
     CriarDisciplinaModalComponent  // O modal que será usado para criar/editar
@@ -34,6 +36,11 @@ export class ListarDisciplinas implements OnInit {
   public disciplinas: DisciplinaResponse[] = [];
   public isLoading = false;
   public errorMessage: string | null = null;
+  public disciplinasOriginais: DisciplinaResponse[] = []
+  // --- MUDANÇA 3: Propriedades para Filtro/Ordenação ---
+  public filtroSelecionado: string = 'todas'; // Para o dropdown de Filtro (futuro)
+  public ordemSelecionada: string = 'nome-az'; // Valor inicial para ordenação
+  public termoBusca: string = ''; // Valor inicial para o campo de busca
 
   // --- Propriedades do Modal de Deleção ---
   public disciplinaParaDeletar: DisciplinaResponse | null = null;
@@ -85,7 +92,7 @@ export class ListarDisciplinas implements OnInit {
     this.errorMessage = null;
     this.disciplinaService.buscarDisciplinas().subscribe({
       next: (data) => {
-        this.disciplinas = data;
+        this.disciplinasOriginais = data; // Armazena a lista original
         this.isLoading = false;
       },
       error: (err) => {
@@ -94,6 +101,33 @@ export class ListarDisciplinas implements OnInit {
         console.error('Erro ao buscar disciplinas:', err);
       }
     });
+  }
+
+  /**
+   * Retorna a lista de disciplinas filtrada pelo termo de busca e
+   * ordenada conforme a opção selecionada.
+   * Este getter é usado pelo *ngFor no template.
+   */
+  get disciplinasFiltradasEOrdenadas(): DisciplinaResponse[] {
+    let items = [...this.disciplinasOriginais]; // Sempre começa com a lista completa
+
+    // 1. Aplicar Filtro de Busca (case-insensitive no nome)
+    if (this.termoBusca && this.termoBusca.trim() !== '') {
+      const termoLower = this.termoBusca.toLowerCase().trim();
+      items = items.filter(disciplina =>
+        disciplina.nome.toLowerCase().includes(termoLower)
+      );
+    }
+
+    // 2. Aplicar Ordenação
+    if (this.ordemSelecionada === 'nome-az') {
+      items.sort((a, b) => a.nome.localeCompare(b.nome));
+    } else if (this.ordemSelecionada === 'nome-za') {
+      items.sort((a, b) => b.nome.localeCompare(a.nome));
+    }
+    // TODO: Adicionar lógica para outros filtros (ex: 'Recentes') se/quando implementado
+
+    return items;
   }
 
   // --- Métodos para o Modal de Criação/Edição ---
@@ -119,7 +153,7 @@ export class ListarDisciplinas implements OnInit {
     // Pequeno delay para garantir que a animação de fechar termine antes de limpar,
     // evitando que o modal pisque com dados antigos se reaberto rapidamente.
     setTimeout(() => {
-        this.disciplinaIdSendoEditada = null;
+      this.disciplinaIdSendoEditada = null;
     }, 300); // 300ms (ajuste conforme a duração da animação CSS)
   }
 
@@ -134,6 +168,17 @@ export class ListarDisciplinas implements OnInit {
     this.carregarDisciplinas();
     // TODO (Opcional): Em vez de recarregar tudo, encontrar e atualizar
     // 'disciplinaAtualizada' na array 'this.disciplinas' localmente para melhor performance.
+  }
+
+/**
+   * Chamado quando o modal emite o evento 'disciplinaCriada'.
+   * Recarrega a lista de disciplinas para exibir a nova entrada.
+   * @param novaDisciplina A disciplina que acabou de ser criada (opcionalmente usada para UI otimista).
+   */
+  onDisciplinaCriada(novaDisciplina: DisciplinaResponse): void {
+     // this.fecharModalCriarDisciplina(); // O modal já se fecha e navega
+     console.log('Nova disciplina criada via modal, recarregando lista...', novaDisciplina); // Log para confirmar
+     this.carregarDisciplinas(); // Recarrega a lista da API
   }
 
   /**
@@ -173,11 +218,12 @@ export class ListarDisciplinas implements OnInit {
     // TODO: Adicionar feedback de loading visual (desabilitar botões, spinner)
     this.disciplinaService.deletarDisciplina(idParaDeletar).subscribe({
       next: () => {
-        // Remove da lista local para atualização instantânea da UI
-        this.disciplinas = this.disciplinas.filter(d => d.id !== idParaDeletar);
-        this.fecharModalDelecao();
-        // TODO: Mostrar notificação de sucesso (toast)
-      },
+       // Atualiza a lista ORIGINAL na UI para remover a disciplina apagada.
+       // O getter 'disciplinasFiltradasEOrdenadas' usará esta lista atualizada.
+       this.disciplinasOriginais = this.disciplinasOriginais.filter(d => d.id !== idParaDeletar); // <-- Linha CORRIGIDA
+       this.fecharModalDelecao();
+       // TODO: Mostrar notificação de sucesso (toast)
+     },
       error: (err) => {
         // Exibe erro na UI (idealmente seria um toast, não o errorMessage da lista)
         // this.errorMessage = 'Não foi possível apagar a disciplina. Tente novamente.';

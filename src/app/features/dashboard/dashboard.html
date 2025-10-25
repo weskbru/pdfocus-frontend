@@ -1,9 +1,7 @@
 <div class="min-h-screen bg-gray-50">
-  <!-- Header -->
-  <header class="bg-white shadow-sm border-b border-gray-200">
+  <header class="bg-white shadow-sm border-b border-gray-200 select-none" style="user-select: none; -webkit-user-select: none;">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-16">
-        <!-- Logo e Título -->
         <div class="flex items-center space-x-3">
           <div class="w-8 h-8 bg-red-600 rounded-lg flex items-center justify-center">
             <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -15,13 +13,13 @@
           <h1 class="text-xl font-bold text-gray-800">PDFocus</h1>
         </div>
 
-        <!-- User Menu -->
         <div class="flex items-center space-x-4">
           <div
-            class="w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white text-sm font-semibold uppercase">
+            class="w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white text-sm font-semibold uppercase cursor-default select-none"
+            style="user-select: none; -webkit-user-select: none;"> 
             {{ userName.charAt(0) }}
           </div>
-          <button (click)="fazerLogout()" class="p-2 text-gray-600 hover:text-red-600 transition-colors" title="Sair">
+          <button (click)="fazerLogout()" class="p-2 text-gray-600 hover:text-red-600 transition-colors" title="Sair" aria-label="Sair">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
@@ -32,39 +30,36 @@
     </div>
   </header>
 
-  <!-- Main Content -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <!-- Welcome Section -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 select-none" style="user-select: none; -webkit-user-select: none;">
     <div class="mb-8">
       <h2 class="text-2xl font-bold text-gray-800 mb-2">Bem-vindo de volta, {{ userName }}!</h2>
       <p class="text-gray-600">Aqui está o resumo dos seus estudos.</p>
     </div>
 
-    <!-- Stats Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-      <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 select-none" style="user-select: none; -webkit-user-select: none;">
+      <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 cursor-default" style="cursor: default; user-select: none; -webkit-user-select: none;">
         <p class="text-sm font-medium text-gray-600">Total de Disciplinas</p>
         <p class="text-2xl font-bold text-gray-800">{{ stats.totalDisciplinas }}</p>
       </div>
-      <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+      <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 cursor-default" style="cursor: default; user-select: none; -webkit-user-select: none;">
         <p class="text-sm font-medium text-gray-600">Resumos Criados</p>
         <p class="text-2xl font-bold text-gray-800">{{ stats.resumosCriados }}</p>
       </div>
-      <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+      <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 cursor-default" style="cursor: default; user-select: none; -webkit-user-select: none;">
         <p class="text-sm font-medium text-gray-600">Total de Materiais</p>
         <p class="text-2xl font-bold text-gray-800">{{ stats.totalMateriais }}</p>
       </div>
-      <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+      <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 cursor-default" style="cursor: default; user-select: none; -webkit-user-select: none;">
         <p class="text-sm font-medium text-gray-600">Armazenamento</p>
         <p class="text-2xl font-bold text-gray-800">N/A</p>
       </div>
     </div>
 
-    <!-- Quick Actions -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
       <div *ngFor="let action of quickActions" (click)="handleActionClick(action)"
-        class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow cursor-pointer block no-underline">
-        <div class="text-center">
+        class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow cursor-pointer block no-underline"
+        style="user-select: none; -webkit-user-select: none;">
+        <div class="text-center select-none" style="user-select: none; -webkit-user-select: none;">
           <div class="w-16 h-16 {{ action.color }} rounded-xl flex items-center justify-center mx-auto mb-4">
             <span class="text-2xl">{{ action.icon }}</span>
           </div>
@@ -73,22 +68,20 @@
       </div>
     </div>
 
-    <!-- Materiais Recentes -->
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-      <div class="px-6 py-4 border-b border-gray-200">
+      <div class="px-6 py-4 border-b border-gray-200 select-none" style="user-select: none; -webkit-user-select: none;">
         <h3 class="text-lg font-semibold text-gray-800">Materiais Recentes</h3>
       </div>
 
       <div class="divide-y divide-gray-100">
-        <div *ngFor="let material of recentMateriais" class="px-6 py-4 hover:bg-gray-50 transition-colors">
+        <div *ngFor="let material of recentMateriais" class="px-6 py-4 hover:bg-gray-50 transition-colors cursor-pointer"
+             style="user-select: none; -webkit-user-select: none;">
           <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-4">
-              <!-- Passa o NOME do arquivo para as funções de ajuda -->
+            <div class="flex items-center space-x-4 select-none" style="user-select: none; -webkit-user-select: none;">
               <div class="w-10 h-10 {{ getMaterialColor(material.nome) }} rounded-lg flex items-center justify-center">
                 <span class="text-sm">{{ getMaterialIcon(material.nome) }}</span>
               </div>
               <div>
-                <!-- Usa os nomes de propriedade corretos da nossa interface -->
                 <h4 class="font-medium text-gray-800">{{ material.nome }}</h4>
                 <p class="text-sm text-gray-600">
                   {{ material.nomeDisciplina }} • {{ material.dataUploadFormatada }} • {{ material.tamanhoFormatado }}
@@ -97,7 +90,7 @@
             </div>
 
             <div class="flex space-x-2">
-              <button class="p-2 text-gray-400 hover:text-blue-600 transition-colors" title="Visualizar">
+              <button class="p-2 text-gray-400 hover:text-blue-600 transition-colors" title="Visualizar" aria-label="Visualizar">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
@@ -106,7 +99,7 @@
                   </path>
                 </svg>
               </button>
-              <button class="p-2 text-gray-400 hover:text-green-600 transition-colors" title="Download">
+              <button class="p-2 text-gray-400 hover:text-green-600 transition-colors" title="Download" aria-label="Download">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
@@ -115,28 +108,33 @@
             </div>
           </div>
         </div>
-        <!-- Mensagem para quando não há materiais -->
-        <div *ngIf="recentMateriais.length === 0" class="px-6 py-8 text-center text-gray-500">
+        <div *ngIf="recentMateriais.length === 0" class="px-6 py-8 text-center text-gray-500 select-none" style="user-select: none; -webkit-user-select: none;">
           <p>Você ainda não adicionou nenhum material.</p>
         </div>
       </div>
     </div>
   </main>
-  <!-- Modal novo resumo -->
-  <app-novo-resumo-modal [isOpen]="isNovoResumoModalOpen" (fecharModal)="isNovoResumoModalOpen = false">
+
+  <app-novo-resumo-modal
+    [isOpen]="isNovoResumoModalOpen"
+    (fecharModal)="isNovoResumoModalOpen = false">
   </app-novo-resumo-modal>
 
-  <!-- Modal adicionar material -->
-  <app-adicionar-material-modal [isOpen]="isAdicionarMaterialModalOpen"
+  <app-adicionar-material-modal
+    [isOpen]="isAdicionarMaterialModalOpen"
     (fecharModal)="isAdicionarMaterialModalOpen = false">
   </app-adicionar-material-modal>
 
-  <!-- Modal criar disciplina -->
-  <app-criar-disciplina-modal [isOpen]="isCriarDisciplinaModalOpen" (fecharModal)="isCriarDisciplinaModalOpen = false">
+  <app-criar-disciplina-modal 
+    [isOpen]="isCriarDisciplinaModalOpen" 
+    (fecharModal)="isCriarDisciplinaModalOpen = false"> 
   </app-criar-disciplina-modal>
   
-  <!-- Modal de aviso/info -->
-  <app-info-modal [isOpen]="isInfoModalOpen" [title]="infoModalTitle" [message]="infoModalMessage"
-    (closeModal)="isInfoModalOpen = false" (actionClicked)="handleInfoModalAction()">
+  <app-info-modal
+    [isOpen]="isInfoModalOpen"
+    [title]="infoModalTitle"
+    [message]="infoModalMessage"
+    (closeModal)="isInfoModalOpen = false"
+    (actionClicked)="handleInfoModalAction()">
   </app-info-modal>
 </div>
