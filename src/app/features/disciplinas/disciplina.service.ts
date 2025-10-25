@@ -13,10 +13,8 @@ export interface DisciplinaResponse {
 }
 
 export interface CriarDisciplinaCommand {
-  materialId: string;
-  disciplinaId: string;
-  titulo?: string;
-  conteudo?: string;
+  nome: string;      
+  descricao: string;
 }
 
 export interface AtualizarDisciplinaCommand {
