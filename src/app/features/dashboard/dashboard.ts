@@ -10,6 +10,7 @@ import { NovoResumoDashboardModalComponent } from './components/novo-resumo-moda
 import { AdicionarMaterialModalComponent } from './components/adicionar-material-modal/adicionar-material-modal';
 import { CriarDisciplinaModalComponent } from './components/criar-disciplina-modal/criar-disciplina-modal';
 import { InfoModalComponent } from './components/info-modal/info-modal';
+
 // --- Importar Modal de Perfil ---
 import { EditarPerfilModalComponent } from '../profile/components/editar-perfil-modal/editar-perfil-modal'; // Ajuste o caminho se necessário
 
@@ -20,6 +21,7 @@ import { DisciplinaService, ResumoResponse } from '../disciplinas/disciplina.ser
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 // --- MUDANÇA: Adicionar Ícones do User Menu ---
 import { faEye, faDownload, faUserEdit, faSignOutAlt, faBell } from '@fortawesome/free-solid-svg-icons';
+
 /**
  * Componente principal do Dashboard.
  * Exibe um resumo das estatísticas do usuário, ações rápidas e materiais recentes.
@@ -31,12 +33,14 @@ import { faEye, faDownload, faUserEdit, faSignOutAlt, faBell } from '@fortawesom
   imports: [
     CommonModule,
     RouterModule,
+
     FontAwesomeModule,
     NovoResumoDashboardModalComponent,
     AdicionarMaterialModalComponent,
     CriarDisciplinaModalComponent,
     InfoModalComponent,
     EditarPerfilModalComponent 
+
   ],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.css'],
@@ -49,10 +53,12 @@ export class Dashboard implements OnInit {
   public stats: DashboardEstatisticasResponse = { totalDisciplinas: 0, resumosCriados: 0, totalMateriais: 0 };
   public quickActions = [
     { label: 'Nova Disciplina', icon: '📚', color: 'bg-blue-100', route: null },
+
     { label: 'Novo Resumo', icon: '📝', color: 'bg-green-100', route: null },
     { label: 'Adicionar Material', icon: '📎', color: 'bg-purple-100', route: null },
     { label: 'Ver Disciplinas', icon: '📂', color: 'bg-orange-100', route: '/disciplinas' }
   ];
+
 
   public recentResumos: ResumoResponse[] = [];
   public isLoadingResumos = false;
@@ -76,6 +82,23 @@ export class Dashboard implements OnInit {
   faSignOutAlt = faSignOutAlt;
   faBell = faBell;
 
+
+  /** Lista de materiais adicionados recentemente. */
+  public recentMateriais: MaterialRecenteResponse[] = [];
+
+
+  // --- Flags de Controle dos Modais ---
+  /** Controla a visibilidade (aberto/fechado) do modal de novo resumo. */
+  public isNovoResumoModalOpen = false;
+  /** Controla a visibilidade do modal de criar disciplina. */
+  public isCriarDisciplinaModalOpen = false;
+  /** Controla a visibilidade do modal de adicionar material. */
+  public isAdicionarMaterialModalOpen = false;
+  public isInfoModalOpen = false;
+  public infoModalTitle = '';
+  public infoModalMessage = '';
+
+  // --- Construtor ---
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -124,6 +147,7 @@ export class Dashboard implements OnInit {
     this.isUserMenuOpen = false; // Fecha o dropdown ao abrir o modal
   }
 
+
   /** Fecha o modal de edição de perfil. */
   fecharModalEditarPerfil(): void {
     this.isPerfilModalOpen = false;
@@ -135,6 +159,7 @@ export class Dashboard implements OnInit {
      this.fecharModalEditarPerfil();
      this.carregarDadosDoUsuario(); 
   }
+
 
   // --- Métodos de Ação (Chamados pelo Template) ---
 
@@ -221,6 +246,7 @@ export class Dashboard implements OnInit {
   }
 
   /**
+
    * Busca todos os resumos do usuário, ordena por data de criação (mais recente primeiro)
    * e armazena os 5 primeiros em 'recentResumos'.
    */
@@ -246,6 +272,7 @@ export class Dashboard implements OnInit {
     });
   }
  
+
   /**
    * Navega para a página de detalhes do resumo clicado.
    * @param resumoId O ID do resumo.
@@ -283,6 +310,7 @@ export class Dashboard implements OnInit {
   }
 
 
+
   /**
    * Cria um Blob com o conteúdo de texto e força o download no navegador.
    * @param nomeArquivo O nome desejado para o arquivo (ex: "meu_resumo.txt").
@@ -294,10 +322,8 @@ export class Dashboard implements OnInit {
     const link = document.createElement('a');
     link.href = url;
     link.download = nomeArquivo;
-    // Append to body and click - necessary for Firefox
     document.body.appendChild(link);
     link.click();
-    // Clean up
     document.body.removeChild(link);
     window.URL.revokeObjectURL(url);
   }

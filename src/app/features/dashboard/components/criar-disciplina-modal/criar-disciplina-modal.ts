@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faTimes, faPencilAlt, faMagic, faSpinner, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
-// --- MUDANÇA: Importar interfaces para Criar e ATUALIZAR ---
 import { DisciplinaService, CriarDisciplinaCommand, AtualizarDisciplinaCommand, DisciplinaResponse } from '../../../disciplinas/disciplina.service'; // Confirme o nome 'AtualizarDisciplinaCommand'
 
 /**
@@ -17,6 +16,7 @@ import { DisciplinaService, CriarDisciplinaCommand, AtualizarDisciplinaCommand, 
   selector: 'app-criar-disciplina-modal',
   standalone: true,
   imports: [ CommonModule, FormsModule, FontAwesomeModule ],
+
   templateUrl: './criar-disciplina-modal.html',
   styleUrls: ['./criar-disciplina-modal.css']
 })
@@ -38,6 +38,7 @@ export class CriarDisciplinaModalComponent implements OnChanges {
   /** Emite quando uma disciplina é ATUALIZADA com sucesso. */
   @Output() disciplinaAtualizada = new EventEmitter<DisciplinaResponse>(); // Envia a disciplina atualizada
   @Output() disciplinaCriada = new EventEmitter<DisciplinaResponse>();
+
   // --- Estado do Formulário ---
   public nome = '';
   public descricao = '';
@@ -50,15 +51,18 @@ export class CriarDisciplinaModalComponent implements OnChanges {
   public tituloModal = 'Nova Disciplina'; // Título dinâmico
   public textoBotaoSubmit = 'Criar Disciplina'; // Texto do botão dinâmico
 
+
   constructor(
     private disciplinaService: DisciplinaService,
     private router: Router,
     private library: FaIconLibrary
   ) {
+
     this.library.addIcons(faTimes, faPencilAlt, faMagic, faSpinner, faExclamationTriangle);
   }
 
   /**
+
    * Hook que detecta mudanças nos @Inputs.
    * Decide se o modal deve operar em modo "Criar" ou "Editar" e carrega dados se necessário.
    */
@@ -116,6 +120,7 @@ export class CriarDisciplinaModalComponent implements OnChanges {
    * Decide se chama o serviço de criar ou atualizar.
    */
   onSubmit(): void {
+
     if (!this.nome || this.nome.trim() === '') {
       this.errorMessage = "O nome da disciplina é obrigatório.";
       return;
@@ -160,6 +165,7 @@ export class CriarDisciplinaModalComponent implements OnChanges {
         }
       });
     }
+
   }
 
   /**
@@ -168,6 +174,7 @@ export class CriarDisciplinaModalComponent implements OnChanges {
    */
   onFecharModal(): void {
     if (!this.isSubmitting && !this.isLoadingDetalhes) {
+
       this.fecharModal.emit();
     }
   }
@@ -180,8 +187,10 @@ export class CriarDisciplinaModalComponent implements OnChanges {
     this.descricao = '';
     this.isSubmitting = false;
     this.errorMessage = null;
+
     this.isLoadingDetalhes = false;
     // Não reseta modoEdicao ou titulo/botao aqui, ngOnChanges cuida disso ao ABRIR.
     // this.disciplinaIdParaEditar = null; // Resetado ao FECHAR em ngOnChanges
+
   }
 }

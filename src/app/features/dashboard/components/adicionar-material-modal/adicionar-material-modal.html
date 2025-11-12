@@ -1,4 +1,5 @@
 <div *ngIf="isOpen"
+
   class="fixed inset-0 bg-black/5 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-opacity duration-300"
   (click)="onFecharModal()">
 
@@ -6,13 +7,16 @@
     class="relative bg-white rounded-xl shadow-2xl w-full max-w-lg overflow-hidden animate-modal-in cursor-default select-none"
     (click)="$event.stopPropagation()">
 
+
     <div class="px-6 py-4 border-b border-gray-200/70 flex justify-between items-center">
       <div>
         <h3 class="text-lg font-semibold text-gray-900">Adicionar novo material</h3>
         <p class="text-sm text-gray-500">Selecione a disciplina e envie seu arquivo.</p>
       </div>
+
       <button (click)="onFecharModal()" class="text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
         [disabled]="isUploading" aria-label="Fechar modal">
+
         <fa-icon [icon]="faTimes"></fa-icon>
       </button>
     </div>
@@ -21,12 +25,14 @@
       <div class="space-y-4">
 
         <div>
+
           <label for="disciplina-upload-select" class="block text-sm font-medium text-gray-700 mb-1 select-none">
             Passo 1: Escolha a disciplina
           </label>
           <select id="disciplina-upload-select"
             class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 cursor-pointer"
             [(ngModel)]="selectedDisciplinaId" [disabled]="isUploading">
+
 
             <option [ngValue]="null" disabled>
               {{ isLoadingDisciplinas ? 'Carregando disciplinas...' : 'Selecione uma disciplina' }}
@@ -38,6 +44,7 @@
         </div>
 
         <div>
+
           <label for="file-upload-modal" class="block text-sm font-medium text-gray-700 mb-1 select-none">
             Passo 2: Escolha o arquivo
           </label>
@@ -50,11 +57,13 @@
             <p class="text-blue-600 font-semibold">Clique para escolher um ficheiro</p>
             <p class="text-xs text-gray-500 mt-1">PDF, DOCX, PPTX</p>
 
+
             <input id="file-upload-modal" type="file" class="sr-only" (change)="onFileSelected($event)"
               [disabled]="!selectedDisciplinaId || isUploading" accept=".pdf,.docx,.pptx">
           </label>
 
           <div *ngIf="selectedFile" class="mt-2 p-3 bg-gray-50 rounded-lg border border-gray-200 select-none">
+
             <div class="flex items-center justify-between">
               <div class="flex items-center space-x-3 min-w-0">
                 <fa-icon [icon]="faFilePdf" class="text-red-500 text-xl flex-shrink-0"></fa-icon>
@@ -64,24 +73,32 @@
                 </div>
               </div>
               <button *ngIf="!isUploading" (click)="removerArquivoSelecionado()"
+
                 class="text-gray-400 hover:text-red-500 transition-colors flex-shrink-0 ml-2 cursor-pointer"> <fa-icon
                   [icon]="faTimes"></fa-icon>
+
               </button>
               <fa-icon *ngIf="uploadSuccess" [icon]="faCheck" class="text-green-500 text-xl"></fa-icon>
             </div>
 
             <div *ngIf="isUploading" class="mt-2 w-full bg-gray-200 rounded-full h-1.5">
+
               <div class="bg-blue-600 h-1.5 rounded-full" [style.width.%]="uploadProgress">
+
               </div>
             </div>
           </div>
 
+
           <div *ngIf="uploadSuccess" class="mt-2 text-green-600 text-sm flex items-center select-none">
+
             <fa-icon [icon]="faCheck" class="mr-2"></fa-icon>
             <span>Material enviado com sucesso!</span>
           </div>
 
+
           <div *ngIf="uploadError" class="mt-2 text-red-600 text-sm flex items-center select-none">
+
             <fa-icon [icon]="faExclamationTriangle" class="mr-2"></fa-icon>
             <span>{{ uploadError }}</span>
           </div>
@@ -90,15 +107,19 @@
       </div>
     </div>
 
+
     <div class="px-6 py-4 border-t border-gray-200/70 bg-gray-50 flex justify-end space-x-3 select-none">
       <button (click)="onFecharModal()" [disabled]="isUploading"
         class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50">
+
         {{ uploadSuccess ? 'Fechar' : 'Cancelar' }}
       </button>
 
       <button (click)="fazerUpload()"
+
         [disabled]="!selectedDisciplinaId || !selectedFile || isUploading || uploadSuccess"
         class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors flex items-center">
+
 
         <fa-icon *ngIf="isUploading" [icon]="faSpinner" class="animate-spin -ml-1 mr-2"></fa-icon>
 

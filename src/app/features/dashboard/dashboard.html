@@ -15,6 +15,7 @@
         <!-- ÁREA DO MENU DO USUÁRIO -->
         <div id="user-menu-area" class="flex items-center space-x-3 relative">
 
+
           <!-- Ícone de Notificação (AGORA CLICÁVEL E REATIVO) -->
           <button (click)="marcarNotificacoesComoLidas()"
             class="p-2 text-gray-600 hover:text-blue-600 transition-colors relative cursor-pointer" title="Notificações"
@@ -32,6 +33,7 @@
           <button (click)="toggleUserMenu()"
             class="w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white text-sm font-semibold uppercase cursor-pointer hover:from-blue-600 hover:to-blue-700 transition-all">
             {{ userName.charAt(0) }}
+
           </button>
 
           <!-- Dropdown Menu -->
@@ -66,7 +68,9 @@
       <p class="text-gray-600">Aqui está o resumo dos seus estudos.</p>
     </div>
 
+
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 cursor-default">
+
       <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
         <p class="text-sm font-medium text-gray-600">Total de Disciplinas</p>
         <p class="text-2xl font-bold text-gray-800">{{ stats.totalDisciplinas }}</p>
@@ -102,6 +106,7 @@
         <h3 class="text-lg font-semibold text-gray-800">Resumos Recentes</h3>
       </div>
 
+
       <div *ngIf="isLoadingResumos" class="px-6 py-8 text-center text-gray-500">
         <p>Carregando resumos...</p>
       </div>
@@ -109,6 +114,7 @@
       <div *ngIf="!isLoadingResumos" class="divide-y divide-gray-100">
 
         <div *ngFor="let resumo of recentResumos" class="px-6 py-4 hover:bg-gray-50 transition-colors">
+
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-4">
               <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center text-indigo-600">
@@ -124,6 +130,7 @@
             </div>
 
             <div class="flex space-x-2">
+
               <button (click)="visualizarResumo(resumo.id)"
                 class="p-2 text-gray-400 hover:text-blue-600 transition-colors" title="Visualizar Resumo"
                 aria-label="Visualizar Resumo">
@@ -132,17 +139,21 @@
               <button (click)="baixarResumo(resumo)" class="p-2 text-gray-400 hover:text-green-600 transition-colors"
                 title="Baixar Resumo (.txt)" aria-label="Baixar Resumo">
                 <fa-icon [icon]="faDownload" class="w-4 h-4"></fa-icon>
+
               </button>
             </div>
           </div>
         </div>
 
+
         <div *ngIf="!isLoadingResumos && recentResumos.length === 0" class="px-6 py-8 text-center text-gray-500">
           <p>Você ainda não criou nenhum resumo.</p>
+
         </div>
       </div>
     </div>
   </main>
+
 
   <app-novo-resumo-modal [isOpen]="isNovoResumoModalOpen"
     (fecharModal)="isNovoResumoModalOpen = false"></app-novo-resumo-modal>
@@ -157,4 +168,5 @@
   <app-editar-perfil-modal [isOpen]="isPerfilModalOpen" (fecharModal)="fecharModalEditarPerfil()"
     (perfilAtualizado)="onPerfilAtualizado($event)">
   </app-editar-perfil-modal>
+
 </div>

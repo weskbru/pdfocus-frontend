@@ -13,8 +13,10 @@ export interface DisciplinaResponse {
 }
 
 export interface CriarDisciplinaCommand {
+
   nome: string;      
   descricao: string;
+
 }
 
 export interface AtualizarDisciplinaCommand {
@@ -32,7 +34,9 @@ export interface MaterialResponse {
 export interface ResumoSimples {
   id: string;
   titulo: string;
+
   materialId: string | null;
+
   dataCriacao: string;
 }
 
@@ -72,6 +76,7 @@ export interface Page<T> {
 
 export interface ResumoResponse {
   id: string;
+
   usuarioId: string; 
   titulo: string;
   conteudo: string; 
@@ -82,6 +87,7 @@ export interface ResumoResponse {
   };
   materialId: string | null; 
   dataCriacao: string; // Data como string ISO 8601 (ex: "2025-10-25T03:59:01.123Z")
+
 }
 
 /**
@@ -337,6 +343,7 @@ export class DisciplinaService {
     );
   }
 
+
   gerarResumoAutomatico(comando: CriarResumoDeMaterialCommand): Observable<ResumoResponse> {
     const endpoint = `${this.resumosUrl}/gerar-automatico`; // Usando resumosUrl
     console.log('Enviando requisição para gerar resumo com o comando:', comando);
@@ -354,6 +361,7 @@ export class DisciplinaService {
     const endpoint = `${this.resumosUrl}/${id}`; // Usando resumosUrl
     return this.http.get<ResumoResponse>(endpoint, { headers: this.getAuthHeaders() }) // Usa a interface atualizada
       .pipe(catchError(this.handleError));
+
   }
 
   /**
