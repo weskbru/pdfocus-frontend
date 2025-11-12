@@ -1,9 +1,7 @@
-<div class="min-h-screen bg-gray-50">
-  <!-- Header -->
+<div class="min-h-screen bg-gray-50 select-none">
   <header class="bg-white shadow-sm border-b border-gray-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-16">
-        <!-- Logo e Título -->
         <div class="flex items-center space-x-3">
           <div class="w-8 h-8 bg-red-600 rounded-lg flex items-center justify-center">
             <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -14,34 +12,65 @@
           </div>
           <h1 class="text-xl font-bold text-gray-800">PDFocus</h1>
         </div>
+        <!-- ÁREA DO MENU DO USUÁRIO -->
+        <div id="user-menu-area" class="flex items-center space-x-3 relative">
 
-        <!-- User Menu -->
-        <div class="flex items-center space-x-4">
-          <div
-            class="w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white text-sm font-semibold uppercase">
-            {{ userName.charAt(0) }}
-          </div>
-          <button (click)="fazerLogout()" class="p-2 text-gray-600 hover:text-red-600 transition-colors" title="Sair">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-            </svg>
+
+          <!-- Ícone de Notificação (AGORA CLICÁVEL E REATIVO) -->
+          <button (click)="marcarNotificacoesComoLidas()"
+            class="p-2 text-gray-600 hover:text-blue-600 transition-colors relative cursor-pointer" title="Notificações"
+            aria-label="Notificações">
+            <fa-icon [icon]="faBell" class="w-5 h-5"></fa-icon>
+
+            <!-- Badge de Notificação (AGORA REATIVO) -->
+            <span *ngIf="hasUnreadNotifications && notificationCount > 0"
+              class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-semibold">
+              {{ notificationCount }}
+            </span>
           </button>
+
+          <!-- Avatar do Usuário (Abre o dropdown) -->
+          <button (click)="toggleUserMenu()"
+            class="w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white text-sm font-semibold uppercase cursor-pointer hover:from-blue-600 hover:to-blue-700 transition-all">
+            {{ userName.charAt(0) }}
+
+          </button>
+
+          <!-- Dropdown Menu -->
+          <div *ngIf="isUserMenuOpen"
+            class="absolute top-12 right-0 bg-white rounded-lg shadow-lg border border-gray-200 py-2 w-48 z-50">
+
+            <!-- Opção Editar Perfil -->
+            <button (click)="abrirModalEditarPerfil()"
+              class="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center space-x-2 transition-colors">
+              <fa-icon [icon]="faUserEdit" class="text-gray-400 w-4 h-4"></fa-icon>
+              <span>Editar Perfil</span>
+            </button>
+
+            <!-- Separador -->
+            <div class="border-t border-gray-100 my-1"></div>
+
+            <!-- Opção Sair -->
+            <button (click)="fazerLogout()"
+              class="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center space-x-2 transition-colors">
+              <fa-icon [icon]="faSignOutAlt" class="w-4 h-4"></fa-icon>
+              <span>Sair</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </header>
 
-  <!-- Main Content -->
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <!-- Welcome Section -->
     <div class="mb-8">
       <h2 class="text-2xl font-bold text-gray-800 mb-2">Bem-vindo de volta, {{ userName }}!</h2>
       <p class="text-gray-600">Aqui está o resumo dos seus estudos.</p>
     </div>
 
-    <!-- Stats Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 cursor-default">
+
       <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
         <p class="text-sm font-medium text-gray-600">Total de Disciplinas</p>
         <p class="text-2xl font-bold text-gray-800">{{ stats.totalDisciplinas }}</p>
@@ -60,7 +89,6 @@
       </div>
     </div>
 
-    <!-- Quick Actions -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
       <div *ngFor="let action of quickActions" (click)="handleActionClick(action)"
         class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow cursor-pointer block no-underline">
@@ -73,70 +101,72 @@
       </div>
     </div>
 
-    <!-- Materiais Recentes -->
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
       <div class="px-6 py-4 border-b border-gray-200">
-        <h3 class="text-lg font-semibold text-gray-800">Materiais Recentes</h3>
+        <h3 class="text-lg font-semibold text-gray-800">Resumos Recentes</h3>
       </div>
 
-      <div class="divide-y divide-gray-100">
-        <div *ngFor="let material of recentMateriais" class="px-6 py-4 hover:bg-gray-50 transition-colors">
+
+      <div *ngIf="isLoadingResumos" class="px-6 py-8 text-center text-gray-500">
+        <p>Carregando resumos...</p>
+      </div>
+
+      <div *ngIf="!isLoadingResumos" class="divide-y divide-gray-100">
+
+        <div *ngFor="let resumo of recentResumos" class="px-6 py-4 hover:bg-gray-50 transition-colors">
+
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-4">
-              <!-- Passa o NOME do arquivo para as funções de ajuda -->
-              <div class="w-10 h-10 {{ getMaterialColor(material.nome) }} rounded-lg flex items-center justify-center">
-                <span class="text-sm">{{ getMaterialIcon(material.nome) }}</span>
+              <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center text-indigo-600">
+                <span class="text-lg">📝</span>
               </div>
               <div>
-                <!-- Usa os nomes de propriedade corretos da nossa interface -->
-                <h4 class="font-medium text-gray-800">{{ material.nome }}</h4>
+                <h4 class="font-medium text-gray-800">{{ resumo.titulo }}</h4>
                 <p class="text-sm text-gray-600">
-                  {{ material.nomeDisciplina }} • {{ material.dataUploadFormatada }} • {{ material.tamanhoFormatado }}
+                  {{ resumo.disciplina.nome || 'Disciplina não encontrada' }} • {{ resumo.dataCriacao |
+                  date:'dd/MM/yyyy' }}
                 </p>
               </div>
             </div>
 
             <div class="flex space-x-2">
-              <button class="p-2 text-gray-400 hover:text-blue-600 transition-colors" title="Visualizar">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
-                  </path>
-                </svg>
+
+              <button (click)="visualizarResumo(resumo.id)"
+                class="p-2 text-gray-400 hover:text-blue-600 transition-colors" title="Visualizar Resumo"
+                aria-label="Visualizar Resumo">
+                <fa-icon [icon]="faEye" class="w-4 h-4"></fa-icon>
               </button>
-              <button class="p-2 text-gray-400 hover:text-green-600 transition-colors" title="Download">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                </svg>
+              <button (click)="baixarResumo(resumo)" class="p-2 text-gray-400 hover:text-green-600 transition-colors"
+                title="Baixar Resumo (.txt)" aria-label="Baixar Resumo">
+                <fa-icon [icon]="faDownload" class="w-4 h-4"></fa-icon>
+
               </button>
             </div>
           </div>
         </div>
-        <!-- Mensagem para quando não há materiais -->
-        <div *ngIf="recentMateriais.length === 0" class="px-6 py-8 text-center text-gray-500">
-          <p>Você ainda não adicionou nenhum material.</p>
+
+
+        <div *ngIf="!isLoadingResumos && recentResumos.length === 0" class="px-6 py-8 text-center text-gray-500">
+          <p>Você ainda não criou nenhum resumo.</p>
+
         </div>
       </div>
     </div>
   </main>
-  <!-- Modal novo resumo -->
-  <app-novo-resumo-modal [isOpen]="isNovoResumoModalOpen" (fecharModal)="isNovoResumoModalOpen = false">
-  </app-novo-resumo-modal>
 
-  <!-- Modal adicionar material -->
+
+  <app-novo-resumo-modal [isOpen]="isNovoResumoModalOpen"
+    (fecharModal)="isNovoResumoModalOpen = false"></app-novo-resumo-modal>
   <app-adicionar-material-modal [isOpen]="isAdicionarMaterialModalOpen"
-    (fecharModal)="isAdicionarMaterialModalOpen = false">
-  </app-adicionar-material-modal>
-
-  <!-- Modal criar disciplina -->
+    (fecharModal)="isAdicionarMaterialModalOpen = false"></app-adicionar-material-modal>
   <app-criar-disciplina-modal [isOpen]="isCriarDisciplinaModalOpen" (fecharModal)="isCriarDisciplinaModalOpen = false">
   </app-criar-disciplina-modal>
-  
-  <!-- Modal de aviso/info -->
   <app-info-modal [isOpen]="isInfoModalOpen" [title]="infoModalTitle" [message]="infoModalMessage"
     (closeModal)="isInfoModalOpen = false" (actionClicked)="handleInfoModalAction()">
   </app-info-modal>
+
+  <app-editar-perfil-modal [isOpen]="isPerfilModalOpen" (fecharModal)="fecharModalEditarPerfil()"
+    (perfilAtualizado)="onPerfilAtualizado($event)">
+  </app-editar-perfil-modal>
+
 </div>

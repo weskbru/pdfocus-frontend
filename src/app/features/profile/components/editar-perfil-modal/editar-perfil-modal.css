@@ -1,0 +1,8 @@
+/* Estilos mínimos - a maioria já está com Tailwind */
+.transform {
+  transform: scale(1);
+}
+
+.transform.scale-100 {
+  transform: scale(1);
+}

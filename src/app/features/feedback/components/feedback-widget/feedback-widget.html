@@ -1,0 +1,102 @@
+<div class="feedback-widget">
+    <!-- Botão Flutuante -->
+    <button (click)="toggleFeedback()"
+        class="feedback-toggle bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-110"
+        [class.bg-green-500]="submitted" [class.hover:bg-green-600]="submitted">
+
+        <fa-icon *ngIf="!submitted" [icon]="faCommentDots" class="text-xl"></fa-icon>
+        <fa-icon *ngIf="submitted" [icon]="faPaperPlane" class="text-xl"></fa-icon>
+    </button>
+
+    <!-- Modal de Feedback -->
+    <div *ngIf="showFeedback" class="feedback-modal">
+        <div class="modal-overlay" (click)="toggleFeedback()"></div>
+
+        <div class="modal-content">
+            <!-- Header -->
+            <div class="modal-header">
+                <div class="flex justify-between items-center w-full">
+                    <h3 class="text-lg font-semibold text-gray-900">
+                        {{ submitted ? 'Obrigado!' : 'Envie seu Feedback' }}
+                    </h3>
+                    <button (click)="toggleFeedback()" class="close-btn">
+                        <fa-icon [icon]="faTimes"></fa-icon>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Conteúdo -->
+            <div *ngIf="!submitted" class="modal-body">
+                <p class="text-sm text-gray-600 mb-4">
+                    Sua opinião nos ajuda a melhorar o PDFocus
+                </p>
+
+                <!-- Tipo de Feedback -->
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Tipo de feedback
+                    </label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button (click)="setFeedbackType('suggestion')"
+                            [class]="'feedback-type-btn ' + (feedbackType === 'suggestion' ? 'active' : '')">
+                            💡 Sugestão
+                        </button>
+                        <button (click)="setFeedbackType('bug')"
+                            [class]="'feedback-type-btn ' + (feedbackType === 'bug' ? 'active' : '')">
+                            🐛 Bug
+                        </button>
+                        <button (click)="setFeedbackType('feature')"
+                            [class]="'feedback-type-btn ' + (feedbackType === 'feature' ? 'active' : '')">
+                            ⭐ Feature
+                        </button>
+                        <button (click)="setFeedbackType('other')"
+                            [class]="'feedback-type-btn ' + (feedbackType === 'other' ? 'active' : '')">
+                            📝 Outro
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Avaliação (Opcional) -->
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Como está sua experiência?
+                    </label>
+                    <div class="flex space-x-1">
+                        <button *ngFor="let star of [1,2,3,4,5]" (click)="setRating(star)" class="rating-star">
+                            <fa-icon [icon]="faStar" [class]="star <= rating ? 'text-yellow-400' : 'text-gray-300'">
+                            </fa-icon>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Textarea -->
+                <div class="mb-4">
+                    <textarea [(ngModel)]="feedbackText"
+                        placeholder="Conte-nos o que você pensa... O que podemos melhorar? O que está funcionando bem?"
+                        class="feedback-textarea" rows="4"></textarea>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex justify-end space-x-3">
+                    <button (click)="toggleFeedback()" class="btn-secondary">
+                        Cancelar
+                    </button>
+                    <button (click)="sendFeedback()" [disabled]="!feedbackText.trim() || isSubmitting"
+                        class="btn-primary">
+                        <fa-icon *ngIf="isSubmitting" [icon]="faPaperPlane" class="animate-pulse mr-2"></fa-icon>
+                        {{ isSubmitting ? 'Enviando...' : 'Enviar Feedback' }}
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mensagem de Sucesso -->
+            <div *ngIf="submitted" class="text-center py-8">
+                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <fa-icon [icon]="faPaperPlane" class="text-green-600 text-2xl"></fa-icon>
+                </div>
+                <h4 class="text-lg font-semibold text-gray-900 mb-2">Feedback Enviado!</h4>
+                <p class="text-gray-600">Obrigado por nos ajudar a melhorar 🚀</p>
+            </div>
+        </div>
+    </div>
+</div>

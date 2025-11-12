@@ -13,10 +13,10 @@ export interface DisciplinaResponse {
 }
 
 export interface CriarDisciplinaCommand {
-  materialId: string;
-  disciplinaId: string;
-  titulo?: string;
-  conteudo?: string;
+
+  nome: string;      
+  descricao: string;
+
 }
 
 export interface AtualizarDisciplinaCommand {
@@ -34,7 +34,9 @@ export interface MaterialResponse {
 export interface ResumoSimples {
   id: string;
   titulo: string;
-  materialId: string;
+
+  materialId: string | null;
+
   dataCriacao: string;
 }
 
@@ -74,10 +76,18 @@ export interface Page<T> {
 
 export interface ResumoResponse {
   id: string;
+
+  usuarioId: string; 
   titulo: string;
-  conteudo: string;
-  materialId: string;
-  dataCriacao: string;
+  conteudo: string; 
+  disciplina: { 
+    id: string;
+    nome: string;
+   
+  };
+  materialId: string | null; 
+  dataCriacao: string; // Data como string ISO 8601 (ex: "2025-10-25T03:59:01.123Z")
+
 }
 
 /**
@@ -91,6 +101,7 @@ export class DisciplinaService {
   private readonly apiBaseUrl = 'http://localhost:8080';
   private readonly disciplinasUrl = `${this.apiBaseUrl}/disciplinas`;
   private readonly materiaisUrl = `${this.apiBaseUrl}/materiais`;
+  private readonly resumosUrl = `${this.apiBaseUrl}/resumos`;
 
   constructor(
     private http: HttpClient,
@@ -332,26 +343,35 @@ export class DisciplinaService {
     );
   }
 
+
   gerarResumoAutomatico(comando: CriarResumoDeMaterialCommand): Observable<ResumoResponse> {
-    const endpoint = `${this.apiBaseUrl}/resumos/gerar-automatico`; // O seu endpoint pode ser apenas /resumos
-
-    console.log('Enviando requisição para gerar resumo com o comando:', comando); // DEBUG
-
-    return this.http.post<ResumoResponse>(endpoint, comando, {
-      headers: this.getAuthHeaders()
-    }).pipe(
-      catchError(this.handleError)
-    );
+    const endpoint = `${this.resumosUrl}/gerar-automatico`; // Usando resumosUrl
+    console.log('Enviando requisição para gerar resumo com o comando:', comando);
+    return this.http.post<ResumoResponse>(endpoint, comando, { headers: this.getAuthHeaders() })
+      .pipe(catchError(this.handleError));
   }
 
-  buscarResumoPorId(id: string): Observable<ResumoResponse> {
-    const endpoint = `${this.apiBaseUrl}/resumos/${id}`;
+  /**
+   * Busca os detalhes completos de um resumo específico pelo ID.
+   * Utiliza a interface ResumoResponse atualizada.
+   * @param id O UUID do resumo.
+   * @returns Observable com os dados completos do ResumoResponse.
+   */
+  buscarResumoPorId(id: string): Observable<ResumoResponse> { // (Verificação): Já usa ResumoResponse
+    const endpoint = `${this.resumosUrl}/${id}`; // Usando resumosUrl
+    return this.http.get<ResumoResponse>(endpoint, { headers: this.getAuthHeaders() }) // Usa a interface atualizada
+      .pipe(catchError(this.handleError));
 
-    return this.http.get<ResumoResponse>(endpoint, {
-      headers: this.getAuthHeaders()
-    }).pipe(
-      catchError(this.handleError)
-    );
   }
 
+  /**
+   * Busca a lista completa de resumos do usuário autenticado.
+   * A ordenação por data será feita no frontend.
+   * @returns Observable com um array de ResumoResponse.
+   */
+  buscarTodosResumos(): Observable<ResumoResponse[]> {
+      const endpoint = this.resumosUrl; // Chama GET /resumos
+      return this.http.get<ResumoResponse[]>(endpoint, { headers: this.getAuthHeaders() })
+          .pipe(catchError(this.handleError));
+  }
 }
