@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../core/auth';
+// [--- CORREÇÃO 1: IMPORTAÇÃO ADICIONADA ---]
 import { DashboardService, DashboardEstatisticasResponse, MaterialRecenteResponse } from './dashboard.service';
 
 // Importa o novo modal de resumo criado para este dashboard
@@ -51,6 +52,7 @@ export class Dashboard implements OnInit {
 
 
   // --- Flags de Controle dos Modais ---
+  // [--- CORREÇÃO 2: BLOCO DUPLICADO REMOVIDO ---]
   /** Controla a visibilidade (aberto/fechado) do modal de novo resumo. */
   public isNovoResumoModalOpen = false;
   /** Controla a visibilidade do modal de criar disciplina. */
@@ -107,17 +109,17 @@ export class Dashboard implements OnInit {
         this.infoModalMessage = 'Você precisa ter pelo menos uma disciplina criada para poder adicionar um resumo.';
         this.isInfoModalOpen = true;
       }
-    } 
+    }
     else if (action.label === 'Adicionar Material') {
-       // A lógica aqui pode precisar da mesma verificação se fizer sentido
-       if (this.stats.totalDisciplinas > 0) {
-           this.isAdicionarMaterialModalOpen = true; // Abre modal de upload
-       } else {
-           // Se não, configura e abre o MODAL DE AVISO (reaproveitando)
-           this.infoModalTitle = 'Crie uma Disciplina Primeiro';
-           this.infoModalMessage = 'Você precisa ter pelo menos uma disciplina criada para poder adicionar um material.';
-           this.isInfoModalOpen = true;
-       }
+      // A lógica aqui pode precisar da mesma verificação se fizer sentido
+      if (this.stats.totalDisciplinas > 0) {
+        this.isAdicionarMaterialModalOpen = true; // Abre modal de upload
+      } else {
+        // Se não, configura e abre o MODAL DE AVISO (reaproveitando)
+        this.infoModalTitle = 'Crie uma Disciplina Primeiro';
+        this.infoModalMessage = 'Você precisa ter pelo menos uma disciplina criada para poder adicionar um material.';
+        this.isInfoModalOpen = true;
+      }
     }
   }
 
@@ -166,7 +168,7 @@ export class Dashboard implements OnInit {
 
   /**
    * Busca a lista de materiais recentes via DashboardService.
-   */
+  */
   private carregarMateriaisRecentes(): void {
     this.dashboardService.buscarMateriaisRecentes().subscribe({
       next: (listaDeMateriais) => { this.recentMateriais = listaDeMateriais; },
@@ -178,7 +180,7 @@ export class Dashboard implements OnInit {
 
   /**
    * Função de ajuda para o template. Retorna uma classe de cor da Tailwind
-   * com base na extensão do nome do arquivo.
+T  * com base na extensão do nome do arquivo.
    * @param nomeArquivo O nome completo do arquivo (ex: "relatorio.pdf").
    * @returns A classe CSS para a cor de fundo.
    */
