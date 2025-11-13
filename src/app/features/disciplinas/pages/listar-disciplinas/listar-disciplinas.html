@@ -1,34 +1,25 @@
-<!-- A estrutura principal mantém a consistência visual com o resto da aplicação. -->
-<div class="min-h-screen bg-gray-50">
-  <!-- 1. Header Consistente -->
+<div class="min-h-screen bg-gray-50 select-none">
   <header class="bg-white shadow-sm border-b border-gray-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-16">
         <div class="flex items-center space-x-3">
           <div class="w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center shadow-sm">
             <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 
-                5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 
-                3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 
-                1.253"></path>
+               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
             </svg>
           </div>
           <h1 class="font-heading text-xl font-semibold text-gray-800">Minhas Disciplinas</h1>
         </div>
         <div class="flex items-center space-x-3">
-          <!-- Botão Upgrade -->
           <button (click)="navegarParaUpgrade()"
             class="px-4 py-2 bg-yellow-400 hover:bg-yellow-500 text-gray-800 font-medium text-sm rounded-lg flex items-center shadow-sm transition-colors"
             title="Upgrade do Plano">
-            <i class="fas fa-crown mr-2"></i> Upgrade de Plano
+            <fa-icon [icon]="faCrown" class="mr-2"></fa-icon> Upgrade de Plano
           </button>
-          <!-- Botão Voltar -->
           <button routerLink="/dashboard" class="p-2 text-gray-500 hover:text-blue-600 transition-colors"
-            title="Voltar ao Dashboard">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a2 2 0 002 2h10a2 2 0 002-2V10M9 20h6">
-              </path>
+            title="Voltar ao Dashboard" aria-label="Voltar ao Dashboard">
+             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a2 2 0 002 2h10a2 2 0 002-2V10M9 20h6"></path>
             </svg>
           </button>
         </div>
@@ -36,153 +27,117 @@
     </div>
   </header>
 
-  <!-- 2. Conteúdo Principal -->
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-    <!-- Cabeçalho da Página -->
     <div class="flex flex-col md:flex-row md:items-center justify-between mb-10 pb-4 border-b border-gray-200">
       <div>
         <h2 class="text-2xl font-semibold text-gray-800">Minhas Disciplinas</h2>
         <p class="text-gray-500 text-sm mt-1">Gerencie todas as suas disciplinas em um só lugar</p>
       </div>
-      <button (click)="navegarParaNovaDisciplina()"
+      <button (click)="abrirModalCriarDisciplina()"
         class="px-5 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 flex items-center mt-4 md:mt-0 shadow-sm hover:shadow-md transition-all duration-200">
-        <i class="fas fa-plus mr-2"></i> Nova Disciplina
+        <fa-icon [icon]="faPlus" class="mr-2"></fa-icon> Nova Disciplina
       </button>
     </div>
 
-    <!-- Container dos Estados -->
     <div class="fade-in">
 
-      <!-- Estado de Carregamento -->
       <div *ngIf="isLoading" class="text-center py-16">
-        <svg class="animate-spin h-8 w-8 text-blue-600 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none"
-          viewBox="0 0 24 24">
-          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-          <path class="opacity-75" fill="currentColor"
-            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-          </path>
-        </svg>
-        <p class="mt-4 text-gray-500 text-sm">A carregar as suas disciplinas...</p>
+         <p class="mt-4 text-gray-500 text-sm">A carregar as suas disciplinas...</p>
       </div>
 
-      <!-- Estado de Erro -->
       <div *ngIf="errorMessage && !isLoading" class="p-4 bg-red-50 border border-red-200 rounded-lg text-center">
-        <p class="text-red-600 text-sm font-medium">{{ errorMessage }}</p>
+         <p class="text-red-600 text-sm font-medium">{{ errorMessage }}</p>
       </div>
 
-      <!-- Conteúdo Principal -->
       <div *ngIf="!isLoading && !errorMessage">
 
-        <!-- Estado de Lista Vazia -->
-        <div *ngIf="disciplinas.length === 0"
+        <div *ngIf="disciplinasOriginais.length === 0"
           class="text-center py-16 border-2 border-dashed border-gray-300 rounded-lg bg-gray-100/50">
-          <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm">
-            <i class="fas fa-folder-open text-3xl text-gray-400"></i>
-          </div>
+           <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm">
+             <fa-icon [icon]="faFolderOpen" class="text-3xl text-gray-400"></fa-icon>
+           </div>
           <h3 class="text-lg font-semibold text-gray-800">Nenhuma disciplina encontrada</h3>
-          <p class="text-gray-500 mt-2 text-sm max-w-sm mx-auto">Parece que ainda não criou nenhuma disciplina. Comece
-            agora a organizar os seus estudos!</p>
-          <button (click)="navegarParaNovaDisciplina()"
+          <p class="text-gray-500 mt-2 text-sm max-w-sm mx-auto">Parece que ainda não criou nenhuma disciplina. Comece agora a organizar os seus estudos!</p>
+          <button (click)="abrirModalCriarDisciplina()"
             class="mt-6 px-5 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
             Criar Primeira Disciplina
           </button>
         </div>
 
-        <!-- Conteúdo quando HÁ disciplinas -->
-        <div *ngIf="disciplinas.length > 0">
-          <!-- Filtros e Ordenação (VISUAL, sem funcionalidade por enquanto) -->
-          <div class="bg-white rounded-lg p-6 shadow-sm border border-gray-100 mb-8 flex flex-wrap items-center gap-4">
-            <div class="flex items-center">
-              <span class="text-sm text-gray-600 mr-2">Filtrar:</span>
-              <select
-                class="text-sm border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                <option>Todas as disciplinas</option>
-                <option>Recentes</option>
-              </select>
-            </div>
-            <div class="flex items-center">
-              <span class="text-sm text-gray-600 mr-2">Ordenar por:</span>
-              <select
-                class="text-sm border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                <option>Nome A-Z</option>
-                <option>Nome Z-A</option>
-              </select>
-            </div>
-            <div class="flex-1 md:flex-none">
-              <div class="relative">
-                <input type="text" placeholder="Buscar disciplina..."
-                  class="w-full md:w-64 text-sm border border-gray-300 rounded-lg px-3 py-2 pl-9 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-              </div>
-            </div>
-          </div>
+        <div *ngIf="disciplinasOriginais.length > 0">
 
-          <!-- Grid de Cards -->
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div *ngFor="let disciplina of disciplinas"
-              class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col justify-between hover:shadow-md hover:-translate-y-1 transition-all duration-200">
+          <div class="bg-white rounded-lg p-4 shadow-sm border border-gray-100 mb-8 flex flex-wrap items-center gap-4">
+
+            <div class="flex items-center relative">
+               <fa-icon [icon]="faFilter" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></fa-icon>
+              <select class="text-sm border border-gray-300 rounded-lg pl-9 pr-8 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none cursor-pointer"
+                      title="Filtrar disciplinas">
+                <option value="todas">Todas as disciplinas</option>
+                <option value="recentes" disabled>Recentes (Em breve)</option>
+              </select>
+            </div>
+
+            <div class="flex items-center relative">
+               <fa-icon [icon]="faSortAlphaDown" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></fa-icon>
+               <select class="text-sm border border-gray-300 rounded-lg pl-9 pr-8 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none cursor-pointer"
+                      [(ngModel)]="ordemSelecionada"
+                      title="Ordenar disciplinas">
+                <option value="nome-az">Nome A-Z</option>
+                <option value="nome-za">Nome Z-A</option>
+                </select>
+            </div>
+
+            <div class="flex-1 md:flex-none relative">
+              <input type="text" placeholder="Buscar disciplina..."
+                class="w-full md:w-64 text-sm border border-gray-300 rounded-lg px-3 py-2 pl-9 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                [(ngModel)]="termoBusca">
+               <fa-icon [icon]="faSearch" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></fa-icon>
+            </div>
+          </div> <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <div *ngFor="let disciplina of disciplinasFiltradasEOrdenadas"
+                 class="relative bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col justify-between group hover:shadow-lg hover:border-gray-300 transition-all duration-200 cursor-pointer"
+                 [routerLink]="['/disciplinas/detalhe', disciplina.id]">
+
+              <div class="absolute top-4 right-4 flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
+                 <button (click)="editarDisciplina(disciplina.id); $event.stopPropagation()"
+                   class="p-2 h-8 w-8 rounded-full bg-white/70 backdrop-blur-sm text-gray-600 hover:text-blue-600 hover:bg-blue-50 transition-colors" title="Editar">
+                   <fa-icon [icon]="faEdit"></fa-icon>
+                 </button>
+                 <button (click)="abrirModalDelecao(disciplina); $event.stopPropagation()"
+                   class="p-2 h-8 w-8 rounded-full bg-white/70 backdrop-blur-sm text-gray-600 hover:text-red-600 hover:bg-red-50 transition-colors" title="Apagar">
+                   <fa-icon [icon]="faTrash"></fa-icon>
+                 </button>
+              </div>
+
               <div>
                 <div class="flex justify-between items-start mb-4">
                   <div class="w-14 h-14 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <i class="fas fa-book-open text-blue-600 text-2xl"></i>
+                     <fa-icon [icon]="faBookOpen" class="text-blue-600 text-2xl"></fa-icon>
                   </div>
-                  <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full">5
-                    materiais</span>
-                </div>
-                <h3 class="text-lg font-semibold text-gray-800 mb-1 truncate" [title]="disciplina.nome">{{
-                  disciplina.nome }}</h3>
-                <p class="text-gray-500 text-sm h-12 overflow-hidden">{{ disciplina.descricao || 'Nenhuma descrição
-                  fornecida.' }}</p>
+                  </div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-1 truncate" [title]="disciplina.nome">{{ disciplina.nome }}</h3>
+                <p class="text-gray-500 text-sm h-10 overflow-hidden line-clamp-2">{{ disciplina.descricao || 'Nenhuma descrição fornecida.' }}</p>
               </div>
 
               <div class="mt-6 pt-4 border-t border-gray-100 flex justify-between items-center">
-                <span class="text-xs text-gray-400">Atualizada há 2 dias</span>
-                <div class="flex space-x-2">
-                  <button (click)="abrirModalDelecao(disciplina)"
-                    class="p-2 text-gray-500 hover:text-red-600 transition-colors" title="Apagar"><i
-                      class="fas fa-trash fa-lg"></i></button>
-                  <button (click)="editarDisciplina(disciplina.id)"
-                    class="p-2 text-gray-500 hover:text-blue-600 transition-colors" title="Editar"><i
-                      class="fas fa-edit fa-lg"></i></button>
-                  <button (click)="verDetalhes(disciplina.id)"
-                    class="px-3 py-1.5 text-xs font-medium text-white bg-gray-700 rounded-lg hover:bg-gray-800">
-                    Detalhes
-                  </button>
-                </div>
+                <span class="text-xs text-gray-400">
+                   &nbsp;
+                </span>
               </div>
-            </div>
-
-            <!-- Card Adicionar -->
-            <div (click)="navegarParaNovaDisciplina()"
-              class="bg-white rounded-xl shadow-sm border-2 border-gray-300 border-dashed p-6 flex flex-col items-center justify-center hover:shadow-md hover:-translate-y-1 transition-all duration-200 cursor-pointer hover:border-blue-500">
-              <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
-                <i class="fas fa-plus text-blue-600 text-2xl"></i>
-              </div>
-              <h3 class="text-lg font-semibold text-gray-800">Nova Disciplina</h3>
-              <p class="text-gray-500 text-sm text-center">Adicione uma nova disciplina para organizar seus estudos.</p>
-            </div>
+            </div> </div> <div *ngIf="disciplinasFiltradasEOrdenadas.length === 0 && disciplinasOriginais.length > 0"
+               class="text-center py-12 text-gray-500">
+             <p>Nenhuma disciplina encontrada com os filtros atuais.</p>
           </div>
-        </div>
-      </div>
-    </div>
-  </main>
 
-  <!-- MODAL DE CONFIRMAÇÃO DE DELEÇÃO--->
-  <div *ngIf="showDeleteModal"
-    class="fixed inset-0 bg-black/5 backdrop-blur-sm z-40 flex items-center justify-center p-4 transition-opacity duration-300"
-    role="dialog" aria-modal="true" (click)="fecharModalDelecao()">
+        </div> </div> </div> </main>
 
-    <!-- Modal Card -->
-    <div
-      class="bg-white rounded-xl shadow-2xl w-full max-w-md p-6 mx-4 sm:mx-0 relative transform transition-transform duration-300 scale-95 opacity-0 animate-modal-in"
-      (click)="$event.stopPropagation()">
-
-      <!-- Cabeçalho do Modal -->
-      <div class="flex items-start">
+  <div *ngIf="showDeleteModal" class="fixed inset-0 bg-black/5 backdrop-blur-sm z-40 flex items-center justify-center p-4 transition-opacity duration-300" role="dialog" aria-modal="true" (click)="fecharModalDelecao()">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-md p-6 mx-4 sm:mx-0 relative transform transition-transform duration-300 scale-95 opacity-0 animate-modal-in cursor-default select-none" (click)="$event.stopPropagation()"> <div class="flex items-start select-none">
         <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
-          <i class="fas fa-exclamation-triangle text-red-600 text-2xl"></i>
+           <fa-icon [icon]="faExclamationTriangle" class="text-red-600 text-2xl"></fa-icon>
         </div>
-        <div>
+        <div class="select-none">
           <h3 class="text-lg font-bold text-gray-800">Apagar Disciplina</h3>
           <p class="text-sm text-gray-600 mt-1">
             Tem a certeza de que deseja apagar a disciplina
@@ -191,38 +146,32 @@
           </p>
         </div>
       </div>
-
-      <!-- Botões -->
-      <div class="mt-6 flex justify-end space-x-3">
-        <button (click)="fecharModalDelecao()"
-          class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+      <div class="mt-6 flex justify-end space-x-3 select-none">
+        <button (click)="fecharModalDelecao()" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition cursor-pointer">
           Cancelar
         </button>
-        <button (click)="confirmarDelecao()"
-          class="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition">
+        <button (click)="confirmarDelecao()" class="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition cursor-pointer">
           Sim, Apagar
         </button>
       </div>
-
     </div>
   </div>
 
-  <!-- Tailwind Animate CSS -->
+ <app-criar-disciplina-modal
+    [isOpen]="isCriarDisciplinaModalOpen"
+    [disciplinaIdParaEditar]="disciplinaIdSendoEditada"
+    (fecharModal)="fecharModalCriarDisciplina()"
+    (disciplinaAtualizada)="onDisciplinaAtualizada($event)"
+    (disciplinaCriada)="onDisciplinaCriada($event)"> </app-criar-disciplina-modal>
+
   <style>
     @keyframes modal-in {
-      0% {
-        opacity: 0;
-        transform: scale(0.95);
-      }
-
-      100% {
-        opacity: 1;
-        transform: scale(1);
-      }
+      0% { opacity: 0; transform: scale(0.95); }
+      100% { opacity: 1; transform: scale(1); }
     }
-
-    .animate-modal-in {
-      animation: modal-in 0.25s ease-out forwards;
+    .animate-modal-in { animation: modal-in 0.25s ease-out forwards; }
+    .line-clamp-2 {
+       overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical;
     }
   </style>
 

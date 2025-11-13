@@ -1,9 +1,11 @@
 <!-- Versão Simplificada e Clean -->
-<div class="min-h-screen bg-gray-50">
-  <header class="bg-white shadow-sm border-b border-gray-200">
+
+<div class="min-h-screen bg-gray-50" style="user-select: none; -webkit-user-select: none;">
+  <header class="bg-white shadow-sm border-b border-gray-200" style="user-select: none; -webkit-user-select: none;">
+
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-16">
-        <div class="flex items-center space-x-3">
+        <div class="flex items-center space-x-3" style="user-select: none;">
           <div class="w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center shadow-sm">
             <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -11,10 +13,12 @@
               </path>
             </svg>
           </div>
-          <h1 class="font-heading text-xl font-semibold text-gray-800">{{ disciplina?.nome || 'Carregando...' }}</h1>
+
+          <h1 class="font-heading text-xl font-semibold text-gray-800" style="user-select: none;">{{ disciplina?.nome || 'Carregando...' }}</h1>
         </div>
         <button routerLink="/disciplinas" class="p-2 text-gray-500 hover:text-blue-600 transition-colors"
-          title="Voltar">
+          title="Voltar" style="user-select: none;">
+
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m8 8l-6-6 6-6"></path>
           </svg>
@@ -23,56 +27,67 @@
     </div>
   </header>
 
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" style="user-select: none; -webkit-user-select: none;">
+
     <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
 
       <!-- Conteúdo Principal -->
       <div class="lg:col-span-3">
 
         <!-- Header com Ações -->
-        <div class="flex justify-between items-center mb-6">
-          <div>
+        <div class="flex justify-between items-center mb-6" style="user-select: none;">
+          <div style="user-select: none;">
+
             <h2 class="text-2xl font-semibold text-gray-900">Materiais</h2>
             <p class="text-gray-600">{{ totalItens }} materiais • {{ resumos.length }} resumos criados</p>
           </div>
 
           <!--BOTÕES POSICIONADOS À DIREITA -->
-          <div class="flex space-x-3">
+          <div class="flex space-x-3" style="user-select: none;">
             <button (click)="abrirModalUpload()"
-              class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 flex items-center">
+              class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 flex items-center"
+              style="user-select: none;">
+
               <fa-icon [icon]="faUpload" class="mr-2"></fa-icon> Adicionar PDF
             </button>
 
             <button (click)="abrirModalSelecaoMaterial()"
-              class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center">
+
+              class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center"
+              style="user-select: none;">
+
               <fa-icon [icon]="faPlus" class="mr-2"></fa-icon> Novo Resumo
             </button>
           </div>
         </div>
 
         <!-- Loading State -->
-        <div *ngIf="isLoading" class="text-center py-8">
+        <div *ngIf="isLoading" class="text-center py-8" style="user-select: none;">
+
           <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
           <p class="text-gray-600 mt-4">Carregando materiais...</p>
         </div>
 
         <!-- Lista de Materiais Simplificada -->
-        <div class="space-y-4" *ngIf="!isLoading && temMateriais">
+        <div class="space-y-4" *ngIf="!isLoading && temMateriais" style="user-select: none;">
 
           <!-- Material Dinâmico -->
-          <div class="bg-white rounded-lg border border-gray-200" *ngFor="let material of materiais">
+          <div class="bg-white rounded-lg border border-gray-200" *ngFor="let material of materiais" style="user-select: none;">
 
-            <div class="p-4 flex justify-between items-center cursor-pointer hover:bg-gray-50">
-              <div class="flex items-center space-x-3">
+            <div class="p-4 flex justify-between items-center cursor-pointer hover:bg-gray-50" style="user-select: none;">
+              <div class="flex items-center space-x-3" style="user-select: none;">
                 <fa-icon [icon]="getMaterialIcon(material)"
                   [class]="getMaterialIconClass(material) + ' text-lg'"></fa-icon>
-                <div>
+                <div style="user-select: none;">
+
                   <p class="font-medium text-gray-900">{{ material.nomeArquivo }}</p>
                   <p class="text-sm text-gray-500">{{ getQuantidadeResumos(material) }} resumos • Último: {{
                     getDataUltimoResumo(material) }}</p>
                 </div>
               </div>
-              <div class="flex items-center space-x-2">
+
+              <div class="flex items-center space-x-2" style="user-select: none;">
+
                 <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
                   {{ getQuantidadeResumos(material) }} resumos
                 </span>
@@ -81,14 +96,18 @@
             </div>
 
             <!-- ✅ SEÇÃO DE RESUMOS ATUALIZADA COM ESTADOS OTIMISTAS -->
-            <div class="border-t border-gray-100 p-4 space-y-3" *ngIf="getResumosDoMaterial(material).length > 0">
+            <div class="border-t border-gray-100 p-4 space-y-3" *ngIf="getResumosDoMaterial(material).length > 0" style="user-select: none;">
+
 
               <!-- Resumo Otimista com Loading State -->
               <div *ngFor="let resumo of getResumosDoMaterial(material)"
                 [class.opacity-50]="resumo.id.startsWith('temp-')"
-                class="flex justify-between items-center p-3 bg-gray-50 rounded-lg transition-all duration-300">
 
-                <div class="flex-1">
+                class="flex justify-between items-center p-3 bg-gray-50 rounded-lg transition-all duration-300"
+                style="user-select: none;">
+
+                <div class="flex-1" style="user-select: none;">
+
                   <p class="font-medium text-gray-800">{{ resumo.titulo }}</p>
                   <p class="text-xs text-gray-500">
                     Automático • {{ resumo.dataCriacao | date:'dd/MM/yyyy' }}
@@ -96,39 +115,50 @@
 
                   <!-- Indicador de carregamento para resumos otimistas -->
                   <div *ngIf="resumo.id.startsWith('temp-')"
-                    class="flex items-center space-x-2 mt-2 text-blue-600 text-xs">
+
+                    class="flex items-center space-x-2 mt-2 text-blue-600 text-xs" style="user-select: none;">
+
                     <fa-icon [icon]="faSpinner" class="text-blue-500"></fa-icon>
                     <span>Gerando resumo automaticamente...</span>
                   </div>
                 </div>
 
                 <button (click)="abrirResumo(resumo)" class="text-blue-600 hover:text-blue-800 text-sm font-medium"
-                  [class.opacity-30]="resumo.id.startsWith('temp-')" [disabled]="resumo.id.startsWith('temp-')">
+
+                  [class.opacity-30]="resumo.id.startsWith('temp-')" [disabled]="resumo.id.startsWith('temp-')"
+                  style="user-select: none;">
+
                   Abrir
                 </button>
               </div>
             </div>
 
             <!-- Ações do Material -->
-            <div class="border-t border-gray-100 p-4 flex justify-end space-x-2">
+
+            <div class="border-t border-gray-100 p-4 flex justify-end space-x-2" style="user-select: none;">
               <button (click)="visualizarMaterial(material)"
-                class="px-3 py-1 text-sm text-blue-600 hover:text-blue-800 font-medium">
+                class="px-3 py-1 text-sm text-blue-600 hover:text-blue-800 font-medium"
+                style="user-select: none;">
                 Visualizar
               </button>
               <button (click)="baixarMaterial(material)"
-                class="px-3 py-1 text-sm text-green-600 hover:text-green-800 font-medium">
+                class="px-3 py-1 text-sm text-green-600 hover:text-green-800 font-medium"
+                style="user-select: none;">
                 Download
               </button>
               <button (click)="abrirModalExclusao(material)"
-                class="px-3 py-1 text-sm text-red-600 hover:text-red-800 font-medium">
+                class="px-3 py-1 text-sm text-red-600 hover:text-red-800 font-medium"
+                style="user-select: none;">
+
                 Excluir
               </button>
             </div>
           </div>
         </div>
 
+
         <!-- Empty State -->
-        <div *ngIf="!isLoading && !temMateriais" class="text-center py-12">
+        <div *ngIf="!isLoading && !temMateriais" class="text-center py-12" style="user-select: none;">
           <fa-icon [icon]="faFilePdf" class="text-4xl text-gray-400 mb-4"></fa-icon>
           <p class="text-gray-500 text-lg">Nenhum material encontrado</p>
           <p class="text-gray-400 mt-2">Adicione seu primeiro material clicando no botão acima</p>
@@ -136,10 +166,11 @@
       </div>
 
       <!-- Sidebar Simplificada -->
-      <aside class="space-y-6">
-        <div class="bg-white rounded-lg border border-gray-200 p-6">
+      <aside class="space-y-6" style="user-select: none;">
+        <div class="bg-white rounded-lg border border-gray-200 p-6" style="user-select: none;">
           <h3 class="font-semibold text-gray-800 mb-4">Visão Geral</h3>
-          <div class="space-y-3">
+          <div class="space-y-3" style="user-select: none;">
+
             <div class="flex justify-between items-center">
               <span class="text-gray-600">Materiais</span>
               <span class="font-semibold">{{ totalItens }}</span>
@@ -151,13 +182,16 @@
           </div>
         </div>
 
-        <div class="bg-white rounded-lg border border-gray-200 p-6">
+        <div class="bg-white rounded-lg border border-gray-200 p-6" style="user-select: none;">
           <h3 class="font-semibold text-gray-800 mb-3">Ações Rápidas</h3>
-          <div class="space-y-2">
-            <button class="w-full text-left p-2 text-sm text-gray-700 hover:bg-gray-50 rounded flex items-center">
+          <div class="space-y-2" style="user-select: none;">
+            <button class="w-full text-left p-2 text-sm text-gray-700 hover:bg-gray-50 rounded flex items-center"
+              style="user-select: none;">
               <fa-icon [icon]="faSearch" class="mr-2 text-gray-400"></fa-icon> Buscar resumos...
             </button>
-            <button class="w-full text-left p-2 text-sm text-gray-700 hover:bg-gray-50 rounded flex items-center">
+            <button class="w-full text-left p-2 text-sm text-gray-700 hover:bg-gray-50 rounded flex items-center"
+              style="user-select: none;">
+
               <fa-icon [icon]="faFilter" class="mr-2 text-gray-400"></fa-icon> Filtrar por tipo
             </button>
           </div>
@@ -166,84 +200,105 @@
     </div>
 
     <!-- Paginação -->
-    <div class="mt-8" *ngIf="totalPaginas > 1">
+    <div class="mt-8" *ngIf="totalPaginas > 1" style="user-select: none;">
       <nav class="flex items-center justify-between" aria-label="Pagination">
 
         <!-- Informações da página -->
-        <div class="text-sm text-gray-700">
+        <div class="text-sm text-gray-700" style="user-select: none;">
+
           Página {{ paginaAtual + 1 }} de {{ totalPaginas }} •
           {{ materiais.length }} de {{ totalItens }} materiais
         </div>
 
         <!-- Controles de paginação -->
-        <div class="flex items-center space-x-2">
+        <div class="flex items-center space-x-2" style="user-select: none;">
           <button (click)="paginaAnterior()" [disabled]="paginaAtual === 0"
-            class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+            class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            style="user-select: none;">
+
             Anterior
           </button>
 
           <button (click)="proximaPagina()" [disabled]="paginaAtual >= totalPaginas - 1"
-            class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+
+            class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            style="user-select: none;">
+
             Próxima
           </button>
         </div>
       </nav>
     </div>
   </main>
+
   <!-- MODAL DE SELEÇÃO DE MATERIAL ADICIONADO -->
   <app-selecionar-material-modal [isOpen]="modalSelecaoMaterialAberto" [materiais]="materiais"
     (fecharModal)="fecharModalSelecaoMaterial()" (materialSelecionado)="onMaterialSelecionado($event)">
   </app-selecionar-material-modal>
+
   <!-- Modal de Upload com Overlay -->
   <div *ngIf="modalUploadAberto"
-    class="fixed inset-0 bg-black/5 backdrop-blur-sm z-40 flex items-center justify-center p-4 transition-opacity duration-300">
+    class="fixed inset-0 bg-black/5 backdrop-blur-sm z-40 flex items-center justify-center p-4 transition-opacity duration-300"
+    style="user-select: none; -webkit-user-select: none;">
 
     <!-- Card do Modal -->
     <div class="relative bg-white rounded-xl shadow-2xl w-full max-w-md animate-modal-in"
-      (click)="$event.stopPropagation()">
+      (click)="$event.stopPropagation()" style="user-select: none;">
 
       <!-- Header do Modal -->
-      <div class="px-6 py-4 border-b border-gray-200/70 flex justify-between items-center">
+      <div class="px-6 py-4 border-b border-gray-200/70 flex justify-between items-center" style="user-select: none;">
         <h3 class="text-lg font-semibold text-gray-900">Adicionar Material</h3>
-        <button (click)="fecharModalUpload()" class="text-gray-400 hover:text-gray-600">
+
+        <button (click)="fecharModalUpload()" class="text-gray-400 hover:text-gray-600" style="user-select: none;">
+
           <fa-icon [icon]="faTimes"></fa-icon>
         </button>
       </div>
 
       <!-- Conteúdo do Modal -->
-      <div class="p-6">
+      <div class="p-6" style="user-select: none;">
         <!-- Área de Upload -->
         <label for="file-upload-modal"
-          class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-blue-400 hover:bg-blue-50/30 transition-colors flex flex-col items-center justify-center">
+
+          class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-blue-400 hover:bg-blue-50/30 transition-colors flex flex-col items-center justify-center"
+          style="user-select: none;">
+
           <fa-icon [icon]="faCloudUploadAlt" class="text-blue-500 text-3xl mb-4"></fa-icon>
           <p class="text-gray-700 font-medium mb-2">Arraste um ficheiro aqui</p>
           <p class="text-gray-500 text-sm mb-4">ou clique para selecionar</p>
           <input id="file-upload-modal" type="file" class="hidden" (change)="onFileSelected($event)"
             accept=".pdf,.docx,.pptx">
-          <span class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+
+          <span class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+            style="user-select: none;">
+
             Selecionar Ficheiro
           </span>
           <p class="text-gray-400 text-xs mt-3">PDF, DOCX, PPTX (até 100MB)</p>
         </label>
 
         <!-- Preview do Ficheiro -->
-        <div *ngIf="arquivoSelecionado" class="mt-6 p-4 bg-gray-50/80 rounded-lg border border-gray-200">
+        <div *ngIf="arquivoSelecionado" class="mt-6 p-4 bg-gray-50/80 rounded-lg border border-gray-200" style="user-select: none;">
           <div class="flex items-center justify-between mb-3">
-            <div class="flex items-center space-x-3">
+
+            <div class="flex items-center space-x-3" style="user-select: none;">
               <fa-icon [icon]="getMaterialIcon(arquivoSelecionado)"
                 [class]="getMaterialIconClass(arquivoSelecionado) + ' text-xl'"></fa-icon>
-              <div>
+              <div style="user-select: none;">
+
                 <p class="font-medium text-gray-900">{{ arquivoSelecionado.name }}</p>
                 <p class="text-sm text-gray-500">{{ formatFileSize(arquivoSelecionado.size) }}</p>
               </div>
             </div>
-            <button (click)="removerArquivoSelecionado()" class="text-gray-400 hover:text-red-500">
+
+            <button (click)="removerArquivoSelecionado()" class="text-gray-400 hover:text-red-500" style="user-select: none;">
+
               <fa-icon [icon]="faTimes"></fa-icon>
             </button>
           </div>
           <button (click)="fazerUploadMaterial()"
             class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
-            [disabled]="isUploading">
+            [disabled]="isUploading" style="user-select: none;">
             <span *ngIf="!isUploading">Fazer Upload</span>
             <span *ngIf="isUploading">
               <fa-icon [icon]="faSpinner" class="animate-spin mr-2"></fa-icon>
@@ -253,7 +308,8 @@
         </div>
 
         <!-- Mensagem de Erro do Upload -->
-        <div *ngIf="uploadErrorMessage" class="mt-4 text-red-600 text-sm text-center">
+        <div *ngIf="uploadErrorMessage" class="mt-4 text-red-600 text-sm text-center" style="user-select: none;">
+
           <fa-icon [icon]="faExclamationTriangle" class="mr-1"></fa-icon>
           {{ uploadErrorMessage }}
         </div>
@@ -263,22 +319,25 @@
 
   <!-- Modal de Confirmação de Exclusão -->
   <div *ngIf="modalExclusaoAberto"
-    class="fixed inset-0 bg-black/5 backdrop-blur-sm z-40 flex items-center justify-center p-4 transition-opacity duration-300">
+
+    class="fixed inset-0 bg-black/5 backdrop-blur-sm z-40 flex items-center justify-center p-4 transition-opacity duration-300"
+    style="user-select: none; -webkit-user-select: none;">
 
     <!-- Card do Modal -->
     <div class="relative bg-white rounded-xl shadow-2xl w-full max-w-md animate-modal-in"
-      (click)="$event.stopPropagation()">
+      (click)="$event.stopPropagation()" style="user-select: none;">
 
       <!-- Header do Modal -->
-      <div class="px-6 py-4 border-b border-gray-200/70 flex justify-between items-center">
+      <div class="px-6 py-4 border-b border-gray-200/70 flex justify-between items-center" style="user-select: none;">
         <h3 class="text-lg font-semibold text-gray-900">Confirmar Exclusão</h3>
-        <button (click)="fecharModalExclusao()" class="text-gray-400 hover:text-gray-600">
+        <button (click)="fecharModalExclusao()" class="text-gray-400 hover:text-gray-600" style="user-select: none;">
+
           <fa-icon [icon]="faTimes"></fa-icon>
         </button>
       </div>
 
       <!-- Conteúdo do Modal -->
-      <div class="p-6">
+      <div class="p-6" style="user-select: none;">
         <div class="text-center">
           <fa-icon [icon]="faExclamationTriangle" class="text-yellow-500 text-3xl mb-4"></fa-icon>
           <p class="text-gray-700 font-medium mb-2">Tem certeza que deseja excluir este material?</p>
@@ -288,14 +347,19 @@
           <p class="text-gray-400 text-xs">Esta ação não pode ser desfeita.</p>
         </div>
 
-        <div class="flex space-x-3 mt-6">
+
+        <div class="flex space-x-3 mt-6" style="user-select: none;">
           <button (click)="fecharModalExclusao()"
-            class="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+            class="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+            style="user-select: none;">
+
             Cancelar
           </button>
           <button (click)="confirmarExclusao()"
             class="flex-1 px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
-            [disabled]="isExcluindo">
+
+            [disabled]="isExcluindo" style="user-select: none;">
+
             <span *ngIf="!isExcluindo">Excluir</span>
             <span *ngIf="isExcluindo">
               <fa-icon [icon]="faSpinner" class="animate-spin mr-2"></fa-icon>
@@ -305,7 +369,8 @@
         </div>
 
         <!-- Mensagem de Erro da Exclusão -->
-        <div *ngIf="exclusaoErrorMessage" class="mt-4 text-red-600 text-sm text-center">
+        <div *ngIf="exclusaoErrorMessage" class="mt-4 text-red-600 text-sm text-center" style="user-select: none;">
+
           <fa-icon [icon]="faExclamationTriangle" class="mr-1"></fa-icon>
           {{ exclusaoErrorMessage }}
         </div>
@@ -315,8 +380,9 @@
 </div>
 
 <!-- NO HTML, ADICIONE ISSO EM ALGUM LUGAR VISÍVEL -->
-<div *ngIf="isLoading" class="fixed inset-0 bg-black/20 flex items-center justify-center z-50">
-  <div class="bg-white rounded-lg p-6 flex items-center space-x-3">
+<div *ngIf="isLoading" class="fixed inset-0 bg-black/20 flex items-center justify-center z-50" style="user-select: none; -webkit-user-select: none;">
+  <div class="bg-white rounded-lg p-6 flex items-center space-x-3" style="user-select: none;">
+
     <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
     <p class="text-gray-700">Gerando resumo automático...</p>
   </div>
