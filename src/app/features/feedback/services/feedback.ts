@@ -23,7 +23,7 @@ export interface FeedbackResponse {
 })
 export class FeedbackService {
 
-  private readonly apiUrl = 'http://localhost:8080';
+  private readonly apiUrl = 'https://pdfocus-production.up.railway.app';
 
   constructor(private http: HttpClient) {}
 
