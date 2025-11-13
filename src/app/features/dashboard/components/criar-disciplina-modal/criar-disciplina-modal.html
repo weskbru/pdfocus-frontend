@@ -1,4 +1,5 @@
 <div *ngIf="isOpen"
+
   class="fixed inset-0 bg-black/5 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-opacity duration-300"
   (click)="onFecharModal()">
 
@@ -9,11 +10,13 @@
     <form (ngSubmit)="onSubmit()">
 
       <div class="px-6 py-4 border-b border-gray-200/70 flex justify-between items-center select-none">
+
         <div class="flex items-center space-x-3">
           <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
             <fa-icon [icon]="faPencilAlt" class="text-blue-600"></fa-icon>
           </div>
           <div>
+
             <h3 class="text-lg font-semibold text-gray-900">{{ tituloModal }}</h3>
             <p class="text-sm text-gray-500">
               {{ modoEdicao ? 'Atualize os dados da disciplina.' : 'Organize seus estudos criando uma nova disciplina.'
@@ -23,6 +26,7 @@
         </div>
         <button type="button" (click)="onFecharModal()" [disabled]="isSubmitting || isLoadingDetalhes"
           class="text-gray-400 hover:text-gray-600 transition-colors cursor-pointer" aria-label="Fechar modal">
+
           <fa-icon [icon]="faTimes"></fa-icon>
         </button>
       </div>
@@ -30,8 +34,10 @@
       <div class="p-6 overflow-y-auto">
         <div class="space-y-4">
 
+
           <div *ngIf="errorMessage"
             class="p-3 bg-red-50 border border-red-200 rounded-lg flex items-center text-sm select-none">
+
             <fa-icon [icon]="faExclamationTriangle" class="text-red-600 mr-2"></fa-icon>
             <span class="text-red-800">{{ errorMessage }}</span>
           </div>
@@ -93,3 +99,4 @@
     </form>
   </div>
 </div> 
+
