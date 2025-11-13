@@ -14,7 +14,7 @@ import { CriarDisciplinaModalComponent } from './components/criar-disciplina-mod
 import { InfoModalComponent } from './components/info-modal/info-modal';
 
 // --- Importar Modal de Perfil ---
-import { EditarPerfilModalComponent } from '../profile/components/editar-perfil-modal/editar-perfil-modal'; // Ajuste o caminho se necessário
+import { EditarPerfilModalComponent } from '../profile/components/editar-perfil-modal/editar-perfil-modal';
 
 // --- Imports de Resumo ---
 import { DisciplinaService, ResumoResponse } from '../disciplinas/disciplina.service';
@@ -24,11 +24,6 @@ import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontaweso
 // --- MUDANÇA: Adicionar Ícones do User Menu ---
 import { faEye, faDownload, faUserEdit, faSignOutAlt, faBell } from '@fortawesome/free-solid-svg-icons';
 
-/**
- * Componente principal do Dashboard.
- * Exibe um resumo das estatísticas do usuário, ações rápidas e materiais recentes.
- * Também gerencia a lógica para abrir o modal de "Novo Resumo".
- */
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -60,20 +55,19 @@ export class Dashboard implements OnInit {
   ];
 
   /** Lista de materiais adicionados recentemente. */
-  public recentMateriais: MaterialRecenteResponse[] = []; // [--- CORREÇÃO 3: Bloco duplicado removido ---]
+  public recentMateriais: MaterialRecenteResponse[] = [];
   public recentResumos: ResumoResponse[] = [];
   public isLoadingResumos = false;
 
   // --- Flags de Controle dos Modais ---
+  // [--- CORREÇÃO 3: TODAS AS PROPRIEDADES DUPLICADAS FORAM REMOVIDAS DAQUI ---]
   public isNovoResumoModalOpen = false;
   public isAdicionarMaterialModalOpen = false;
   public isCriarDisciplinaModalOpen = false;
   public isInfoModalOpen = false;
   public infoModalTitle = '';
   public infoModalMessage = '';
-  // --- MUDANÇA: Flag para o modal de perfil ---
   public isPerfilModalOpen = false;
-  // --- MUDANÇA: Flag para o dropdown do usuário ---
   public isUserMenuOpen = false;
 
   // --- Ícones ---
@@ -82,8 +76,6 @@ export class Dashboard implements OnInit {
   faUserEdit = faUserEdit;
   faSignOutAlt = faSignOutAlt;
   faBell = faBell;
-
-  // [--- CORREÇÃO 4: Bloco de propriedades duplicadas (recentMateriais, isNovoResumoModalOpen, etc.) foi REMOVIDO daqui ---]
 
   // --- Construtor ---
   constructor(
@@ -98,33 +90,21 @@ export class Dashboard implements OnInit {
   }
 
   // --- Métodos de Ciclo de Vida ---
-  /**
-   * Hook do Angular chamado na inicialização do componente.
-   * Dispara o carregamento de todos os dados iniciais do dashboard.
-   */
   ngOnInit(): void {
     this.carregarDadosDoUsuario();
     this.carregarEstatisticas();
     this.carregarResumosRecentes();
-    // [--- CORREÇÃO 5: A chamada duplicada para 'carregarMateriaisRecentes()' foi removida ---]
+    // [--- CORREÇÃO 4: A chamada duplicada para 'carregarMateriaisRecentes()' foi removida ---]
   }
 
-  /**
-     * Escuta cliques em qualquer lugar do documento.
-     * Se o clique for FORA do menu do usuário (ícone ou dropdown), fecha o dropdown.
-     * @param event O evento de clique do mouse.
-     */
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
     const userMenuArea = this.elementRef.nativeElement.querySelector('#user-menu-area');
-    // Se o menu está aberto E o clique NÃO foi dentro da área do menu
     if (this.isUserMenuOpen && userMenuArea && !userMenuArea.contains(event.target as Node)) {
       this.isUserMenuOpen = false;
     }
   }
 
-  // --- MUDANÇA: Método para controlar dropdown ---
-  /** Alterna a visibilidade do menu dropdown do usuário. */
   toggleUserMenu(): void {
     this.isUserMenuOpen = !this.isUserMenuOpen;
   }
@@ -132,57 +112,39 @@ export class Dashboard implements OnInit {
   abrirModalEditarPerfil(): void {
     console.log("Abrindo modal de editar perfil...");
     this.isPerfilModalOpen = true;
-   this.isUserMenuOpen = false; // Fecha o dropdown ao abrir o modal
+    this.isUserMenuOpen = false;
   }
 
-
-  /** Fecha o modal de edição de perfil. */
   fecharModalEditarPerfil(): void {
     this.isPerfilModalOpen = false;
   }
 
-  /** Chamado quando o modal de perfil emite sucesso na atualização. Recarrega o nome do usuário. */
-  onPerfilAtualizado(novosDados: any): void { // Use 'UserInfo' se tiver essa interface
+  onPerfilAtualizado(novosDados: any): void {
     console.log('Perfil atualizado, recarregando dados do usuário...', novosDados);
     this.fecharModalEditarPerfil();
     this.carregarDadosDoUsuario();
   }
 
-
   // --- Métodos de Ação (Chamados pelo Template) ---
-
-  /**
-   * Decide o que fazer quando um card de "Ação Rápida" é clicado.
-   * Se a ação tiver uma rota, navega.
-   * Se for "Novo Resumo", abre o modal.
-   * @param action O objeto da ação clicada (do array 'quickActions').
-   */
   handleActionClick(action: { label: string, route: string | null }): void {
-
     if (action.route) {
       this.router.navigate([action.route]);
     } else if (action.label === 'Nova Disciplina') {
       this.isCriarDisciplinaModalOpen = true;
     }
-    // ---Lógica do "Novo Resumo" atualizada ---
     else if (action.label === 'Novo Resumo') {
-      // VERIFICA SE EXISTEM DISCIPLINAS
       if (this.stats.totalDisciplinas > 0) {
-        // Se sim, abre o modal de novo resumo normalmente
         this.isNovoResumoModalOpen = true;
       } else {
-        // Se não, configura e abre o MODAL DE AVISO
         this.infoModalTitle = 'Crie uma Disciplina Primeiro';
         this.infoModalMessage = 'Você precisa ter pelo menos uma disciplina criada para poder adicionar um resumo.';
         this.isInfoModalOpen = true;
       }
     }
     else if (action.label === 'Adicionar Material') {
-      // A lógica aqui pode precisar da mesma verificação se fizer sentido
       if (this.stats.totalDisciplinas > 0) {
-        this.isAdicionarMaterialModalOpen = true; // Abre modal de upload
+        this.isAdicionarMaterialModalOpen = true;
       } else {
-        // Se não, configura e abre o MODAL DE AVISO (reaproveitando)
         this.infoModalTitle = 'Crie uma Disciplina Primeiro';
         this.infoModalMessage = 'Você precisa ter pelo menos uma disciplina criada para poder adicionar um material.';
         this.isInfoModalOpen = true;
@@ -190,42 +152,27 @@ export class Dashboard implements OnInit {
     }
   }
 
-  // --- função para lidar com a ação do modal de aviso ---
-  /**
-   * Chamado quando o usuário clica no botão principal do modal de aviso.
-   * Fecha o modal de aviso e abre o modal de criar disciplina.
-   */
   handleInfoModalAction(): void {
-    this.isInfoModalOpen = false; // Fecha o aviso
-    this.isCriarDisciplinaModalOpen = true; // Abre o de criar disciplina
+    this.isInfoModalOpen = false;
+    this.isCriarDisciplinaModalOpen = true;
   }
 
-  /**
-   * Realiza o logout do usuário e o redireciona para a página de login.
-   */
   fazerLogout(): void {
     this.authService.logout();
     this.router.navigate(['/login']);
   }
 
   // --- Métodos Privados de Busca de Dados ---
-
-  /**
-   * Busca os dados do usuário logado (ex: nome) via AuthService.
-   */
   private carregarDadosDoUsuario(): void {
     this.authService.buscarUsuarioLogado().subscribe({
       next: (dadosDoUsuario) => { this.userName = dadosDoUsuario.nome; },
       error: (err) => {
         console.error('Erro ao buscar dados do usuário:', err);
-        this.fazerLogout(); // Desloga o usuário se houver erro (ex: token expirado)
+        this.fazerLogout();
       }
     });
   }
 
-  /**
-   * Busca as estatísticas (contagens) via DashboardService.
-   */
   private carregarEstatisticas(): void {
     this.dashboardService.buscarEstatisticas().subscribe({
       next: (dadosDasEstatisticas) => { this.stats = dadosDasEstatisticas; },
@@ -233,43 +180,27 @@ export class Dashboard implements OnInit {
     });
   }
 
-  /**
-   * Busca todos os resumos do usuário, ordena por data de criação (mais recente primeiro)
-   * e armazena os 5 primeiros em 'recentResumos'.
-   */
   private carregarResumosRecentes(): void {
-    this.isLoadingResumos = true; // Inicia loading (opcional)
+    this.isLoadingResumos = true;
     this.disciplinaService.buscarTodosResumos().subscribe({
       next: (todosResumos) => {
-        // Ordena pela data de criação (string ISO 8601), mais recente primeiro
         const resumosOrdenados = [...todosResumos].sort((a, b) => {
-          // Comparação de strings ISO funciona para ordenação cronológica descendente
           return b.dataCriacao.localeCompare(a.dataCriacao);
         });
-
-        // Pega os 5 mais recentes (ou menos, se houver menos que 5)
         this.recentResumos = resumosOrdenados.slice(0, 5);
-        this.isLoadingResumos = false; // Finaliza loading
+        this.isLoadingResumos = false;
       },
       error: (err) => {
         console.error('Erro ao buscar resumos recentes:', err);
-        this.isLoadingResumos = false; // Finaliza loading
+        this.isLoadingResumos = false;
       }
     });
   }
 
-  /**
-   * Navega para a página de detalhes do resumo clicado.
-   * @param resumoId O ID do resumo.
-   */
   visualizarResumo(resumoId: string): void {
     this.router.navigate(['/resumos', resumoId]);
   }
 
-  /**
-   * Busca o conteúdo completo do resumo e inicia o download como arquivo .txt.
-section-six-text    * @param resumo O objeto ResumoResponse clicado.
-   */
   baixarResumo(resumo: ResumoResponse): void {
     console.log('Iniciando download para:', resumo.titulo);
     this.disciplinaService.buscarResumoPorId(resumo.id).subscribe({
@@ -289,12 +220,6 @@ section-six-text    * @param resumo O objeto ResumoResponse clicado.
     });
   }
 
-
-  /**
-   * Cria um Blob com o conteúdo de texto e força o download no navegador.
-s  * @param nomeArquivo O nome desejado para o arquivo (ex: "meu_resumo.txt").
-   * @param conteudo O texto a ser salvo no arquivo.
-   */
   private criarEBaixarArquivoTxt(nomeArquivo: string, conteudo: string): void {
     const blob = new Blob([conteudo], { type: 'text/plain;charset=utf-8' });
     const url = window.URL.createObjectURL(blob);
@@ -307,7 +232,6 @@ s  * @param nomeArquivo O nome desejado para o arquivo (ex: "meu_resumo.txt").
     window.URL.revokeObjectURL(url);
   }
 
-
   public hasUnreadNotifications = true;
   public notificationCount = 3;
 
@@ -315,7 +239,4 @@ s  * @param nomeArquivo O nome desejado para o arquivo (ex: "meu_resumo.txt").
     this.hasUnreadNotifications = false;
     this.notificationCount = 0;
   }
-
-  // [--- CORREÇÃO 6: Métodos duplicados (getMaterialColor, etc.) foram removidos ---]
-
 }
