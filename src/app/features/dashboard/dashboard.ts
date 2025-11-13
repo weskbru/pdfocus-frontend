@@ -1,7 +1,10 @@
 // --- MUDANÇA: Adicionar HostListener e ElementRef ---
 import { Component, OnInit, HostListener, ElementRef } from '@angular/core';
+// --- MUDANÇA: DatePipe importado de @angular/common ---
+import { CommonModule, DatePipe } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../core/auth';
+// [--- CORREÇÃO 1: IMPORTAÇÃO ADICIONADA ---]
 import { DashboardService, DashboardEstatisticasResponse, MaterialRecenteResponse } from './dashboard.service';
 
 // --- Imports dos Modais ---
@@ -32,18 +35,17 @@ import { faEye, faDownload, faUserEdit, faSignOutAlt, faBell } from '@fortawesom
   imports: [
     CommonModule,
     RouterModule,
-
     FontAwesomeModule,
     NovoResumoDashboardModalComponent,
     AdicionarMaterialModalComponent,
     CriarDisciplinaModalComponent,
     InfoModalComponent,
-    EditarPerfilModalComponent 
-
+    EditarPerfilModalComponent,
+    DatePipe // [--- CORREÇÃO 2: DatePipe movido para imports ---]
   ],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.css'],
-  providers: [DatePipe]
+  providers: [ /* DatePipe removido daqui */]
 })
 export class Dashboard implements OnInit {
 
@@ -52,17 +54,17 @@ export class Dashboard implements OnInit {
   public stats: DashboardEstatisticasResponse = { totalDisciplinas: 0, resumosCriados: 0, totalMateriais: 0 };
   public quickActions = [
     { label: 'Nova Disciplina', icon: '📚', color: 'bg-blue-100', route: null },
-
     { label: 'Novo Resumo', icon: '📝', color: 'bg-green-100', route: null },
     { label: 'Adicionar Material', icon: '📎', color: 'bg-purple-100', route: null },
     { label: 'Ver Disciplinas', icon: '📂', color: 'bg-orange-100', route: '/disciplinas' }
   ];
 
-
+  /** Lista de materiais adicionados recentemente. */
+  public recentMateriais: MaterialRecenteResponse[] = []; // [--- CORREÇÃO 3: Bloco duplicado removido ---]
   public recentResumos: ResumoResponse[] = [];
   public isLoadingResumos = false;
- 
- // --- Flags de Controle dos Modais ---
+
+  // --- Flags de Controle dos Modais ---
   public isNovoResumoModalOpen = false;
   public isAdicionarMaterialModalOpen = false;
   public isCriarDisciplinaModalOpen = false;
@@ -74,29 +76,14 @@ export class Dashboard implements OnInit {
   // --- MUDANÇA: Flag para o dropdown do usuário ---
   public isUserMenuOpen = false;
 
- // --- Ícones ---
+  // --- Ícones ---
   faEye = faEye;
   faDownload = faDownload;
   faUserEdit = faUserEdit;
   faSignOutAlt = faSignOutAlt;
   faBell = faBell;
 
-
-  /** Lista de materiais adicionados recentemente. */
-  public recentMateriais: MaterialRecenteResponse[] = [];
-
-
-  // --- Flags de Controle dos Modais ---
-  // [--- CORREÇÃO 2: BLOCO DUPLICADO REMOVIDO ---]
-  /** Controla a visibilidade (aberto/fechado) do modal de novo resumo. */
-  public isNovoResumoModalOpen = false;
-  /** Controla a visibilidade do modal de criar disciplina. */
-  public isCriarDisciplinaModalOpen = false;
-  /** Controla a visibilidade do modal de adicionar material. */
-  public isAdicionarMaterialModalOpen = false;
-  public isInfoModalOpen = false;
-  public infoModalTitle = '';
-  public infoModalMessage = '';
+  // [--- CORREÇÃO 4: Bloco de propriedades duplicadas (recentMateriais, isNovoResumoModalOpen, etc.) foi REMOVIDO daqui ---]
 
   // --- Construtor ---
   constructor(
@@ -107,7 +94,7 @@ export class Dashboard implements OnInit {
     library: FaIconLibrary,
     private elementRef: ElementRef
   ) {
-      library.addIcons(faEye, faDownload, faUserEdit, faSignOutAlt, faBell);
+    library.addIcons(faEye, faDownload, faUserEdit, faSignOutAlt, faBell);
   }
 
   // --- Métodos de Ciclo de Vida ---
@@ -119,13 +106,14 @@ export class Dashboard implements OnInit {
     this.carregarDadosDoUsuario();
     this.carregarEstatisticas();
     this.carregarResumosRecentes();
+    // [--- CORREÇÃO 5: A chamada duplicada para 'carregarMateriaisRecentes()' foi removida ---]
   }
 
-/**
-   * Escuta cliques em qualquer lugar do documento.
-   * Se o clique for FORA do menu do usuário (ícone ou dropdown), fecha o dropdown.
-   * @param event O evento de clique do mouse.
-   */
+  /**
+     * Escuta cliques em qualquer lugar do documento.
+     * Se o clique for FORA do menu do usuário (ícone ou dropdown), fecha o dropdown.
+     * @param event O evento de clique do mouse.
+     */
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
     const userMenuArea = this.elementRef.nativeElement.querySelector('#user-menu-area');
@@ -144,7 +132,7 @@ export class Dashboard implements OnInit {
   abrirModalEditarPerfil(): void {
     console.log("Abrindo modal de editar perfil...");
     this.isPerfilModalOpen = true;
-    this.isUserMenuOpen = false; // Fecha o dropdown ao abrir o modal
+   this.isUserMenuOpen = false; // Fecha o dropdown ao abrir o modal
   }
 
 
@@ -155,9 +143,9 @@ export class Dashboard implements OnInit {
 
   /** Chamado quando o modal de perfil emite sucesso na atualização. Recarrega o nome do usuário. */
   onPerfilAtualizado(novosDados: any): void { // Use 'UserInfo' se tiver essa interface
-     console.log('Perfil atualizado, recarregando dados do usuário...', novosDados);
-     this.fecharModalEditarPerfil();
-     this.carregarDadosDoUsuario(); 
+    console.log('Perfil atualizado, recarregando dados do usuário...', novosDados);
+    this.fecharModalEditarPerfil();
+    this.carregarDadosDoUsuario();
   }
 
 
@@ -246,38 +234,66 @@ export class Dashboard implements OnInit {
   }
 
   /**
-   * Busca a lista de materiais recentes via DashboardService.
+   * Busca todos os resumos do usuário, ordena por data de criação (mais recente primeiro)
+   * e armazena os 5 primeiros em 'recentResumos'.
    */
-  private carregarMateriaisRecentes(): void {
-    this.dashboardService.buscarMateriaisRecentes().subscribe({
-      next: (listaDeMateriais) => { this.recentMateriais = listaDeMateriais; },
-      error: (err) => { console.error('Erro ao buscar materiais recentes:', err); }
+  private carregarResumosRecentes(): void {
+    this.isLoadingResumos = true; // Inicia loading (opcional)
+    this.disciplinaService.buscarTodosResumos().subscribe({
+      next: (todosResumos) => {
+        // Ordena pela data de criação (string ISO 8601), mais recente primeiro
+        const resumosOrdenados = [...todosResumos].sort((a, b) => {
+          // Comparação de strings ISO funciona para ordenação cronológica descendente
+          return b.dataCriacao.localeCompare(a.dataCriacao);
+        });
+
+        // Pega os 5 mais recentes (ou menos, se houver menos que 5)
+        this.recentResumos = resumosOrdenados.slice(0, 5);
+        this.isLoadingResumos = false; // Finaliza loading
+      },
+      error: (err) => {
+        console.error('Erro ao buscar resumos recentes:', err);
+        this.isLoadingResumos = false; // Finaliza loading
+      }
     });
   }
 
-  // --- Métodos de Ajuda (Helpers) para o Template ---
-
   /**
-   * Função de ajuda para o template. Retorna uma classe de cor da Tailwind
-   * com base na extensão do nome do arquivo.
-   * @param nomeArquivo O nome completo do arquivo (ex: "relatorio.pdf").
-   * @returns A classe CSS para a cor de fundo.
+   * Navega para a página de detalhes do resumo clicado.
+   * @param resumoId O ID do resumo.
    */
-  getMaterialColor(nomeArquivo: string): string {
-    const extensao = nomeArquivo.split('.').pop()?.toLowerCase();
-    switch (extensao) {
-      case 'pdf': return 'bg-red-100';
-      case 'pptx': return 'bg-orange-100';
-      case 'docx': return 'bg-blue-100';
-      default: return 'bg-gray-100';
-    }
+  visualizarResumo(resumoId: string): void {
+    this.router.navigate(['/resumos', resumoId]);
   }
 
   /**
-   * Função de ajuda para o template. Retorna um ícone (emoji) com base
-   * na extensão do nome do arquivo.
-   * @param nomeArquivo O nome completo do arquivo (ex: "relatorio.pdf").
-   * @returns O caractere do ícone.
+   * Busca o conteúdo completo do resumo e inicia o download como arquivo .txt.
+section-six-text    * @param resumo O objeto ResumoResponse clicado.
+   */
+  baixarResumo(resumo: ResumoResponse): void {
+    console.log('Iniciando download para:', resumo.titulo);
+    this.disciplinaService.buscarResumoPorId(resumo.id).subscribe({
+      next: (detalhesResumo) => {
+        if (detalhesResumo.conteudo) {
+          const nomeArquivoLimpo = resumo.titulo.replace(/[^a-z0-9\s_-]/gi, '').replace(/\s+/g, '_');
+          this.criarEBaixarArquivoTxt(`${nomeArquivoLimpo || 'resumo'}.txt`, detalhesResumo.conteudo);
+        } else {
+          console.error('Conteúdo do resumo está vazio.');
+          alert('Não foi possível baixar o resumo: conteúdo vazio.');
+        }
+      },
+      error: (err) => {
+        console.error('Erro ao buscar detalhes do resumo para download:', err);
+        alert('Erro ao baixar o resumo. Tente novamente.');
+      }
+    });
+  }
+
+
+  /**
+   * Cria um Blob com o conteúdo de texto e força o download no navegador.
+s  * @param nomeArquivo O nome desejado para o arquivo (ex: "meu_resumo.txt").
+   * @param conteudo O texto a ser salvo no arquivo.
    */
   private criarEBaixarArquivoTxt(nomeArquivo: string, conteudo: string): void {
     const blob = new Blob([conteudo], { type: 'text/plain;charset=utf-8' });
@@ -290,13 +306,16 @@ export class Dashboard implements OnInit {
     document.body.removeChild(link);
     window.URL.revokeObjectURL(url);
   }
-  
 
-public hasUnreadNotifications = true;
-public notificationCount = 3;
 
-marcarNotificacoesComoLidas(): void {
-  this.hasUnreadNotifications = false;
-  this.notificationCount = 0;
-}
+  public hasUnreadNotifications = true;
+  public notificationCount = 3;
+
+  marcarNotificacoesComoLidas(): void {
+    this.hasUnreadNotifications = false;
+    this.notificationCount = 0;
+  }
+
+  // [--- CORREÇÃO 6: Métodos duplicados (getMaterialColor, etc.) foram removidos ---]
+
 }
