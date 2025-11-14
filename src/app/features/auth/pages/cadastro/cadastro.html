@@ -1,13 +1,15 @@
 <!-- features/auth/pages/cadastro/cadastro.html -->
 <div class="min-h-screen bg-gray-50 flex items-center justify-center p-4">
   <div class="w-full max-w-sm">
-    
+
     <!-- Logo e Título -->
     <div class="text-center mb-8">
       <div class="flex justify-center mb-4">
         <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
           <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+            </path>
           </svg>
         </div>
       </div>
@@ -22,20 +24,17 @@
     <!-- Card do Formulário -->
     <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
       <form [formGroup]="cadastroForm" (ngSubmit)="onSubmit()" class="space-y-4">
-        
+
         <!-- Campo Nome -->
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-2">
             Nome completo
           </label>
-          <input 
-            type="text" 
-            formControlName="nome" 
-            placeholder="Seu nome completo"
+          <input type="text" formControlName="nome" placeholder="Seu nome completo"
             class="w-full px-3 py-2 border border-gray-300 rounded-md text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
             [class.border-red-300]="nome?.invalid && nome?.touched"
             [class.focus:ring-red-200]="nome?.invalid && nome?.touched">
-          
+
           <div *ngIf="nome?.invalid && nome?.touched" class="mt-1 text-red-600 text-sm">
             <span *ngIf="nome?.errors?.['required']">Nome é obrigatório</span>
             <span *ngIf="nome?.errors?.['minlength']">Mínimo 3 caracteres</span>
@@ -47,14 +46,11 @@
           <label class="block text-sm font-medium text-gray-700 mb-2">
             Email
           </label>
-          <input 
-            type="email" 
-            formControlName="email" 
-            placeholder="seu@email.com"
+          <input type="email" formControlName="email" placeholder="seu@email.com"
             class="w-full px-3 py-2 border border-gray-300 rounded-md text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
             [class.border-red-300]="email?.invalid && email?.touched"
             [class.focus:ring-red-200]="email?.invalid && email?.touched">
-          
+
           <div *ngIf="email?.invalid && email?.touched" class="mt-1 text-red-600 text-sm">
             <span *ngIf="email?.errors?.['required']">Email é obrigatório</span>
             <span *ngIf="email?.errors?.['email']">Digite um email válido</span>
@@ -66,14 +62,11 @@
           <label class="block text-sm font-medium text-gray-700 mb-2">
             Senha
           </label>
-          <input 
-            type="password" 
-            formControlName="senha" 
-            placeholder="Mínimo 6 caracteres"
+          <input type="password" formControlName="senha" placeholder="Mínimo 6 caracteres"
             class="w-full px-3 py-2 border border-gray-300 rounded-md text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
             [class.border-red-300]="senha?.invalid && senha?.touched"
             [class.focus:ring-red-200]="senha?.invalid && senha?.touched">
-          
+
           <div *ngIf="senha?.invalid && senha?.touched" class="mt-1 text-red-600 text-sm">
             <span *ngIf="senha?.errors?.['required']">Senha é obrigatória</span>
             <span *ngIf="senha?.errors?.['minlength']">Mínimo 6 caracteres</span>
@@ -85,52 +78,50 @@
           <label class="block text-sm font-medium text-gray-700 mb-2">
             Confirmar senha
           </label>
-          <input 
-            type="password" 
-            formControlName="confirmarSenha" 
-            placeholder="Confirme sua senha"
+          <input type="password" formControlName="confirmarSenha" placeholder="Confirme sua senha"
             class="w-full px-3 py-2 border border-gray-300 rounded-md text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
             [class.border-red-300]="confirmarSenha?.invalid && confirmarSenha?.touched"
             [class.focus:ring-red-200]="confirmarSenha?.invalid && confirmarSenha?.touched">
-          
+
           <div *ngIf="confirmarSenha?.invalid && confirmarSenha?.touched" class="mt-1 text-red-600 text-sm">
             <span *ngIf="confirmarSenha?.errors?.['required']">Confirmação é obrigatória</span>
           </div>
-          <div *ngIf="cadastroForm.errors?.['senhasNaoConferem'] && confirmarSenha?.touched" class="mt-1 text-red-600 text-sm">
+          <div *ngIf="cadastroForm.errors?.['senhasNaoConferem'] && confirmarSenha?.touched"
+            class="mt-1 text-red-600 text-sm">
             As senhas não conferem
           </div>
         </div>
 
         <!-- Termos e Condições -->
         <label class="flex items-start">
-          <input 
-            type="checkbox" 
-            class="mt-1 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+          <input type="checkbox" class="mt-1 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
           <span class="ml-2 text-sm text-gray-600">
-            Concordo com os 
-            <a href="#" class="text-blue-600 hover:text-blue-800">termos de serviço</a> 
-            e 
+            Concordo com os
+            <a href="#" class="text-blue-600 hover:text-blue-800">termos de serviço</a>
+            e
             <a href="#" class="text-blue-600 hover:text-blue-800">política de privacidade</a>
           </span>
         </label>
 
         <!-- Botão de Cadastrar -->
-        <button 
-          type="submit" 
-          [disabled]="cadastroForm.invalid || loading"
+        <button type="submit" [disabled]="cadastroForm.invalid || loading"
           class="w-full bg-blue-600 text-white py-2 px-4 rounded-md font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
-          
+
           <span *ngIf="!loading" class="flex items-center justify-center">
             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
             </svg>
             Criar conta
           </span>
-          
+
           <span *ngIf="loading" class="flex items-center justify-center">
-            <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+              viewBox="0 0 24 24">
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              <path class="opacity-75" fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+              </path>
             </svg>
             Criando conta...
           </span>
@@ -146,19 +137,20 @@
           <span class="px-2 bg-white text-gray-500">ou</span>
         </div>
       </div>
- <!-- Link para Login -->
-    <div class="text-center mt-6">
-  <p class="text-gray-600 text-sm">
-    Já tem uma conta? 
-    <button (click)="redirectToLogin()" class="text-blue-600 hover:text-blue-800 font-medium transition-colors focus:outline-none">
-      Faça login
-    </button>
-  </p>
-</div>
+      <!-- Link para Login -->
+      <div class="text-center mt-6">
+        <p class="text-gray-600 text-sm">
+          Já tem uma conta?
+          <button (click)="redirectToLogin()"
+            class="text-blue-600 hover:text-blue-800 font-medium transition-colors focus:outline-none">
+            Faça login
+          </button>
+        </p>
+      </div>
 
     </div>
 
-   
+
     <!-- Footer -->
     <div class="text-center mt-8">
       <p class="text-xs text-gray-500">
