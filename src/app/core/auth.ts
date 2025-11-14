@@ -48,7 +48,7 @@ export class AuthService {
 
   // [--- CORREÇÃO AQUI ---]
   // Apontamos para a URL de produção na Railway
-  private readonly apiUrl = 'https://pdfocus-production.up.railway.app';
+  private readonly apiUrl = 'https://pdfocus.up.railway.app/api';
   private readonly TOKEN_KEY = 'auth_token';
 
   constructor(private http: HttpClient) { }
