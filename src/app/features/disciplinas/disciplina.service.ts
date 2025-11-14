@@ -99,7 +99,7 @@ export class DisciplinaService {
 
   // [--- CORREÇÃO AQUI ---]
   // Apontamos para a URL de produção na Railway
-  private readonly apiBaseUrl = 'https://pdfocus.up.railway.app/api';
+  private readonly apiBaseUrl = 'https://pdfocus.up.railway.app';
   private readonly disciplinasUrl = `${this.apiBaseUrl}/disciplinas`;
   private readonly materiaisUrl = `${this.apiBaseUrl}/materiais`;
   private readonly resumosUrl = `${this.apiBaseUrl}/resumos`;
