@@ -32,7 +32,7 @@ export class DashboardService {
 
   // [--- CORREÇÃO AQUI ---]
   // Apontamos para a URL de produção na Railway
-  private readonly apiUrl = 'https://pdfocus.up.railway.app/dashboard';
+  private readonly apiUrl = 'https://pdfocus.up.railway.app';
 
   constructor(
     private http: HttpClient,
