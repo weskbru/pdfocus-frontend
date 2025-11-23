@@ -3,25 +3,40 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-16">
         <div class="flex items-center space-x-3">
-          <div class="w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center shadow-sm">
-            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-            </svg>
+          <div class="w-9 h-9 bg-orange-600 rounded-lg flex items-center justify-center shadow-sm">
+            <a href="/dashboard">
+              <div
+                class="w-9 h-9 bg-orange-600 rounded-lg flex items-center justify-center shadow-sm cursor-pointer hover:bg-orange-500 transition">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253">
+                  </path>
+                </svg>
+              </div>
+            </a>
+
           </div>
           <h1 class="font-heading text-xl font-semibold text-gray-800">Minhas Disciplinas</h1>
         </div>
         <div class="flex items-center space-x-3">
-          <button (click)="navegarParaUpgrade()"
-            class="px-4 py-2 bg-yellow-400 hover:bg-yellow-500 text-gray-800 font-medium text-sm rounded-lg flex items-center shadow-sm transition-colors"
-            title="Upgrade do Plano">
-            <fa-icon [icon]="faCrown" class="mr-2"></fa-icon> Upgrade de Plano
-          </button>
-          <button routerLink="/dashboard" class="p-2 text-gray-500 hover:text-blue-600 transition-colors"
-            title="Voltar ao Dashboard" aria-label="Voltar ao Dashboard">
-             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a2 2 0 002 2h10a2 2 0 002-2V10M9 20h6"></path>
+          <button routerLink="/dashboard"
+            class="p-2 text-gray-500 hover:text-orange-600 transition-colors cursor-pointer" title="Voltar ao Dashboard"
+            aria-label="Voltar ao Dashboard">
+
+            <svg width="32" height="32" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="4"
+              stroke-linecap="round" stroke-linejoin="round">
+
+              <path d="M8 30 L32 8 L56 30" />
+              <path d="M46 14 H56 V24" />
+              <path d="M14 30 V56 H50 V30" />
+              <path d="M26 40 H38" />
+              <path d="M26 40 V56" />
+              <path d="M38 40 V56" />
             </svg>
+
+
           </button>
+
         </div>
       </div>
     </div>
@@ -34,7 +49,7 @@
         <p class="text-gray-500 text-sm mt-1">Gerencie todas as suas disciplinas em um só lugar</p>
       </div>
       <button (click)="abrirModalCriarDisciplina()"
-        class="px-5 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 flex items-center mt-4 md:mt-0 shadow-sm hover:shadow-md transition-all duration-200">
+        class="px-5 py-2.5 text-sm font-medium text-white bg-orange-500 rounded-lg hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 flex items-center mt-4 md:mt-0 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer">
         <fa-icon [icon]="faPlus" class="mr-2"></fa-icon> Nova Disciplina
       </button>
     </div>
@@ -42,22 +57,23 @@
     <div class="fade-in">
 
       <div *ngIf="isLoading" class="text-center py-16">
-         <p class="mt-4 text-gray-500 text-sm">A carregar as suas disciplinas...</p>
+        <p class="mt-4 text-gray-500 text-sm">A carregar as suas disciplinas...</p>
       </div>
 
       <div *ngIf="errorMessage && !isLoading" class="p-4 bg-red-50 border border-red-200 rounded-lg text-center">
-         <p class="text-red-600 text-sm font-medium">{{ errorMessage }}</p>
+        <p class="text-red-600 text-sm font-medium">{{ errorMessage }}</p>
       </div>
 
       <div *ngIf="!isLoading && !errorMessage">
 
         <div *ngIf="disciplinasOriginais.length === 0"
           class="text-center py-16 border-2 border-dashed border-gray-300 rounded-lg bg-gray-100/50">
-           <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm">
-             <fa-icon [icon]="faFolderOpen" class="text-3xl text-gray-400"></fa-icon>
-           </div>
+          <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm">
+            <fa-icon [icon]="faFolderOpen" class="text-3xl text-gray-400"></fa-icon>
+          </div>
           <h3 class="text-lg font-semibold text-gray-800">Nenhuma disciplina encontrada</h3>
-          <p class="text-gray-500 mt-2 text-sm max-w-sm mx-auto">Parece que ainda não criou nenhuma disciplina. Comece agora a organizar os seus estudos!</p>
+          <p class="text-gray-500 mt-2 text-sm max-w-sm mx-auto">Parece que ainda não criou nenhuma disciplina. Comece
+            agora a organizar os seus estudos!</p>
           <button (click)="abrirModalCriarDisciplina()"
             class="mt-6 px-5 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
             Criar Primeira Disciplina
@@ -69,73 +85,94 @@
           <div class="bg-white rounded-lg p-4 shadow-sm border border-gray-100 mb-8 flex flex-wrap items-center gap-4">
 
             <div class="flex items-center relative">
-               <fa-icon [icon]="faFilter" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></fa-icon>
-              <select class="text-sm border border-gray-300 rounded-lg pl-9 pr-8 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none cursor-pointer"
-                      title="Filtrar disciplinas">
+              <fa-icon [icon]="faFilter"
+                class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></fa-icon>
+              <select
+                class="text-sm border border-gray-300 rounded-lg pl-9 pr-8 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none cursor-pointer"
+                title="Filtrar disciplinas">
                 <option value="todas">Todas as disciplinas</option>
                 <option value="recentes" disabled>Recentes (Em breve)</option>
               </select>
             </div>
 
             <div class="flex items-center relative">
-               <fa-icon [icon]="faSortAlphaDown" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></fa-icon>
-               <select class="text-sm border border-gray-300 rounded-lg pl-9 pr-8 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none cursor-pointer"
-                      [(ngModel)]="ordemSelecionada"
-                      title="Ordenar disciplinas">
+              <fa-icon [icon]="faSortAlphaDown"
+                class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></fa-icon>
+              <select
+                class="text-sm border border-gray-300 rounded-lg pl-9 pr-8 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none cursor-pointer"
+                [(ngModel)]="ordemSelecionada" title="Ordenar disciplinas">
                 <option value="nome-az">Nome A-Z</option>
                 <option value="nome-za">Nome Z-A</option>
-                </select>
+              </select>
             </div>
 
             <div class="flex-1 md:flex-none relative">
               <input type="text" placeholder="Buscar disciplina..."
                 class="w-full md:w-64 text-sm border border-gray-300 rounded-lg px-3 py-2 pl-9 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 [(ngModel)]="termoBusca">
-               <fa-icon [icon]="faSearch" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></fa-icon>
+              <fa-icon [icon]="faSearch"
+                class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></fa-icon>
             </div>
-          </div> <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
             <div *ngFor="let disciplina of disciplinasFiltradasEOrdenadas"
-                 class="relative bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col justify-between group hover:shadow-lg hover:border-gray-300 transition-all duration-200 cursor-pointer"
-                 [routerLink]="['/disciplinas/detalhe', disciplina.id]">
+              class="relative bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col justify-between group hover:shadow-lg hover:border-gray-300 transition-all duration-200 cursor-pointer"
+              [routerLink]="['/disciplinas/detalhe', disciplina.id]">
 
-              <div class="absolute top-4 right-4 flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
-                 <button (click)="editarDisciplina(disciplina.id); $event.stopPropagation()"
-                   class="p-2 h-8 w-8 rounded-full bg-white/70 backdrop-blur-sm text-gray-600 hover:text-blue-600 hover:bg-blue-50 transition-colors" title="Editar">
-                   <fa-icon [icon]="faEdit"></fa-icon>
-                 </button>
-                 <button (click)="abrirModalDelecao(disciplina); $event.stopPropagation()"
-                   class="p-2 h-8 w-8 rounded-full bg-white/70 backdrop-blur-sm text-gray-600 hover:text-red-600 hover:bg-red-50 transition-colors" title="Apagar">
-                   <fa-icon [icon]="faTrash"></fa-icon>
-                 </button>
+              <div class="absolute top-4 right-4 flex space-x-1 z-10">
+                <button (click)="editarDisciplina(disciplina.id); $event.stopPropagation()"
+                  class="p-2 h-8 w-8 rounded-full bg-white/70 backdrop-blur-sm text-gray-600 hover:text-blue-600 hover:bg-blue-50 transition-colors"
+                  title="Editar">
+                  <fa-icon [icon]="faEdit"></fa-icon>
+                </button>
+
+                <button (click)="abrirModalDelecao(disciplina); $event.stopPropagation()"
+                  class="p-2 h-8 w-8 rounded-full bg-white/70 backdrop-blur-sm text-gray-600 hover:text-red-600 hover:bg-red-50 transition-colors"
+                  title="Apagar">
+                  <fa-icon [icon]="faTrash"></fa-icon>
+                </button>
               </div>
+
 
               <div>
                 <div class="flex justify-between items-start mb-4">
                   <div class="w-14 h-14 bg-blue-100 rounded-lg flex items-center justify-center">
-                     <fa-icon [icon]="faBookOpen" class="text-blue-600 text-2xl"></fa-icon>
+                    <fa-icon [icon]="faBookOpen" class="text-orange-500 text-2xl"></fa-icon>
                   </div>
-                  </div>
-                <h3 class="text-lg font-semibold text-gray-800 mb-1 truncate" [title]="disciplina.nome">{{ disciplina.nome }}</h3>
-                <p class="text-gray-500 text-sm h-10 overflow-hidden line-clamp-2">{{ disciplina.descricao || 'Nenhuma descrição fornecida.' }}</p>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-1 truncate" [title]="disciplina.nome">{{
+                  disciplina.nome }}</h3>
+                <p class="text-gray-500 text-sm h-10 overflow-hidden line-clamp-2">{{ disciplina.descricao || 'Nenhuma
+                  descrição fornecida.' }}</p>
               </div>
 
               <div class="mt-6 pt-4 border-t border-gray-100 flex justify-between items-center">
                 <span class="text-xs text-gray-400">
-                   &nbsp;
+                  &nbsp;
                 </span>
               </div>
-            </div> </div> <div *ngIf="disciplinasFiltradasEOrdenadas.length === 0 && disciplinasOriginais.length > 0"
-               class="text-center py-12 text-gray-500">
-             <p>Nenhuma disciplina encontrada com os filtros atuais.</p>
+            </div>
+          </div>
+          <div *ngIf="disciplinasFiltradasEOrdenadas.length === 0 && disciplinasOriginais.length > 0"
+            class="text-center py-12 text-gray-500">
+            <p>Nenhuma disciplina encontrada com os filtros atuais.</p>
           </div>
 
-        </div> </div> </div> </main>
+        </div>
+      </div>
+    </div>
+  </main>
 
-  <div *ngIf="showDeleteModal" class="fixed inset-0 bg-black/5 backdrop-blur-sm z-40 flex items-center justify-center p-4 transition-opacity duration-300" role="dialog" aria-modal="true" (click)="fecharModalDelecao()">
-    <div class="bg-white rounded-xl shadow-2xl w-full max-w-md p-6 mx-4 sm:mx-0 relative transform transition-transform duration-300 scale-95 opacity-0 animate-modal-in cursor-default select-none" (click)="$event.stopPropagation()"> <div class="flex items-start select-none">
+  <div *ngIf="showDeleteModal"
+    class="fixed inset-0 bg-black/5 backdrop-blur-sm z-40 flex items-center justify-center p-4 transition-opacity duration-300"
+    role="dialog" aria-modal="true" (click)="fecharModalDelecao()">
+    <div
+      class="bg-white rounded-xl shadow-2xl w-full max-w-md p-6 mx-4 sm:mx-0 relative transform transition-transform duration-300 scale-95 opacity-0 animate-modal-in cursor-default select-none"
+      (click)="$event.stopPropagation()">
+      <div class="flex items-start select-none">
         <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
-           <fa-icon [icon]="faExclamationTriangle" class="text-red-600 text-2xl"></fa-icon>
+          <fa-icon [icon]="faExclamationTriangle" class="text-red-600 text-2xl"></fa-icon>
         </div>
         <div class="select-none">
           <h3 class="text-lg font-bold text-gray-800">Apagar Disciplina</h3>
@@ -147,31 +184,53 @@
         </div>
       </div>
       <div class="mt-6 flex justify-end space-x-3 select-none">
-        <button (click)="fecharModalDelecao()" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition cursor-pointer">
+        <button (click)="fecharModalDelecao()"
+          class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition cursor-pointer">
           Cancelar
         </button>
-        <button (click)="confirmarDelecao()" class="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition cursor-pointer">
+        <button (click)="confirmarDelecao()"
+          class="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition cursor-pointer">
           Sim, Apagar
         </button>
       </div>
     </div>
+
+   
   </div>
 
- <app-criar-disciplina-modal
-    [isOpen]="isCriarDisciplinaModalOpen"
-    [disciplinaIdParaEditar]="disciplinaIdSendoEditada"
-    (fecharModal)="fecharModalCriarDisciplina()"
-    (disciplinaAtualizada)="onDisciplinaAtualizada($event)"
+  <app-criar-disciplina-modal [isOpen]="isCriarDisciplinaModalOpen" [disciplinaIdParaEditar]="disciplinaIdSendoEditada"
+    (fecharModal)="fecharModalCriarDisciplina()" (disciplinaAtualizada)="onDisciplinaAtualizada($event)"
     (disciplinaCriada)="onDisciplinaCriada($event)"> </app-criar-disciplina-modal>
 
+   <!-- Footer -->
+      <div class="text-center mt-8">
+        <p class="text-xs text-gray-500">
+          © 2025 PDFocus • Plataforma de estudos com PDF
+        </p>
+      </div>
+
+      
   <style>
     @keyframes modal-in {
-      0% { opacity: 0; transform: scale(0.95); }
-      100% { opacity: 1; transform: scale(1); }
+      0% {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
     }
-    .animate-modal-in { animation: modal-in 0.25s ease-out forwards; }
+
+    .animate-modal-in {
+      animation: modal-in 0.25s ease-out forwards;
+    }
+
     .line-clamp-2 {
-       overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
     }
   </style>
 

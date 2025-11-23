@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from '../../core/auth';
-
+import { environment } from '../../../environments/environment';
 /**
  * DTO para a resposta do endpoint /dashboard/estatisticas.
  */
@@ -31,8 +31,8 @@ export interface MaterialRecenteResponse {
 export class DashboardService {
 
   // [--- CORREÇÃO AQUI ---]
-  // Apontamos para a URL de produção na Railway
-  private readonly apiUrl = 'https://pdfocus.up.railway.app';
+  // Apontamos para a URL do environment, que muda conforme o build (dev ou prod)
+  private readonly apiUrl = environment.apiUrl;
 
   constructor(
     private http: HttpClient,

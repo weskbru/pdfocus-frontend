@@ -1,12 +1,13 @@
 <div class="feedback-widget">
     <!-- Botão Flutuante -->
     <button (click)="toggleFeedback()"
-        class="feedback-toggle bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-110"
-        [class.bg-green-500]="submitted" [class.hover:bg-green-600]="submitted">
+    class="feedback-toggle bg-orange-100 hover:bg-orange-200 text-orange-600 p-4 rounded-full shadow-md transition-all duration-300 hover:scale-105"
+    [class.bg-green-500]="submitted" [class.hover:bg-green-600]="submitted">
 
-        <fa-icon *ngIf="!submitted" [icon]="faCommentDots" class="text-xl"></fa-icon>
-        <fa-icon *ngIf="submitted" [icon]="faPaperPlane" class="text-xl"></fa-icon>
-    </button>
+    <fa-icon *ngIf="!submitted" [icon]="faCommentDots" class="text-xl"></fa-icon>
+    <fa-icon *ngIf="submitted" [icon]="faPaperPlane" class="text-xl"></fa-icon>
+</button>
+
 
     <!-- Modal de Feedback -->
     <div *ngIf="showFeedback" class="feedback-modal">
@@ -32,12 +33,12 @@
                 </p>
 
                 <!-- Tipo de Feedback -->
-                <div class="mb-4">
+                <div class="mb-4" cursor="pointer">
                     <label class="block text-sm font-medium text-gray-700 mb-2">
                         Tipo de feedback
                     </label>
                     <div class="grid grid-cols-2 gap-2">
-                        <button (click)="setFeedbackType('suggestion')"
+                        <button (click)="setFeedbackType('suggestion') "
                             [class]="'feedback-type-btn ' + (feedbackType === 'suggestion' ? 'active' : '')">
                             💡 Sugestão
                         </button>
@@ -71,18 +72,18 @@
 
                 <!-- Textarea -->
                 <div class="mb-4">
-                    <textarea [(ngModel)]="feedbackText"
-                        placeholder="Conte-nos o que você pensa... O que podemos melhorar? O que está funcionando bem?"
+                    <textarea [(ngModel)]="feedbackText" placeholder="Conte-nos o que você pensa..."
                         class="feedback-textarea" rows="4"></textarea>
                 </div>
 
+
                 <!-- Actions -->
                 <div class="flex justify-end space-x-3">
-                    <button (click)="toggleFeedback()" class="btn-secondary">
+                    <button (click)="toggleFeedback()" class="btn-secondary cursor-pointer">
                         Cancelar
                     </button>
                     <button (click)="sendFeedback()" [disabled]="!feedbackText.trim() || isSubmitting"
-                        class="btn-primary">
+                        class="btn-primary cursor-pointer">
                         <fa-icon *ngIf="isSubmitting" [icon]="faPaperPlane" class="animate-pulse mr-2"></fa-icon>
                         {{ isSubmitting ? 'Enviando...' : 'Enviar Feedback' }}
                     </button>

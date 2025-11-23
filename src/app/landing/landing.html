@@ -1,0 +1,263 @@
+<!-- Landing Page (Marketing) para o PdFocus - TEMA CLARO -->
+<div class="min-h-screen bg-gray-50 text-gray-900 font-sans antialiased">
+
+  <!-- Navegação Simples (Header) -->
+  <header class="sticky top-0 z-10 bg-white shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
+      <!-- Logo com Ícone e Nome -->
+      <div class="flex items-center space-x-2">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="w-10 h-10">
+          <path style="fill:#E2E5E7;"
+            d="M128,0c-17.6,0-32,14.4-32,32v448c0,17.6,14.4,32,32,32h320c17.6,0,32-14.4,32-32V128L352,0H128z" />
+          <path style="fill:#B0B7BD;" d="M384,128h96L352,0v96C352,113.6,366.4,128,384,128z" />
+          <polygon style="fill:#CAD1D8;" points="480,224 384,128 480,128" />
+          <path style="fill:#F15642;"
+            d="M416,416c0,8.8-7.2,16-16,16H48c-8.8,0-16-7.2-16-16V256c0-8.8,7.2-16,16-16h352c8.8,0,16,7.2,16,16V416z" />
+          <g>
+            <path style="fill:#FFFFFF;"
+              d="M101.744,303.152c0-4.224,3.328-8.832,8.688-8.832h29.552c16.64,0,31.616,11.136,31.616,32.48c0,20.224-14.976,31.488-31.616,31.488h-21.36v16.896c0,5.632-3.584,8.816-8.192,8.816c-4.224,0-8.688-3.184-8.688-8.816V303.152z M118.624,310.432v31.872h21.36c8.576,0,15.36-7.568,15.36-15.504c0-8.944-6.784-16.368-15.36-16.368H118.624z" />
+            <path style="fill:#FFFFFF;"
+              d="M196.656,384c-4.224,0-8.832-2.304-8.832-7.92v-72.672c0-4.592,4.608-7.936,8.832-7.936h29.296c58.464,0,57.184,88.528,1.152,88.528H196.656z M204.72,311.088V368.4h21.232c34.544,0,36.08-57.312,0-57.312H204.72z" />
+            <path style="fill:#FFFFFF;"
+              d="M303.872,312.112v20.336h32.624c4.608,0,9.216,4.608,9.216,9.072c0,4.224-4.608,7.68-9.216,7.68h-32.624v26.864c0,4.48-3.184,7.92-7.664,7.92c-5.632,0-9.072-3.44-9.072-7.92v-72.672c0-4.592,3.456-7.936,9.072-7.936h44.912c5.632,0,8.96,3.344,8.96,7.936c0,4.096-3.328,8.704-8.96,8.704h-37.248V312.112z" />
+          </g>
+          <path style="fill:#CAD1D8;" d="M400,432H96v16h304c8.8,0,16-7.2,16-16v-16C416,424.8,408.8,432,400,432z" />
+        </svg>
+
+        <div class="text-2xl font-bold text-gray-900">
+          <span style="color: #F15642;">PDFocus</span>
+        </div>
+      </div>
+
+      <nav class="flex space-x-4">
+        <!-- Adicionada focus:outline-none aqui -->
+        <a routerLink="/login"
+          class="px-4 py-2 text-sm font-medium text-gray-600 hover:text-orange-600 transition duration-150 focus:outline-none">Login</a>
+        <!-- Adicionada focus:outline-none aqui -->
+        <a routerLink="/cadastro"
+          class="px-5 py-2 text-sm font-semibold rounded-lg text-white bg-orange-500 hover:bg-orange-600 transition duration-300 shadow-md hover:shadow-lg transform hover:scale-[1.02] focus:outline-none">
+          Começar Grátis
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- 1. SEÇÃO HERO: Foco e Chamada para Ação -->
+    <section class="py-24 sm:py-32 text-center bg-white border-b border-gray-100">
+      <div class="max-w-4xl mx-auto px-4">
+        <!-- Título Principal (H1) -->
+        <h1 class="text-5xl sm:text-7xl font-extrabold tracking-tight mb-6 leading-tight text-gray-900">
+          Transforme <span class="text-orange-600">PDFs </span>longos em resumos objetivos com a inteligência do <span
+            class="text-orange-600">PDFocus</span>
+        </h1>
+
+        <!-- Subtítulo Revisado -->
+        <p class="text-xl sm:text-2xl text-gray-600 mb-10 max-w-2xl mx-auto">
+          Desenvolvido para estudantes. Envie seu arquivo e receba, em minutos, o conteúdo mais conciso e organizado,
+          pronto para fixar o aprendizado.
+        </p>
+
+        <!-- CTA Principal - REMOVIDO: focus:ring-4 focus:ring-orange-500/50 -->
+        <a routerLink="/cadastro"
+          class="inline-flex items-center justify-center px-12 py-4 border border-transparent text-lg font-bold rounded-xl text-white bg-orange-500 hover:bg-orange-600 transition duration-300 shadow-2xl shadow-orange-500/30 transform hover:scale-[1.05] focus:outline-none">
+          Comece a Resumir de Graça
+        </a>
+
+        <p class="mt-4 text-sm text-gray-500">
+          Não é necessário cartão de crédito.
+        </p>
+      </div>
+    </section>
+
+    <!-- 2. SEÇÃO DE VANTAGENS (Mesa de Vantagens) -->
+    <section class="py-20 sm:py-24 bg-gray-50">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl sm:text-4xl font-bold text-center mb-16 text-gray-800">
+          Otimize seu tempo. Maximize sua nota.
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+
+          <!-- Vantagem 1: Resumos Atualizados -->
+          <div
+            class="bg-white p-6 rounded-xl shadow-lg border border-gray-100 hover:border-orange-500 transition duration-300">
+            <span class="text-3xl text-green-500 mb-3 block">📚</span>
+            <h3 class="text-xl font-semibold mb-2 text-gray-900">Resumos Sempre Organizados</h3>
+            <p class="text-gray-600">Acesso ao seu histórico completo de documentos e resumos gerados. Nunca perca um
+              material de estudo importante.</p>
+          </div>
+
+          <!-- Vantagem 2: Privacidade e Segurança -->
+          <div
+            class="bg-white p-6 rounded-xl shadow-lg border border-gray-100 hover:border-orange-500 transition duration-300">
+            <span class="text-3xl text-green-500 mb-3 block">🔒</span>
+            <h3 class="text-xl font-semibold mb-2 text-gray-900">Privacidade e Segurança</h3>
+            <p class="text-gray-600">Seu material de estudo é processado de forma privada. Garantimos que seus PDFs e
+              resumos são apenas seus e não são compartilhados.</p>
+          </div>
+
+          <!-- Vantagem 3: Acesso Mobile -->
+          <div
+            class="bg-white p-6 rounded-xl shadow-lg border border-gray-100 hover:border-orange-500 transition duration-300">
+            <span class="text-3xl text-green-500 mb-3 block">📱</span>
+            <h3 class="text-xl font-semibold mb-2 text-gray-900">Acesso Mobile Otimizado</h3>
+            <p class="text-gray-600">Estude de onde estiver. O dashboard é totalmente responsivo e funciona
+              perfeitamente no seu celular ou tablet.</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. SEÇÃO DE COMO FUNCIONA (3 Passos) -->
+    <section class="py-20 sm:py-24 bg-white border-t border-gray-100">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl sm:text-4xl font-bold text-center mb-16 text-gray-800">
+          Como funciona em 3 passos simples
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+          <!-- Passo 1 -->
+          <div class="text-center p-6 rounded-xl border border-dashed border-orange-300/50">
+            <div class="text-6xl font-extrabold text-orange-500 mb-4">1</div>
+            <h3 class="text-2xl font-semibold mb-3 text-gray-900">Envie o seu Material</h3>
+            <p class="text-gray-600">Arraste e solte seus PDFs, editais ou apostilas. Upload simples e rápido para
+              começar.</p>
+          </div>
+
+          <!-- Passo 2 -->
+          <div class="text-center p-6 rounded-xl border border-dashed border-orange-300/50">
+            <div class="text-6xl font-extrabold text-orange-500 mb-4">2</div>
+            <h3 class="text-2xl font-semibold mb-3 text-gray-900">A Mágica Acontece</h3>
+            <p class="text-gray-600">Nosso algoritmo analisa o documento e identifica a estrutura e os pontos-chave de
+              aprendizado.</p>
+          </div>
+
+          <!-- Passo 3 -->
+          <div class="text-center p-6 rounded-xl border border-dashed border-orange-300/50">
+            <div class="text-6xl font-extrabold text-orange-500 mb-4">3</div>
+            <h3 class="text-2xl font-semibold mb-3 text-gray-900">Receba seu Foco</h3>
+            <p class="text-gray-600">Tenha acesso ao resumo objetivo, pronto para ser estudado, lendo apenas o
+              essencial.</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- 4. SEÇÃO DE PROVA SOCIAL (Depoimentos) -->
+    <section class="py-20 sm:py-24 bg-gray-50 border-t border-gray-100">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl sm:text-4xl font-bold text-center mb-16 text-gray-800">
+          Estude com Inteligência. O Feedback Confirma.
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+          <!-- Depoimento 1: Velocidade -->
+          <div class="bg-white p-6 rounded-xl shadow-xl border border-gray-100">
+            <blockquote class="text-lg italic text-gray-600">
+              "Gerei o resumo de um edital de 300 páginas em menos de 1 minuto. Isso mudou meu jogo!"
+            </blockquote>
+            <cite class="mt-4 block font-semibold text-orange-500">— Gabriel.M, Concurseiro</cite>
+          </div>
+
+          <!-- Depoimento 2: Qualidade -->
+          <div class="bg-white p-6 rounded-xl shadow-xl border border-gray-100">
+            <blockquote class="text-lg italic text-gray-600">
+              "O resumo que o PdFocus fez foi mais coeso e preciso do que o que eu faria manualmente."
+            </blockquote>
+            <cite class="mt-4 block font-semibold text-orange-500">— Ana.C, Universitária</cite>
+          </div>
+
+          <!-- Depoimento 3: Uso Geral -->
+          <div class="bg-white p-6 rounded-xl shadow-xl border border-gray-100">
+            <blockquote class="text-lg italic text-gray-600">
+              "Ferramenta essencial para quem estuda para concurso. Nunca mais perdi tempo lendo o que não precisava."
+            </blockquote>
+            <cite class="mt-4 block font-semibold text-orange-500">— Wemily.C, Analista</cite>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. SEÇÃO DE PREÇOS -->
+    <section class="py-20 sm:py-24 bg-white border-t border-gray-100">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl sm:text-4xl font-bold mb-4 text-gray-800">Escolha o seu Foco</h2>
+          <p class="text-xl text-gray-600">Comece de graça e suba de nível quando precisar de mais poder.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+          <!-- Plano Grátis -->
+          <div class="bg-gray-50 p-8 rounded-xl shadow-xl border border-gray-200">
+            <h3 class="text-2xl font-bold text-green-600 mb-2">Foco (Grátis)</h3>
+            <p class="text-5xl font-extrabold mb-6 text-gray-900">R$ 0<span class="text-xl font-normal text-gray-500"> /
+                mês</span></p>
+            <ul class="space-y-3 text-gray-600 mb-8">
+              <li class="flex items-center">✅ 10 uploads de PDF por mês</li>
+              <li class="flex items-center">✅ Geração de resumos automáticos</li>
+              <li class="flex items-center">✅ Acesso mobile otimizado</li>
+              <li class="flex items-center text-gray-400">❌ Histórico limitado</li>
+            </ul>
+            <!-- Adicionada focus:outline-none aqui -->
+            <a routerLink="/cadastro"
+              class="block w-full text-center py-3 rounded-lg font-semibold text-white bg-green-500 hover:bg-green-600 transition duration-300 focus:outline-none">
+              Começar Grátis
+            </a>
+          </div>
+
+          <!-- Plano Premium -->
+          <div class="bg-white p-8 rounded-xl shadow-2xl border-2 border-orange-500 relative transform scale-[1.05]">
+            <div class="absolute top-0 right-0 bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">MAIS
+              VENDIDO</div>
+            <h3 class="text-2xl font-bold text-orange-500 mb-2">Retenção (Premium)</h3>
+            <p class="text-5xl font-extrabold mb-6 text-gray-900">R$ 9<span
+                class="text-xl font-normal text-gray-500">,90 / mês</span></p>
+            <ul class="space-y-3 text-gray-600 mb-8">
+              <li class="flex items-center">✅ Uploads Ilimitados</li>
+              <li class="flex items-center">✅ Histórico completo sem limites</li>
+              <li class="flex items-center">✅ Suporte Prioritário</li>
+              <li class="flex items-center">✅ Prioridade na fila de IA futura</li>
+            </ul>
+            <!-- Adicionada focus:outline-none aqui -->
+            <a routerLink="/cadastro"
+              class="block w-full text-center py-3 rounded-lg font-semibold text-white bg-orange-500 hover:bg-orange-600 transition duration-300 focus:outline-none">
+              Assinar Premium
+            </a>
+          </div>
+
+          <!-- Plano Corporativo -->
+          <div class="bg-gray-50 p-8 rounded-xl shadow-xl border border-gray-200">
+            <h3 class="text-2xl font-bold text-gray-600 mb-2">Corporativo</h3>
+            <p class="text-5xl font-extrabold mb-6 text-gray-900">Sob Consulta</p>
+            <ul class="space-y-3 text-gray-600 mb-8">
+              <li class="flex items-center">✅ Recursos avançados de colaboração</li>
+              <li class="flex items-center">✅ Contas gerenciadas em lote</li>
+              <li class="flex items-center">✅ Treinamento e integração dedicada</li>
+              <li class="flex items-center">✅ SLA e Faturamento Centralizado</li>
+            </ul>
+            <!-- Adicionada focus:outline-none aqui -->
+            <a href="mailto:contato@pdfocus.ai"
+              class="block w-full text-center py-3 rounded-lg font-semibold text-gray-900 bg-gray-300 hover:bg-gray-400 transition duration-300 focus:outline-none">
+              Falar com Vendas
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Rodapé Simples -->
+  <footer class="bg-white border-t border-gray-200 mt-16 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-500 text-sm">
+      &copy; {{ currentYear }} PdFocus. Todos os direitos reservados.
+    </div>
+  </footer>
+
+</div>
