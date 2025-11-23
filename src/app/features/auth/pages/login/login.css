@@ -1,4 +1,11 @@
-/* features/auth/pages/login/login.css */
+.login-container * {
+    caret-color: transparent !important;
+}
+
+.login-container input {
+    caret-color: auto !important;
+}
+
 /* Estilos para melhorar a experiência do Linear */
 .input-focus {
   transition: all 0.2s ease-in-out;

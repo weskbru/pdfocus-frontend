@@ -6,23 +6,31 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-16">
         <div class="flex items-center space-x-3" style="user-select: none;">
-          <div class="w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center shadow-sm">
+          <a routerLink="/dashboard"
+            class="w-9 h-9 bg-orange-400 rounded-lg flex items-center justify-center shadow-sm cursor-pointer"
+            title="Voltar ao Dashboard">
             <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253">
               </path>
             </svg>
-          </div>
+          </a>
 
-          <h1 class="font-heading text-xl font-semibold text-gray-800" style="user-select: none;">{{ disciplina?.nome || 'Carregando...' }}</h1>
+
+          <h1 class="font-heading text-xl font-semibold text-gray-800" style="user-select: none;">{{ disciplina?.nome ||
+            'Carregando...' }}</h1>
         </div>
-        <button routerLink="/disciplinas" class="p-2 text-gray-500 hover:text-blue-600 transition-colors"
+        <button routerLink="/disciplinas"
+          class="p-2 flex items-center text-gray-500 hover:text-orange-600 transition-colors cursor-pointer"
           title="Voltar" style="user-select: none;">
-
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m8 8l-6-6 6-6"></path>
+          <svg class="w-6 h-6 mr-1" fill="none" stroke="currentColor" stroke-width="2" cursor="pointer"
+            stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+            <path d="M15 19l-7-7 7-7"></path>
           </svg>
+          <span class="text-sm font-medium">Voltar</span>
         </button>
+
+
       </div>
     </div>
   </header>
@@ -35,31 +43,26 @@
       <div class="lg:col-span-3">
 
         <!-- Header com Ações -->
-        <div class="flex justify-between items-center mb-6" style="user-select: none;">
-          <div style="user-select: none;">
-
+        <div class="flex justify-between items-center mb-6 select-none">
+          <div>
             <h2 class="text-2xl font-semibold text-gray-900">Materiais</h2>
             <p class="text-gray-600">{{ totalItens }} materiais • {{ resumos.length }} resumos criados</p>
           </div>
 
-          <!--BOTÕES POSICIONADOS À DIREITA -->
-          <div class="flex space-x-3" style="user-select: none;">
+          <!-- BOTÕES POSICIONADOS À DIREITA -->
+          <div class="flex space-x-3">
             <button (click)="abrirModalUpload()"
-              class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 flex items-center"
-              style="user-select: none;">
-
+              class="px-4 py-2 text-sm font-medium text-white bg-orange-400 rounded-lg hover:bg-gray-700 flex items-center cursor-pointer">
               <fa-icon [icon]="faUpload" class="mr-2"></fa-icon> Adicionar PDF
             </button>
 
             <button (click)="abrirModalSelecaoMaterial()"
-
-              class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center"
-              style="user-select: none;">
-
+              class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center cursor-pointer">
               <fa-icon [icon]="faPlus" class="mr-2"></fa-icon> Novo Resumo
             </button>
           </div>
         </div>
+
 
         <!-- Loading State -->
         <div *ngIf="isLoading" class="text-center py-8" style="user-select: none;">
@@ -72,9 +75,11 @@
         <div class="space-y-4" *ngIf="!isLoading && temMateriais" style="user-select: none;">
 
           <!-- Material Dinâmico -->
-          <div class="bg-white rounded-lg border border-gray-200" *ngFor="let material of materiais" style="user-select: none;">
+          <div class="bg-white rounded-lg border border-gray-200" *ngFor="let material of materiais"
+            style="user-select: none;">
 
-            <div class="p-4 flex justify-between items-center cursor-pointer hover:bg-gray-50" style="user-select: none;">
+            <div class="p-4 flex justify-between items-center cursor-pointer hover:bg-gray-50"
+              style="user-select: none;">
               <div class="flex items-center space-x-3" style="user-select: none;">
                 <fa-icon [icon]="getMaterialIcon(material)"
                   [class]="getMaterialIconClass(material) + ' text-lg'"></fa-icon>
@@ -96,13 +101,13 @@
             </div>
 
             <!-- ✅ SEÇÃO DE RESUMOS ATUALIZADA COM ESTADOS OTIMISTAS -->
-            <div class="border-t border-gray-100 p-4 space-y-3" *ngIf="getResumosDoMaterial(material).length > 0" style="user-select: none;">
+            <div class="border-t border-gray-100 p-4 space-y-3" *ngIf="getResumosDoMaterial(material).length > 0"
+              style="user-select: none;">
 
 
               <!-- Resumo Otimista com Loading State -->
               <div *ngFor="let resumo of getResumosDoMaterial(material)"
                 [class.opacity-50]="resumo.id.startsWith('temp-')"
-
                 class="flex justify-between items-center p-3 bg-gray-50 rounded-lg transition-all duration-300"
                 style="user-select: none;">
 
@@ -115,7 +120,6 @@
 
                   <!-- Indicador de carregamento para resumos otimistas -->
                   <div *ngIf="resumo.id.startsWith('temp-')"
-
                     class="flex items-center space-x-2 mt-2 text-blue-600 text-xs" style="user-select: none;">
 
                     <fa-icon [icon]="faSpinner" class="text-blue-500"></fa-icon>
@@ -123,36 +127,34 @@
                   </div>
                 </div>
 
-                <button (click)="abrirResumo(resumo)" class="text-blue-600 hover:text-blue-800 text-sm font-medium"
-
-                  [class.opacity-30]="resumo.id.startsWith('temp-')" [disabled]="resumo.id.startsWith('temp-')"
-                  style="user-select: none;">
-
+                <button (click)="abrirResumo(resumo)"
+                  class="text-blue-600 hover:text-blue-800 text-sm font-medium cursor-pointer select-none"
+                  [class.opacity-30]="resumo.id.startsWith('temp-')" [disabled]="resumo.id.startsWith('temp-')">
                   Abrir
                 </button>
+
               </div>
             </div>
 
             <!-- Ações do Material -->
 
-            <div class="border-t border-gray-100 p-4 flex justify-end space-x-2" style="user-select: none;">
+            <div class="border-t border-gray-100 p-4 flex justify-end space-x-2 select-none">
               <button (click)="visualizarMaterial(material)"
-                class="px-3 py-1 text-sm text-blue-600 hover:text-blue-800 font-medium"
-                style="user-select: none;">
+                class="px-3 py-1 text-sm text-blue-600 hover:text-blue-800 font-medium cursor-pointer">
                 Visualizar
               </button>
+
               <button (click)="baixarMaterial(material)"
-                class="px-3 py-1 text-sm text-green-600 hover:text-green-800 font-medium"
-                style="user-select: none;">
+                class="px-3 py-1 text-sm text-green-600 hover:text-green-800 font-medium cursor-pointer">
                 Download
               </button>
-              <button (click)="abrirModalExclusao(material)"
-                class="px-3 py-1 text-sm text-red-600 hover:text-red-800 font-medium"
-                style="user-select: none;">
 
+              <button (click)="abrirModalExclusao(material)"
+                class="px-3 py-1 text-sm text-red-600 hover:text-red-800 font-medium cursor-pointer">
                 Excluir
               </button>
             </div>
+
           </div>
         </div>
 
@@ -220,7 +222,6 @@
           </button>
 
           <button (click)="proximaPagina()" [disabled]="paginaAtual >= totalPaginas - 1"
-
             class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
             style="user-select: none;">
 
@@ -259,7 +260,6 @@
       <div class="p-6" style="user-select: none;">
         <!-- Área de Upload -->
         <label for="file-upload-modal"
-
           class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-blue-400 hover:bg-blue-50/30 transition-colors flex flex-col items-center justify-center"
           style="user-select: none;">
 
@@ -278,7 +278,8 @@
         </label>
 
         <!-- Preview do Ficheiro -->
-        <div *ngIf="arquivoSelecionado" class="mt-6 p-4 bg-gray-50/80 rounded-lg border border-gray-200" style="user-select: none;">
+        <div *ngIf="arquivoSelecionado" class="mt-6 p-4 bg-gray-50/80 rounded-lg border border-gray-200"
+          style="user-select: none;">
           <div class="flex items-center justify-between mb-3">
 
             <div class="flex items-center space-x-3" style="user-select: none;">
@@ -291,7 +292,8 @@
               </div>
             </div>
 
-            <button (click)="removerArquivoSelecionado()" class="text-gray-400 hover:text-red-500" style="user-select: none;">
+            <button (click)="removerArquivoSelecionado()" class="text-gray-400 hover:text-red-500"
+              style="user-select: none;">
 
               <fa-icon [icon]="faTimes"></fa-icon>
             </button>
@@ -319,7 +321,6 @@
 
   <!-- Modal de Confirmação de Exclusão -->
   <div *ngIf="modalExclusaoAberto"
-
     class="fixed inset-0 bg-black/5 backdrop-blur-sm z-40 flex items-center justify-center p-4 transition-opacity duration-300"
     style="user-select: none; -webkit-user-select: none;">
 
@@ -357,7 +358,6 @@
           </button>
           <button (click)="confirmarExclusao()"
             class="flex-1 px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
-
             [disabled]="isExcluindo" style="user-select: none;">
 
             <span *ngIf="!isExcluindo">Excluir</span>
@@ -377,10 +377,17 @@
       </div>
     </div>
   </div>
+  <!-- Footer -->
+      <div class="text-center mt-8">
+        <p class="text-xs text-gray-500">
+          © 2025 PDFocus • Plataforma de estudos com PDF
+        </p>
+      </div>
+      
 </div>
 
-<!-- NO HTML, ADICIONE ISSO EM ALGUM LUGAR VISÍVEL -->
-<div *ngIf="isLoading" class="fixed inset-0 bg-black/20 flex items-center justify-center z-50" style="user-select: none; -webkit-user-select: none;">
+<div *ngIf="isLoading" class="fixed inset-0 bg-black/20 flex items-center justify-center z-50"
+  style="user-select: none; -webkit-user-select: none;">
   <div class="bg-white rounded-lg p-6 flex items-center space-x-3" style="user-select: none;">
 
     <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
@@ -388,6 +395,8 @@
   </div>
 </div>
 
+
+    
 <style>
   .rotate-180 {
     transform: rotate(180deg);

@@ -1,10 +1,7 @@
-// --- MUDANÇA: Adicionar HostListener e ElementRef ---
 import { Component, OnInit, HostListener, ElementRef } from '@angular/core';
-// --- MUDANÇA: DatePipe importado de @angular/common ---
 import { CommonModule, DatePipe } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../core/auth';
-// [--- CORREÇÃO 1: IMPORTAÇÃO ADICIONADA ---]
 import { DashboardService, DashboardEstatisticasResponse, MaterialRecenteResponse } from './dashboard.service';
 
 // --- Imports dos Modais ---
@@ -36,11 +33,11 @@ import { faEye, faDownload, faUserEdit, faSignOutAlt, faBell } from '@fortawesom
     CriarDisciplinaModalComponent,
     InfoModalComponent,
     EditarPerfilModalComponent,
-    DatePipe // [--- CORREÇÃO 2: DatePipe movido para imports ---]
+    DatePipe
   ],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.css'],
-  providers: [ /* DatePipe removido daqui */]
+  providers: []
 })
 export class Dashboard implements OnInit {
 
@@ -60,7 +57,6 @@ export class Dashboard implements OnInit {
   public isLoadingResumos = false;
 
   // --- Flags de Controle dos Modais ---
-  // [--- CORREÇÃO 3: TODAS AS PROPRIEDADES DUPLICADAS FORAM REMOVIDAS DAQUI ---]
   public isNovoResumoModalOpen = false;
   public isAdicionarMaterialModalOpen = false;
   public isCriarDisciplinaModalOpen = false;
@@ -69,6 +65,7 @@ export class Dashboard implements OnInit {
   public infoModalMessage = '';
   public isPerfilModalOpen = false;
   public isUserMenuOpen = false;
+  public notifications: { id: number; message: string; date: Date }[] = [];
 
   // --- Ícones ---
   faEye = faEye;
@@ -94,16 +91,32 @@ export class Dashboard implements OnInit {
     this.carregarDadosDoUsuario();
     this.carregarEstatisticas();
     this.carregarResumosRecentes();
-    // [--- CORREÇÃO 4: A chamada duplicada para 'carregarMateriaisRecentes()' foi removida ---]
+
+
   }
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
     const userMenuArea = this.elementRef.nativeElement.querySelector('#user-menu-area');
-    if (this.isUserMenuOpen && userMenuArea && !userMenuArea.contains(event.target as Node)) {
+    const isClickInsideUserMenu = userMenuArea?.contains(event.target as Node);
+
+    // Fecha o menu do usuário
+    if (this.isUserMenuOpen && !isClickInsideUserMenu) {
       this.isUserMenuOpen = false;
     }
+
+    // Fecha o painel de notificações
+    const notificationButton = this.elementRef.nativeElement.querySelector('[aria-label="Notificações"]');
+    const notificationPanel = this.elementRef.nativeElement.querySelector('.notification-panel');
+
+    const isInsideNotificationButton = notificationButton?.contains(event.target as Node);
+    const isInsideNotificationPanel = notificationPanel?.contains(event.target as Node);
+
+    if (this.isNotificationPanelOpen && !isInsideNotificationButton && !isInsideNotificationPanel) {
+      this.isNotificationPanelOpen = false;
+    }
   }
+
 
   toggleUserMenu(): void {
     this.isUserMenuOpen = !this.isUserMenuOpen;
@@ -233,10 +246,47 @@ export class Dashboard implements OnInit {
   }
 
   public hasUnreadNotifications = true;
-  public notificationCount = 3;
+  public notificationCount = 1;
 
   marcarNotificacoesComoLidas(): void {
     this.hasUnreadNotifications = false;
     this.notificationCount = 0;
   }
+
+
+  public isNotificationPanelOpen = false;
+
+  toggleNotificationPanel(): void {
+    this.isNotificationPanelOpen = !this.isNotificationPanelOpen;
+
+    if (this.isNotificationPanelOpen) {
+
+      // Se ainda não existem notificações, cria a "motivacional"
+      if (this.notifications.length === 0) {
+        this.notifications = [
+          {
+            id: 1,
+            message: 'Bem-vindo. Sua área de estudos está atualizada e pronta para continuar seus progresso.',
+            date: new Date()
+          }
+
+        ];
+      }
+
+      // Marca como lidas
+      this.hasUnreadNotifications = false;
+      this.notificationCount = this.notifications.length;
+    }
+  }
+
 }
+
+
+
+
+
+
+
+
+
+

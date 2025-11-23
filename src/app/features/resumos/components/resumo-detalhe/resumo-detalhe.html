@@ -1,52 +1,63 @@
 <div class="min-h-screen bg-gray-50 py-8">
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-    
-    <!-- Header -->
-    <div class="mb-6">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+
+    <!-- Voltar -->
+    <div>
       <button 
-        routerLink="/disciplinas" 
-        class="inline-flex items-center text-sm text-blue-600 hover:text-blue-800 mb-4">
-        ← Voltar para disciplinas
+        routerLink="/disciplinas"
+        class="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors cursor-pointer select-none">
+        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+        </svg>
+        Voltar para disciplinas
       </button>
-      
-      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <div class="flex justify-between items-start">
-          <div>
-            <h1 class="text-2xl font-bold text-gray-900">{{ resumo?.titulo || 'Carregando...' }}</h1>
-            <p class="text-gray-500 mt-2" *ngIf="resumo">
-              Criado em: {{ resumo.dataCriacao | date:'dd/MM/yyyy \'às\' HH:mm' }}
-            </p>
-          </div>
+    </div>
+
+    <!-- Header do Resumo -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+      <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start space-y-3 sm:space-y-0">
+        <div class="space-y-1">
+          <h1 class="text-2xl font-bold text-gray-900">{{ resumo?.titulo || 'Carregando...' }}</h1>
+          <p class="text-gray-500 text-sm" *ngIf="resumo">
+            Criado em: {{ resumo.dataCriacao | date:'dd/MM/yyyy \'às\' HH:mm' }}
+          </p>
         </div>
       </div>
     </div>
 
-    <!-- Loading State -->
-    <div *ngIf="isLoading" class="text-center py-12">
-      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-      <p class="text-gray-600 mt-4">Carregando resumo...</p>
+    <!-- Loading State com placeholders -->
+    <div *ngIf="isLoading" class="space-y-4 animate-pulse">
+      <div class="h-6 bg-gray-200 rounded w-3/4 mx-auto"></div>
+      <div class="h-4 bg-gray-200 rounded w-1/2 mx-auto"></div>
+      <div class="h-64 bg-gray-200 rounded mx-auto sm:h-80"></div>
+      <p class="text-gray-600 text-center">Carregando resumo...</p>
     </div>
 
-    <!-- Conteúdo do Resumo -->
+    <!-- Conteúdo do Resumo com scroll interno -->
     <div *ngIf="resumo && !isLoading" class="bg-white rounded-lg shadow-sm border border-gray-200">
-      <div class="p-6">
-        <div class="prose max-w-none">
-          <h3 class="text-lg font-semibold text-gray-900 mb-4">Conteúdo do Resumo</h3>
-          <div class="whitespace-pre-wrap text-gray-700 leading-relaxed">
-            {{ resumo.conteudo }}
-          </div>
+      <div class="p-4 sm:p-6 max-h-[60vh] overflow-y-auto">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Conteúdo do Resumo</h3>
+        <div class="whitespace-pre-wrap text-gray-700 leading-relaxed prose max-w-none break-words">
+          {{ resumo.conteudo }}
         </div>
       </div>
     </div>
 
     <!-- Error State -->
-    <div *ngIf="errorMessage && !isLoading" class="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
-      <p class="text-red-700">{{ errorMessage }}</p>
-      <button 
-        routerLink="/disciplinas" 
-        class="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
-        Voltar para Disciplinas
-      </button>
+    <div *ngIf="errorMessage && !isLoading" class="bg-red-50 border border-red-200 rounded-lg p-4 sm:p-6 text-center space-y-3">
+      <p class="text-red-700 font-medium">{{ errorMessage }}</p>
+      <div class="flex flex-col sm:flex-row justify-center space-y-2 sm:space-y-0 sm:space-x-3">
+        <button 
+          routerLink="/disciplinas" 
+          class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 cursor-pointer transition-colors">
+          Voltar para Disciplinas
+        </button>
+        <button 
+ 
+          class="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 cursor-pointer transition-colors">
+          Tentar novamente
+        </button>
+      </div>
     </div>
 
   </div>

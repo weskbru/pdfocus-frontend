@@ -1,0 +1,8 @@
+
+.cadastro-container * {
+    caret-color: transparent !important;
+}
+
+.cadastro-container input {
+    caret-color: auto !important;
+}

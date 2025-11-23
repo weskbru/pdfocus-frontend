@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams, HttpEvent } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-
+import { environment } from '../../../environments/environment';
 import { AuthService } from '../../core/auth';
 
 // Interfaces para melhor organização (normalmente em arquivos separados)
@@ -41,9 +41,9 @@ export interface ResumoSimples {
 
 export interface CriarResumoDeMaterialCommand {
   materialId: string;
-  disciplinaId: string; // ✅ Adicione esta linha
-  titulo?: string;       // ✅ Adicione esta linha (opcional)
-  conteudo?: string;     // ✅ Adicione esta linha (opcional)
+  disciplinaId: string; 
+  titulo?: string; 
+  conteudo?: string;
 }
 
 export interface MaterialSimples {
@@ -97,12 +97,12 @@ export interface ResumoResponse {
 })
 export class DisciplinaService {
 
-  // [--- CORREÇÃO AQUI ---]
-  // Apontamos para a URL de produção na Railway
-  private readonly apiBaseUrl = 'https://pdfocus.up.railway.app';
-  private readonly disciplinasUrl = `${this.apiBaseUrl}/disciplinas`;
-  private readonly materiaisUrl = `${this.apiBaseUrl}/materiais`;
-  private readonly resumosUrl = `${this.apiBaseUrl}/resumos`;
+
+  // Apontamos para a URL do environment, que muda conforme o build (dev ou prod)
+  private readonly apiUrl = environment.apiUrl;
+  private readonly disciplinasUrl = `${this.apiUrl}/disciplinas`;
+  private readonly materiaisUrl = `${this.apiUrl}/materiais`;
+  private readonly resumosUrl = `${this.apiUrl}/resumos`;
 
   constructor(
     private http: HttpClient,
@@ -175,7 +175,6 @@ export class DisciplinaService {
   }
 
   /**
-    * ✅ 5. MÉTODO ATUALIZADO PARA SUPORTAR PAGINAÇÃO
     * Busca o "dossier completo" de uma disciplina, incluindo uma página específica de materiais.
     * @param id - UUID da disciplina a ser buscada.
     * @param page - O número da página de materiais a ser buscada (base 0).

@@ -3,68 +3,83 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-16">
         <div class="flex items-center space-x-3">
-          <div class="w-8 h-8 bg-red-600 rounded-lg flex items-center justify-center">
+          <div class="w-8 h-8 bg-orange-600 rounded-lg flex items-center justify-center">
             <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
               </path>
             </svg>
           </div>
-          <h1 class="text-xl font-bold text-gray-800">PDFocus</h1>
+          <h1 class="text-xl font-bold text-gray-700">PDFocus</h1>
         </div>
+
         <!-- ÁREA DO MENU DO USUÁRIO -->
         <div id="user-menu-area" class="flex items-center space-x-3 relative">
 
-
-          <!-- Ícone de Notificação (AGORA CLICÁVEL E REATIVO) -->
-          <button (click)="marcarNotificacoesComoLidas()"
+          <!-- Ícone de Notificação -->
+          <button (click)="toggleNotificationPanel()"
             class="p-2 text-gray-600 hover:text-blue-600 transition-colors relative cursor-pointer" title="Notificações"
             aria-label="Notificações">
             <fa-icon [icon]="faBell" class="w-5 h-5"></fa-icon>
 
-            <!-- Badge de Notificação (AGORA REATIVO) -->
             <span *ngIf="hasUnreadNotifications && notificationCount > 0"
               class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-semibold">
               {{ notificationCount }}
             </span>
           </button>
 
-          <!-- Avatar do Usuário (Abre o dropdown) -->
-          <button (click)="toggleUserMenu()"
-            class="w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white text-sm font-semibold uppercase cursor-pointer hover:from-blue-600 hover:to-blue-700 transition-all">
-            {{ userName.charAt(0) }}
+          <!-- Painel de Notificações -->
+          <div *ngIf="isNotificationPanelOpen"
+            class="absolute top-12 right-0 bg-white shadow-lg rounded-lg border border-gray-200 w-72 p-4 z-50">
 
+            <!-- Se não houver notificações -->
+            <div *ngIf="notifications.length === 0" class="text-center py-4">
+              <p class="text-gray-600 text-sm">Nada por aqui ainda.</p>
+            </div>
+
+            <!-- Lista de notificações -->
+            <div *ngIf="notifications.length > 0" class="space-y-3">
+              <div *ngFor="let n of notifications" class="p-2 rounded-lg bg-gray-50 border border-gray-100">
+                <p class="text-sm text-gray-700">{{ n.message }}</p>
+                <p class="text-xs text-gray-700 mt-1">{{ n.date | date:'dd/MM/yyyy HH:mm' }}</p>
+              </div>
+            </div>
+          </div>
+
+
+          <!-- Avatar do Usuário -->
+          <button (click)="toggleUserMenu()"
+            class="w-8 h-8 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full flex items-center justify-center text-white text-sm font-semibold uppercase cursor-pointer hover:from-red-400 hover:to-orange-400 transition-all">
+            {{ userName.charAt(0) }}
           </button>
 
           <!-- Dropdown Menu -->
           <div *ngIf="isUserMenuOpen"
             class="absolute top-12 right-0 bg-white rounded-lg shadow-lg border border-gray-200 py-2 w-48 z-50">
-
-            <!-- Opção Editar Perfil -->
             <button (click)="abrirModalEditarPerfil()"
               class="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center space-x-2 transition-colors">
               <fa-icon [icon]="faUserEdit" class="text-gray-400 w-4 h-4"></fa-icon>
               <span>Editar Perfil</span>
             </button>
 
-            <!-- Separador -->
             <div class="border-t border-gray-100 my-1"></div>
 
-            <!-- Opção Sair -->
             <button (click)="fazerLogout()"
               class="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center space-x-2 transition-colors">
               <fa-icon [icon]="faSignOutAlt" class="w-4 h-4"></fa-icon>
               <span>Sair</span>
             </button>
           </div>
+
         </div>
+
       </div>
     </div>
   </header>
 
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <div class="mb-8">
-      <h2 class="text-2xl font-bold text-gray-800 mb-2">Bem-vindo de volta, {{ userName }}!</h2>
+      <h2 class="text-2xl font-bold text-gray-800 mb-2">Bem-vindo, {{ userName }}!</h2>
       <p class="text-gray-600">Aqui está o resumo dos seus estudos.</p>
     </div>
 
@@ -153,20 +168,25 @@
       </div>
     </div>
   </main>
-
-
-  <app-novo-resumo-modal [isOpen]="isNovoResumoModalOpen"
-    (fecharModal)="isNovoResumoModalOpen = false"></app-novo-resumo-modal>
-  <app-adicionar-material-modal [isOpen]="isAdicionarMaterialModalOpen"
-    (fecharModal)="isAdicionarMaterialModalOpen = false"></app-adicionar-material-modal>
-  <app-criar-disciplina-modal [isOpen]="isCriarDisciplinaModalOpen" (fecharModal)="isCriarDisciplinaModalOpen = false">
-  </app-criar-disciplina-modal>
-  <app-info-modal [isOpen]="isInfoModalOpen" [title]="infoModalTitle" [message]="infoModalMessage"
-    (closeModal)="isInfoModalOpen = false" (actionClicked)="handleInfoModalAction()">
-  </app-info-modal>
-
-  <app-editar-perfil-modal [isOpen]="isPerfilModalOpen" (fecharModal)="fecharModalEditarPerfil()"
-    (perfilAtualizado)="onPerfilAtualizado($event)">
-  </app-editar-perfil-modal>
-
+  
+  <!-- Footer -->
+  <div class="text-center mt-8">
+    <p class="text-xs text-gray-500">
+      © 2025 PDFocus • Plataforma de estudos com PDF
+    </p>
+  </div>
 </div>
+
+<app-novo-resumo-modal [isOpen]="isNovoResumoModalOpen"
+  (fecharModal)="isNovoResumoModalOpen = false"></app-novo-resumo-modal>
+<app-adicionar-material-modal [isOpen]="isAdicionarMaterialModalOpen"
+  (fecharModal)="isAdicionarMaterialModalOpen = false"></app-adicionar-material-modal>
+<app-criar-disciplina-modal [isOpen]="isCriarDisciplinaModalOpen" (fecharModal)="isCriarDisciplinaModalOpen = false">
+</app-criar-disciplina-modal>
+<app-info-modal [isOpen]="isInfoModalOpen" [title]="infoModalTitle" [message]="infoModalMessage"
+  (closeModal)="isInfoModalOpen = false" (actionClicked)="handleInfoModalAction()">
+</app-info-modal>
+
+<app-editar-perfil-modal [isOpen]="isPerfilModalOpen" (fecharModal)="fecharModalEditarPerfil()"
+  (perfilAtualizado)="onPerfilAtualizado($event)">
+</app-editar-perfil-modal>
