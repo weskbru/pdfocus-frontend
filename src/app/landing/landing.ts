@@ -11,4 +11,13 @@ import { RouterModule } from '@angular/router';
 })
 export class LandingComponent {
   currentYear = new Date().getFullYear();
+  isMobileMenuOpen = false;
+
+  toggleMobileMenu(): void {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+  }
+
+  closeMobileMenu(): void {
+    this.isMobileMenuOpen = false;
+  }
 }

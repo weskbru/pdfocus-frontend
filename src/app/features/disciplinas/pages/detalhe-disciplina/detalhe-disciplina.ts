@@ -13,7 +13,7 @@ import {
 
 // IMPORTS DO FONT AWESOME
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { IconDefinition, faChevronDown, faFilePdf, faPlus, faUpload, faFileWord, faFilePowerpoint, faFile, faEye, faDownload, faTrash, faEdit, faExclamationTriangle, faSpinner, faPlusCircle, faCloudUploadAlt, faTimes, faSearch, faFilter } from '@fortawesome/free-solid-svg-icons';
+import { IconDefinition, faChevronDown, faFilePdf, faPlus, faUpload, faFileWord, faFilePowerpoint, faFile, faEye, faDownload, faTrash, faEdit, faExclamationTriangle, faSpinner, faPlusCircle, faCloudUploadAlt, faTimes, faSearch, faFilter, faCrown, faRocket, faCheck, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 
 // ✅ IMPORT DO NOVO MODAL
 import { SelecionarMaterialModal } from '../../../resumos/components/selecionar-material-modal/selecionar-material-modal';
@@ -44,10 +44,21 @@ export class DetalheDisciplina implements OnInit {
   faDownload = faDownload;
   faTrash = faTrash;
   faEye = faEye;
+  faCrown = faCrown;
+  faRocket = faRocket;
+  faCheck = faCheck;
+  faCheckCircle = faCheck;
 
   disciplina: DetalheDisciplinaResponse | null = null;
   isLoading = true;
   errorMessage: string | null = null;
+
+  // --- Propriedades para o Modal de Informação ---
+  public isInfoModalOpen = false;
+  public infoModalTitle = '';
+  public infoModalMessage = '';
+  public isSuccessModalOpen = false;
+  public successMessage = '';
 
   // PROPRIEDADES DE PAGINAÇÃO (ADICIONAR)
   paginaAtual: number = 0;
@@ -176,14 +187,13 @@ export class DetalheDisciplina implements OnInit {
     this.materialParaResumo = material;
     this.modalSelecaoMaterialAberto = false;
 
-    // ✅ AGORA GERAMOS O RESUMO AUTOMATICAMENTE
+    // Inicia a geração do resumo automático
     this.gerarResumoAutomatico(material);
   }
 
   /**
-   * Gera resumo automático usando o backend
-   */
-  // NO COMPONENTE, ADICIONE LOGS PARA DEBUG:
+    * Gera resumo automático usando o backend
+    */
   gerarResumoAutomatico(material: MaterialSimples): void {
     this.isLoading = true;
     this.errorMessage = null;
@@ -201,15 +211,15 @@ export class DetalheDisciplina implements OnInit {
       dataCriacao: new Date().toISOString()
     };
 
-    // ✅ 2. ATUALIZAÇÃO IMUTÁVEL DA LISTA
+    //  ATUALIZAÇÃO IMUTÁVEL DA LISTA
     this.atualizarListaResumosOptimista(resumoOptimista);
 
-    // ✅ 3. CHAMADA PARA API
+    // CHAMADA PARA API
     this.disciplinaService.gerarResumoAutomatico(comandoParaApi).subscribe({
       next: (resumoReal: ResumoResponse) => {
         this.isLoading = false;
 
-        // ✅ 4. SUBSTITUIR RESUMO OTIMISTA PELO REAL
+        // ✅ 2. SUBSTITUIR RESUMO OTIMISTA PELO REAL
         this.substituirResumoOptimista(resumoOptimista.id, resumoReal);
 
         this.mostrarMensagemSucesso(`Resumo para "${material.nomeArquivo}" criado com sucesso!`);
@@ -217,14 +227,30 @@ export class DetalheDisciplina implements OnInit {
       error: (err) => {
         this.isLoading = false;
 
-        // ✅ 5. REMOVER RESUMO OTIMISTA EM CASO DE ERRO
+     
         this.removerResumoOptimista(resumoOptimista.id);
 
-        console.error('❌ ERRO DETALHADO:', err);
-        this.errorMessage = 'Erro ao gerar resumo automático. Tente novamente.';
+        // TRATAMENTO DE ERRO DE COTA EXCEDIDA (UX)
+        if (err.status === 429) {
+          
+          const defaultMsg = 'Você atingiu seu limite diário de resumos. Volte amanhã!';
+          this.infoModalTitle = 'Limite de Uso Atingido';
+          this.infoModalMessage = err.error?.message || defaultMsg;
+          this.isInfoModalOpen = true;
+        }
+        else if (err.status === 401 || err.status === 403) {
+          this.router.navigate(['/login']);
+        }
+        else {
+          console.error('❌ ERRO DETALHADO:', err);
+          this.errorMessage = 'Erro ao gerar resumo automático. Tente novamente.';
+        }
       }
     });
   }
+
+
+
   /**
    * Método auxiliar: Adiciona resumo otimista à lista
    */
@@ -288,9 +314,13 @@ export class DetalheDisciplina implements OnInit {
   /**
    * Mostra mensagem de sucesso (simples por enquanto)
    */
-  mostrarMensagemSucesso(mensagem: string): void {
-    // Implementação simples - você pode melhorar com toast/snackbar depois
-    alert(mensagem);
+ private mostrarMensagemSucesso(mensagem: string): void {
+    this.successMessage = mensagem;
+    this.isSuccessModalOpen = true;
+  }
+
+  fecharSuccessModal(): void {
+    this.isSuccessModalOpen = false;
   }
 
   /**
@@ -504,4 +534,26 @@ export class DetalheDisciplina implements OnInit {
       default: return 'text-gray-500';
     }
   }
+
+  fecharInfoModal(): void {
+    this.isInfoModalOpen = false;
+  }
+  // --- Método para ação do modal (Criar Disciplina) ---
+  handleInfoModalAction(): void {
+    this.isInfoModalOpen = false;
+    // Redireciona para criar disciplina ou outra ação
+    this.router.navigate(['/disciplinas/criar']);
+  }
+
+  // No dashboard.component.ts
+fazerUpgrade(): void {
+  this.fecharInfoModal();
+  // Pode passar contexto de onde veio o upgrade
+  this.router.navigate(['/assinatura'], {
+    queryParams: { 
+      source: 'limit_reached',
+      plan: 'premium'
+    }
+  });
+}
 }

@@ -30,7 +30,6 @@ export interface MaterialRecenteResponse {
 })
 export class DashboardService {
 
-  // [--- CORREÇÃO AQUI ---]
   // Apontamos para a URL do environment, que muda conforme o build (dev ou prod)
   private readonly apiUrl = environment.apiUrl;
 
@@ -43,22 +42,20 @@ export class DashboardService {
    * Busca as estatísticas agregadas do utilizador logado.
    */
   buscarEstatisticas(): Observable<DashboardEstatisticasResponse> {
-    const endpoint = `${this.apiUrl}/estatisticas`;
+    const endpoint = `${this.apiUrl}/dashboard/estatisticas`;
     const token = this.authService.obterToken();
     const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` });
     return this.http.get<DashboardEstatisticasResponse>(endpoint, { headers });
-  }
+}
 
   /**
    * ADICIONE ESTE NOVO MÉTODO:
    * Busca a lista de materiais mais recentes do utilizador logado.
    */
   buscarMateriaisRecentes(): Observable<MaterialRecenteResponse[]> {
-    const endpoint = `${this.apiUrl}/materiais/recentes`;
+    const endpoint = `${this.apiUrl}/dashboard/materiais/recentes`;
     const token = this.authService.obterToken();
     const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` });
-
-    // A única diferença é que esperamos receber um array de MaterialRecenteResponse
     return this.http.get<MaterialRecenteResponse[]>(endpoint, { headers });
-  }
+}
 }

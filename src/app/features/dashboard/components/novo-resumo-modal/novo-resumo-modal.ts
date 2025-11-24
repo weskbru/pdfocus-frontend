@@ -107,12 +107,18 @@ export class NovoResumoDashboardModalComponent implements OnChanges {
    * Disparado pelo botão "Iniciar Resumo".
    * Navega o usuário para a página de criação de resumo com o ID do material selecionado.
    */
-  confirmarSelecao(): void {
-    if (this.selectedMaterialId) {
-      this.router.navigate(['/app/resumos/criar', this.selectedMaterialId]);
-      this.onFecharModal();
-    }
+  @Output() resumoSubmetido = new EventEmitter<any>();
+
+confirmarSelecao(): void {
+  if (this.selectedMaterialId && this.selectedDisciplinaId) {
+    // ✅ Emite os dados para o dashboard processar
+    this.resumoSubmetido.emit({
+      materialId: this.selectedMaterialId,
+      disciplinaId: this.selectedDisciplinaId
+    });
+    this.onFecharModal();
   }
+}
 
   /**
    * Disparado pelo botão de ajuda "Adicionar Material" (no caso "sem materiais").

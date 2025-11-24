@@ -102,7 +102,7 @@ export class DisciplinaService {
   private readonly apiUrl = environment.apiUrl;
   private readonly disciplinasUrl = `${this.apiUrl}/disciplinas`;
   private readonly materiaisUrl = `${this.apiUrl}/materiais`;
-  private readonly resumosUrl = `${this.apiUrl}/resumos`;
+  public readonly resumosUrl = `${this.apiUrl}/resumos`;
 
   constructor(
     private http: HttpClient,
@@ -120,29 +120,15 @@ export class DisciplinaService {
     });
   }
 
-  /**
+ /**
    * Tratamento centralizado de erros HTTP
-   * @param error - Erro retornado pela requisição
-   * @returns Observable com mensagem de erro
+   * CORREÇÃO: Agora repassa o erro original (HttpErrorResponse) 
+   * para que o componente consiga ler o status (429, 401, etc.)
    */
   private handleError(error: any): Observable<never> {
-    console.error('Erro na requisição:', error);
-
-    let errorMessage = 'Ocorreu um erro desconhecido';
-
-    if (error.error instanceof ErrorEvent) {
-      // Erro do lado do cliente
-      errorMessage = `Erro: ${error.error.message}`;
-    } else {
-      // Erro do lado do servidor
-      errorMessage = `Erro ${error.status}: ${error.message}`;
-
-      if (error.error && error.error.message) {
-        errorMessage = error.error.message;
-      }
-    }
-
-    return throwError(() => new Error(errorMessage));
+    console.error('Erro na requisição (Service):', error);
+    // Repassa o erro original. Não cria um "new Error()".
+    return throwError(() => error); 
   }
 
   // --- OPERAÇÕES DE DISCIPLINA ---
