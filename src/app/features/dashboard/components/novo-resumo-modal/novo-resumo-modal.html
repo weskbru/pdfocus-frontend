@@ -1,4 +1,3 @@
-
 <div *ngIf="isOpen"
   class="fixed inset-0 bg-black/5 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-opacity duration-300"
   (click)="onFecharModal()">
@@ -83,13 +82,13 @@
     </div>
 
     <div class="px-6 py-4 border-t border-gray-200/70 bg-gray-50 flex justify-end space-x-3 select-none">
-      <button (click)="onFecharModal()"
-        class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+      <button type="button" (click)="onFecharModal()"
+        class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
         Cancelar
       </button>
 
-      <button (click)="confirmarSelecao()" [disabled]="!selectedMaterialId"
-        class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors flex items-center">
+      <button type="button" (click)="confirmarSelecao()" [disabled]="!selectedMaterialId"
+        class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors flex items-center cursor-pointer">
         <fa-icon [icon]="faCheck" class="mr-2"></fa-icon>
         Iniciar Resumo
       </button>

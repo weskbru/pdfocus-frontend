@@ -1,8 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth-guard';
-
-// 1. Importar o novo Landing Component (Assegure-se de que o caminho está correto)
-import { LandingComponent } from './landing/landing';
+import { AssinaturaComponent } from './features/assinatura/assinatura';
 
 export const routes: Routes = [
   // Rota de Cadastro com Carregamento Preguiçoso (Lazy Loading)
@@ -26,7 +24,7 @@ export const routes: Routes = [
       .then(m => m.LandingComponent)
   },
 
-  // Rota da Dashboard,
+  // Rota da Dashboard
   {
     path: 'dashboard',
     loadComponent: () => import('./features/dashboard/dashboard')
@@ -46,14 +44,13 @@ export const routes: Routes = [
     // Rota para a página de detalhes de uma disciplina específica (protegida)
     path: 'disciplinas/detalhe/:id',
     loadComponent: () => import('./features/disciplinas/pages/detalhe-disciplina/detalhe-disciplina')
-      .then(m => m.DetalheDisciplina), // Supondo que o nome da classe seja DetalheDisciplina
+      .then(m => m.DetalheDisciplina),
     canActivate: [authGuard]
   },
 
   // --- ROTA DE MATERIAIS (Protegida) ---
   {
-    //  NOVA ROTA DE UPLOAD:
-    // O :disciplinaId é um parâmetro que conterá o UUID da disciplina.
+    // Rota de Upload
     path: 'disciplinas/detalhe/:disciplinaId/adicionar-material',
     loadComponent: () => import('./features/materiais/pages/adicionar-material/adicionar-material')
       .then(m => m.AdicionarMaterial),
@@ -68,7 +65,13 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
 
-  // Rotas de redirecionamento (devem ficar por último)
-  // Redireciona qualquer caminho desconhecido para a Landing Page (pública)
+  // ✅ CORREÇÃO: A rota 'assinatura' deve vir ANTES do Wildcard (**)
+  {
+    path: 'assinatura', 
+    component: AssinaturaComponent,
+    canActivate: [authGuard] 
+  },
+
+  // 🛑 IMPORTANTE: Rotas de redirecionamento (Wildcard) devem ficar SEMPRE POR ÚLTIMO
   { path: '**', redirectTo: '', pathMatch: 'full' }
 ];

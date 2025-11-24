@@ -378,12 +378,12 @@
     </div>
   </div>
   <!-- Footer -->
-      <div class="text-center mt-8">
-        <p class="text-xs text-gray-500">
-          © 2025 PDFocus • Plataforma de estudos com PDF
-        </p>
-      </div>
-      
+  <div class="text-center mt-8">
+    <p class="text-xs text-gray-500">
+      © 2025 PDFocus • Plataforma de estudos com PDF
+    </p>
+  </div>
+
 </div>
 
 <div *ngIf="isLoading" class="fixed inset-0 bg-black/20 flex items-center justify-center z-50"
@@ -395,27 +395,97 @@
   </div>
 </div>
 
+<!-- Modal de Sucesso - Resumo Criado -->
+<div *ngIf="isSuccessModalOpen"
+  class="fixed inset-0 bg-black/5 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-opacity duration-300"
+  (click)="fecharSuccessModal()">
 
-    
-<style>
-  .rotate-180 {
-    transform: rotate(180deg);
-  }
+  <div class="relative bg-white rounded-xl shadow-2xl w-full max-w-md animate-modal-in"
+    (click)="$event.stopPropagation()">
 
-  /* Animação para o modal */
-  @keyframes modal-in {
-    from {
-      opacity: 0;
-      transform: scale(0.9) translateY(-10px);
-    }
+    <!-- Header do Modal -->
+    <div class="px-6 py-4 border-b border-gray-200/70 flex justify-between items-center">
+      <h3 class="text-lg font-semibold text-gray-900">Resumo Criado!</h3>
+      <button (click)="fecharSuccessModal()" class="text-gray-400 hover:text-gray-600">
+        <fa-icon [icon]="faTimes"></fa-icon>
+      </button>
+    </div>
 
-    to {
-      opacity: 1;
-      transform: scale(1) translateY(0);
-    }
-  }
+    <!-- Conteúdo do Modal -->
+    <div class="p-6">
+      <div class="text-center">
+        <!-- Ícone de Sucesso -->
+        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <fa-icon [icon]="faCheckCircle" class="text-green-500 text-2xl"></fa-icon>
+        </div>
+        
+        <p class="text-gray-700 font-medium mb-2">{{ successMessage }}</p>
+        <p class="text-gray-500 text-sm">Seu resumo foi processado e salvo com sucesso.</p>
+      </div>
+    </div>
+  </div>
+</div>
 
-  .animate-modal-in {
-    animation: modal-in 0.3s ease-out;
-  }
-</style>
+<!-- Modal de Limite Atingido -->
+<div *ngIf="isInfoModalOpen"
+  class="fixed inset-0 bg-black/5 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-opacity duration-300"
+  (click)="fecharInfoModal()">
+
+  <div class="relative bg-white rounded-xl shadow-2xl w-full max-w-md animate-modal-in"
+    (click)="$event.stopPropagation()">
+
+    <!-- Header do Modal -->
+    <div class="px-6 py-4 border-b border-gray-200/70 flex justify-between items-center">
+      <h3 class="text-lg font-semibold text-gray-900">{{ infoModalTitle }}</h3>
+      <button (click)="fecharInfoModal()" class="text-gray-400 hover:text-gray-600">
+        <fa-icon [icon]="faTimes"></fa-icon>
+      </button>
+    </div>
+
+    <!-- Conteúdo do Modal -->
+    <div class="p-6">
+      <div class="text-center">
+        <!-- Ícone Premium -->
+        <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
+          <fa-icon [icon]="faCrown" class="text-white text-xl"></fa-icon>
+        </div>
+        
+        <p class="text-gray-700 font-medium mb-2">{{ infoModalMessage }}</p>
+        <p class="text-gray-600 text-sm mb-4">3 resumos diários</p>
+
+        <!-- Benefícios do Upgrade -->
+        <div class="bg-gray-50 rounded-lg p-4 mb-4 text-left">
+          <p class="text-sm font-medium text-gray-800 mb-2">Com o Plano Premium:</p>
+          <ul class="text-sm text-gray-600 space-y-1">
+            <li class="flex items-center">
+              <fa-icon [icon]="faCheck" class="text-green-500 mr-2 text-xs"></fa-icon>
+              Resumos ilimitados por dia
+            </li>
+            <li class="flex items-center">
+              <fa-icon [icon]="faCheck" class="text-green-500 mr-2 text-xs"></fa-icon>
+              Processamento mais rápido
+            </li>
+            <li class="flex items-center">
+              <fa-icon [icon]="faCheck" class="text-green-500 mr-2 text-xs"></fa-icon>
+              Recursos avançados de IA
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="flex space-x-3 mt-6">
+        <button (click)="fecharInfoModal()"
+          class="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+          Continuar Gratuito
+        </button>
+        <button (click)="fazerUpgrade()"
+          class="flex-1 px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all shadow-md">
+          <fa-icon [icon]="faRocket" class="mr-2"></fa-icon>
+          Fazer Upgrade
+        </button>
+      </div>
+
+      <p class="text-xs text-gray-400 text-center mt-4">* Plano gratuito renova à meia-noite</p>
+    </div>
+  </div>
+</div>
