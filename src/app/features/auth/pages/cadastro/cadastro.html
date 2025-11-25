@@ -6,8 +6,9 @@
       <!-- Logo e Título -->
       <div class="text-center mb-6 md:mb-8">
         <div class="flex justify-center mb-3 md:mb-4">
-          <a routerLink="/landing" class="inline-block">
-            <div class="w-10 h-10 bg-orange-400 rounded-lg flex items-center justify-center">
+          <a routerLink="/landing" class="inline-block group cursor-pointer">
+            <div
+              class="w-10 h-10 bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg flex items-center justify-center shadow-md group-hover:from-red-400 group-hover:to-orange-400 transition-all duration-300">
               <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
@@ -86,7 +87,8 @@
               [class.border-red-300]="confirmarSenha?.invalid && confirmarSenha?.touched"
               [class.focus:ring-red-200]="confirmarSenha?.invalid && confirmarSenha?.touched">
 
-            <div *ngIf="confirmarSenha?.invalid && confirmarSenha?.touched" class="mt-1 text-red-600 text-xs md:text-sm">
+            <div *ngIf="confirmarSenha?.invalid && confirmarSenha?.touched"
+              class="mt-1 text-red-600 text-xs md:text-sm">
               <span *ngIf="confirmarSenha?.errors?.['required']">Confirmação é obrigatória</span>
             </div>
             <div *ngIf="cadastroForm.errors?.['senhasNaoConferem'] && confirmarSenha?.touched"
@@ -108,7 +110,7 @@
 
           <!-- Botão de Cadastrar -->
           <button type="submit" [disabled]="cadastroForm.invalid || loading"
-            class="w-full bg-blue-700 text-white py-3 px-4 rounded-md font-medium hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-base">
+            class="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-3 px-4 rounded-lg font-medium hover:from-red-400 hover:to-orange-400 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none text-sm md:text-base cursor-pointer">
 
             <span *ngIf="!loading" class="flex items-center justify-center">
               <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

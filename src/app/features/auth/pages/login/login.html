@@ -5,9 +5,10 @@
 
       <!-- Logo e Título -->
       <div class="text-center mb-6 md:mb-8">
-        <a routerLink="/landing" class="inline-block">
+        <a routerLink="/landing" class="inline-block group cursor-pointer">
           <div class="flex justify-center mb-3 md:mb-4">
-            <div class="w-10 h-10 bg-orange-400 rounded-lg flex items-center justify-center">
+            <div
+              class="w-10 h-10 bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg flex items-center justify-center shadow-md group-hover:from-red-400 group-hover:to-orange-400 transition-all duration-300">
               <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
@@ -16,7 +17,6 @@
             </div>
           </div>
         </a>
-
         <h1 class="text-xl md:text-2xl font-semibold text-gray-900 mb-2">
           Entrar no PDFocus
         </h1>
@@ -31,7 +31,7 @@
           <div *ngIf="errorMessage" class="p-3 mb-3 text-sm text-red-700 bg-red-100 rounded-md border border-red-200">
             {{ errorMessage }}
           </div>
-          
+
           <!-- Campo Email -->
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">
@@ -77,7 +77,7 @@
 
           <!-- Botão de Login -->
           <button type="submit" [disabled]="loginForm.invalid || loading"
-            class="w-full bg-blue-700 text-white py-3 px-4 rounded-md font-medium hover:bg-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer text-sm md:text-base">
+            class="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-3 px-4 rounded-lg font-medium hover:from-red-400 hover:to-orange-400 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none cursor-pointer text-sm md:text-base">
 
             <span *ngIf="!loading" class="flex items-center justify-center">
               <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

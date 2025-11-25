@@ -32,6 +32,7 @@ export class NovoResumoDashboardModalComponent implements OnChanges {
   faTimes = faTimes;
   faCheck = faCheck;
   faPlus = faPlus;
+  faCrown = faPlus;
 
   // --- Inputs & Outputs ---
 
@@ -182,7 +183,10 @@ confirmarSelecao(): void {
       }
     });
   }
-
+irParaPremium(): void {
+    this.onFecharModal(); // Fecha este modal primeiro
+    this.router.navigate(['/assinatura']); // Navega para a página de planos
+  }
   /**
    * Limpa todo o estado interno do modal.
    * Chamado quando o modal é fechado (via ngOnChanges).

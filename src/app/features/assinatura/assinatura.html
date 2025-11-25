@@ -1,38 +1,31 @@
-<div class="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8 font-sans select-none">
-  
-  <!-- Header -->
+<div class="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8 font-sans select-none overflow-x-hidden">
+
   <div class="max-w-4xl mx-auto mb-8">
-    <button (click)="voltar()" 
-      class="flex items-center text-gray-600 hover:text-orange-600 transition-colors font-medium focus:outline-none">
+    <button (click)="voltar()"
+      class="flex items-center cursor-pointer  hover:text-orange-600 transition-colors font-medium focus:outline-none touch-manipulation">
       <fa-icon [icon]="faArrowLeft" class="mr-2"></fa-icon>
       Voltar para o Dashboard
     </button>
   </div>
 
-  <!-- Hero -->
- <div class="max-w-4xl mx-auto text-center mb-12">
-  <!-- Ícone Clicável (Voltar ao Dashboard) -->
-  <button (click)="voltar()"
-    class="w-16 h-16 bg-orange-600 rounded-lg flex items-center justify-center mx-auto mb-6 hover:bg-orange-700 transition-colors cursor-pointer shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
-    title="Voltar para o Dashboard">
+  <div class="max-w-4xl mx-auto text-center mb-12 px-2">
+    <button (click)="voltar()"
+      class="w-16 h-16 bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg flex items-center justify-center mx-auto mb-6 hover:from-red-400 hover:to-orange-400 transition-all cursor-pointer shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
+      title="Voltar para o Dashboard">
+      <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+        </path>
+      </svg>
+    </button>
 
-    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-      </path>
-    </svg>
+    <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">Faça Upgrade para Premium</h1>
+    <p class="text-gray-600 text-sm md:text-base">Desbloqueie resumos ilimitados e estude sem limites</p>
+  </div>
 
-  </button>
-  
-  <h1 class="text-2xl font-bold text-gray-800 mb-2">Faça Upgrade para Premium</h1>
-  <p class="text-gray-600">Desbloqueie resumos ilimitados e estude sem limites</p>
-</div>
+  <div class="max-w-4xl mx-auto grid gap-6 grid-cols-1 md:grid-cols-2">
 
-  <!-- Planos -->
-  <div class="max-w-4xl mx-auto grid gap-6 md:grid-cols-2">
-
-    <!-- Plano Gratuito -->
-    <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+    <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 order-2 md:order-1">
       <div class="text-center mb-6">
         <h3 class="text-lg font-semibold text-gray-800 mb-2">Plano Atual</h3>
         <div class="text-2xl font-bold text-gray-800">Grátis</div>
@@ -40,15 +33,15 @@
 
       <ul class="space-y-3 mb-6">
         <li class="flex items-center text-gray-600 text-sm">
-          <fa-icon [icon]="faCheck" class="text-green-500 mr-3"></fa-icon>
+          <fa-icon [icon]="faCheck" class="text-green-500 mr-3 flex-shrink-0"></fa-icon>
           3 resumos por dia
         </li>
         <li class="flex items-center text-gray-600 text-sm">
-          <fa-icon [icon]="faCheck" class="text-green-500 mr-3"></fa-icon>
+          <fa-icon [icon]="faCheck" class="text-green-500 mr-3 flex-shrink-0"></fa-icon>
           Upload de materiais PDF
         </li>
         <li class="flex items-center text-gray-600 text-sm">
-          <fa-icon [icon]="faCheck" class="text-green-500 mr-3"></fa-icon>
+          <fa-icon [icon]="faCheck" class="text-green-500 mr-3 flex-shrink-0"></fa-icon>
           Organização por disciplinas
         </li>
       </ul>
@@ -58,106 +51,108 @@
       </div>
     </div>
 
-    <!-- Plano Premium -->
-    <div class="bg-white rounded-xl p-6 shadow-sm border-2 border-orange-500 relative">
-      <div class="absolute -top-3 left-1/2 transform -translate-x-1/2">
-        <span class="bg-orange-500 text-white text-xs font-semibold px-3 py-1 rounded-full">
+    <div class="bg-white rounded-xl p-6 shadow-lg border-2 border-orange-500 relative order-1 md:order-2 transform md:scale-105 transition-transform duration-300">
+      <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 w-max">
+        <span class="bg-orange-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-sm">
           Recomendado
         </span>
       </div>
 
-      <div class="text-center mb-6">
+      <div class="text-center mb-6 pt-2">
         <h3 class="text-lg font-semibold text-gray-800 mb-2">Premium</h3>
-        <div class="text-2xl font-bold text-gray-800">R$ 9,90</div>
+        <div class="text-3xl font-bold text-gray-800">R$ 9,90</div>
         <p class="text-gray-500 text-sm">por mês</p>
       </div>
 
-      <ul class="space-y-3 mb-6">
+      <ul class="space-y-3 mb-8">
         <li class="flex items-center text-gray-800 text-sm font-medium">
-          <fa-icon [icon]="faCheck" class="text-orange-500 mr-3"></fa-icon>
-          Resumos ilimitados por dia
+          <fa-icon [icon]="faCheck" class="text-orange-500 mr-3 flex-shrink-0"></fa-icon>
+          Resumos ilimitados
         </li>
         <li class="flex items-center text-gray-800 text-sm font-medium">
-          <fa-icon [icon]="faCheck" class="text-orange-500 mr-3"></fa-icon>
+          <fa-icon [icon]="faCheck" class="text-orange-500 mr-3 flex-shrink-0"></fa-icon>
           Recursos avançados de IA
         </li>
         <li class="flex items-center text-gray-800 text-sm font-medium">
-          <fa-icon [icon]="faCheck" class="text-orange-500 mr-3"></fa-icon>
-          Suporte prioritário
+          <fa-icon [icon]="faCheck" class="text-orange-500 mr-3 flex-shrink-0"></fa-icon>
+          Suporte prioritário (WhatsApp)
         </li>
         <li class="flex items-center text-gray-800 text-sm font-medium">
-          <fa-icon [icon]="faCheck" class="text-orange-500 mr-3"></fa-icon>
+          <fa-icon [icon]="faCheck" class="text-orange-500 mr-3 flex-shrink-0"></fa-icon>
           Novos recursos primeiro
         </li>
         <li class="flex items-center text-gray-800 text-sm font-medium">
-          <fa-icon [icon]="faCheck" class="text-orange-500 mr-3"></fa-icon>
-          Processamento mais rápido
+          <fa-icon [icon]="faCheck" class="text-orange-500 mr-3 flex-shrink-0"></fa-icon>
+          Processamento 2x mais rápido
         </li>
       </ul>
 
-      <button (click)="assinarPremium()" 
-        class="w-full bg-orange-500 text-white py-2 px-4 rounded-lg font-medium hover:bg-orange-600 transition-colors cursor-pointer">
+      <button (click)="assinarPremium()"
+        class="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-3 px-4 rounded-lg font-bold hover:from-red-400 hover:to-orange-400 transition-all cursor-pointer shadow-md active:scale-95">
         Assinar Agora
       </button>
-      
+
       <p class="text-center text-gray-400 text-xs mt-3">
         Cancele a qualquer momento
       </p>
     </div>
   </div>
 
-  <!-- Comparação -->
-  <div class="max-w-4xl mx-auto mt-12 bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-    <h3 class="text-lg font-semibold text-gray-800 text-center mb-6">Compare os planos</h3>
-    
-    <div class="grid grid-cols-3 gap-4 text-sm">
-      <div class="font-medium text-gray-700 py-2 border-b border-gray-100">Recurso</div>
-      <div class="text-center font-medium text-gray-700 py-2 border-b border-gray-100">Gratuito</div>
-      <div class="text-center font-medium text-orange-600 py-2 border-b border-gray-100">Premium</div>
+  <div class="max-w-4xl mx-auto mt-12 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+    <div class="p-6">
+      <h3 class="text-lg font-semibold text-gray-800 text-center mb-6">Compare os planos</h3>
       
-      <div class="py-3 border-b border-gray-100 text-gray-600">Resumos por dia</div>
-      <div class="py-3 border-b border-gray-100 text-center text-gray-600">3</div>
-      <div class="py-3 border-b border-gray-100 text-center font-semibold text-green-600">Ilimitado</div>
-      
-      <div class="py-3 border-b border-gray-100 text-gray-600">Velocidade</div>
-      <div class="py-3 border-b border-gray-100 text-center text-gray-600">Padrão</div>
-      <div class="py-3 border-b border-gray-100 text-center font-semibold text-green-600">2x mais rápido</div>
-      <div class="py-3 border-b border-gray-100 text-gray-600">Inteligência Artificial</div>
-        <div class="py-4 border-b border-gray-100 text-center text-gray-600">Padrão(Algoritmo)</div>
-        <div class="py-4 border-b border-gray-100 text-center font-medium text-green-600">Avançada (IA)</div>
-      
-    <div class="py-4 border-b border-gray-100 text-gray-700 font-medium">Suporte</div>
-        <div class="py-4 border-b border-gray-100 text-center text-gray-600">Email</div>
-        <div class="py-4 border-b border-gray-100 text-center font-medium text-green-600">WhatsApp VIP</div>
+      <div class="overflow-x-auto pb-2">
+        <div class="grid grid-cols-3 gap-4 min-w-[320px] text-xs md:text-sm">
+          
+          <div class="font-bold text-gray-700 py-2 border-b border-gray-100 text-left pl-2">Recurso</div>
+          <div class="text-center font-bold text-gray-700 py-2 border-b border-gray-100">Gratuito</div>
+          <div class="text-center font-bold text-orange-600 py-2 border-b border-gray-100">Premium</div>
+
+          <div class="py-3 border-b border-gray-100 text-gray-600 font-medium pl-2 flex items-center">Resumos/dia</div>
+          <div class="py-3 border-b border-gray-100 text-center text-gray-600 flex items-center justify-center">3</div>
+          <div class="py-3 border-b border-gray-100 text-center font-bold text-green-600 flex items-center justify-center">Ilimitado</div>
+
+          <div class="py-3 border-b border-gray-100 text-gray-600 font-medium pl-2 flex items-center">Velocidade</div>
+          <div class="py-3 border-b border-gray-100 text-center text-gray-600 flex items-center justify-center">Padrão</div>
+          <div class="py-3 border-b border-gray-100 text-center font-bold text-green-600 flex items-center justify-center">2x Rápido</div>
+
+          <div class="py-3 border-b border-gray-100 text-gray-600 font-medium pl-2 flex items-center">IA</div>
+          <div class="py-4 border-b border-gray-100 text-center text-gray-600 flex items-center justify-center">Padrão</div>
+          <div class="py-4 border-b border-gray-100 text-center font-bold text-green-600 flex items-center justify-center">Avançada</div>
+
+          <div class="py-4 border-b border-gray-100 text-gray-700 font-medium pl-2 flex items-center">Suporte</div>
+          <div class="py-4 border-b border-gray-100 text-center text-gray-600 flex items-center justify-center">Email</div>
+          <div class="py-4 border-b border-gray-100 text-center font-bold text-green-600 flex items-center justify-center">WhatsApp</div>
+        </div>
+      </div>
     </div>
   </div>
 
-   <!-- 5. FAQ -->
-  <div class="max-w-3xl mx-auto mt-16 mb-8">
+  <div class="max-w-3xl mx-auto mt-16 mb-8 px-2">
     <h3 class="text-xl font-bold text-gray-900 text-center mb-8">Perguntas Frequentes</h3>
-    <div class="grid gap-6 md:grid-cols-2">
+    <div class="grid gap-6 grid-cols-1 md:grid-cols-2">
       <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
         <h5 class="font-bold text-gray-800 mb-2 flex items-center">
-          <span class="text-orange-500 mr-2">?</span> Como funciona o pagamento?
+          <span class="text-orange-500 mr-2 text-xl">?</span> Como pagar?
         </h5>
         <p class="text-sm text-gray-600 leading-relaxed">
-          Simples e direto. Você paga via Pix ou Cartão de Crédito e o acesso é liberado imediatamente na sua conta.
+          Simples. Você paga via Pix ou Cartão de Crédito e o acesso é liberado imediatamente.
         </p>
       </div>
-      
+
       <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
         <h5 class="font-bold text-gray-800 mb-2 flex items-center">
-          <span class="text-orange-500 mr-2">?</span> Posso cancelar depois?
+          <span class="text-orange-500 mr-2 text-xl">?</span> Fidelidade?
         </h5>
         <p class="text-sm text-gray-600 leading-relaxed">
-          Com certeza. Sem fidelidade e sem letras miúdas. Você pode cancelar sua assinatura a qualquer momento.
+          Zero fidelidade. Você pode cancelar sua assinatura a qualquer momento no seu perfil.
         </p>
       </div>
     </div>
   </div>
 
-  <!-- Footer -->
-  <div class="max-w-4xl mx-auto mt-12 pt-8 border-t border-gray-200 text-center">
+  <div class="max-w-4xl mx-auto mt-12 pt-8 border-t border-gray-200 text-center pb-8">
     <p class="text-sm text-gray-400">
       © 2025 PDFocus • Feito para estudantes
     </p>

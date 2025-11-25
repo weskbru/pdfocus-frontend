@@ -13,10 +13,16 @@
           <h1 class="text-xl font-bold text-gray-700">PDFocus</h1>
         </div>
 
-        <!-- ÁREA DO MENU DO USUÁRIO -->
         <div id="user-menu-area" class="flex items-center space-x-3 relative">
 
-          <!-- Ícone de Notificação -->
+          <button (click)="fazerUpgrade()"
+  class="group flex items-center space-x-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white px-4 py-1.5 rounded-full shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5 hover:from-red-400 hover:to-orange-400 mr-2 cursor-pointer">
+  
+  <fa-icon [icon]="faCrown" class="text-white md:text-yellow-100 text-sm animate-pulse"></fa-icon>
+  
+  <span class="font-bold text-sm hidden sm:inline">Seja Pro</span>
+</button>
+
           <button (click)="toggleNotificationPanel()"
             class="p-2 text-gray-600 hover:text-blue-600 transition-colors relative cursor-pointer" title="Notificações"
             aria-label="Notificações">
@@ -28,16 +34,13 @@
             </span>
           </button>
 
-          <!-- Painel de Notificações -->
           <div *ngIf="isNotificationPanelOpen"
             class="absolute top-12 right-0 bg-white shadow-lg rounded-lg border border-gray-200 w-72 p-4 z-50">
 
-            <!-- Se não houver notificações -->
             <div *ngIf="notifications.length === 0" class="text-center py-4">
               <p class="text-gray-600 text-sm">Nada por aqui ainda.</p>
             </div>
 
-            <!-- Lista de notificações -->
             <div *ngIf="notifications.length > 0" class="space-y-3">
               <div *ngFor="let n of notifications" class="p-2 rounded-lg bg-gray-50 border border-gray-100">
                 <p class="text-sm text-gray-700">{{ n.message }}</p>
@@ -47,13 +50,11 @@
           </div>
 
 
-          <!-- Avatar do Usuário -->
           <button (click)="toggleUserMenu()"
             class="w-8 h-8 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full flex items-center justify-center text-white text-sm font-semibold uppercase cursor-pointer hover:from-red-400 hover:to-orange-400 transition-all">
             {{ userName.charAt(0) }}
           </button>
 
-          <!-- Dropdown Menu -->
           <div *ngIf="isUserMenuOpen"
             class="absolute top-12 right-0 bg-white rounded-lg shadow-lg border border-gray-200 py-2 w-48 z-50">
             <button (click)="abrirModalEditarPerfil()"
@@ -169,7 +170,6 @@
     </div>
   </main>
 
-  <!-- Footer -->
   <div class="text-center mt-8">
     <p class="text-xs text-gray-500">
       © 2025 PDFocus • Plataforma de estudos com PDF
@@ -178,26 +178,22 @@
 </div>
 
 
-<!-- NO DASHBOARD - Modal de Limite Atingido COM UPGRADE -->
-<div *ngIf="isInfoModalOpen"
+<div *ngIf="isUpgradeModalOpen"
   class="fixed inset-0 bg-black/5 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-opacity duration-300"
-  (click)="fecharInfoModal()">
+  (click)="fecharUpgradeModal()">
 
   <div class="relative bg-white rounded-xl shadow-2xl w-full max-w-md animate-modal-in"
     (click)="$event.stopPropagation()">
 
-    <!-- Header do Modal -->
     <div class="px-6 py-4 border-b border-gray-200/70 flex justify-between items-center">
       <h3 class="text-lg font-semibold text-gray-900">Limite Diário Atingido</h3>
-      <button (click)="fecharInfoModal()" class="text-gray-400 hover:text-gray-600">
+      <button (click)="fecharUpgradeModal()" class="text-gray-400 hover:text-gray-600">
         <fa-icon [icon]="faTimes"></fa-icon>
       </button>
     </div>
 
-    <!-- Conteúdo do Modal -->
     <div class="p-6">
       <div class="text-center">
-        <!-- Ícone Premium -->
         <div
           class="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
           <fa-icon [icon]="faCrown" class="text-white text-xl"></fa-icon>
@@ -206,7 +202,6 @@
         <p class="text-gray-700 font-medium mb-2">Você atingiu o limite do plano gratuito</p>
         <p class="text-gray-600 text-sm mb-4">3 resumos diários</p>
 
-        <!-- Benefícios do Upgrade -->
         <div class="bg-gray-50 rounded-lg p-4 mb-4 text-left">
           <p class="text-sm font-medium text-gray-800 mb-2">Com o Plano Premium:</p>
           <ul class="text-sm text-gray-600 space-y-1">
@@ -218,16 +213,12 @@
               <fa-icon [icon]="faCheck" class="text-green-500 mr-2 text-xs"></fa-icon>
               Processamento mais rápido
             </li>
-            <li class="flex items-center">
-              <fa-icon [icon]="faCheck" class="text-green-500 mr-2 text-xs"></fa-icon>
-              Recursos avançados de IA
-            </li>
           </ul>
         </div>
       </div>
 
       <div class="flex space-x-3 mt-6">
-        <button (click)="fecharInfoModal()"
+        <button (click)="fecharUpgradeModal()"
           class="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
           Continuar Gratuito
         </button>
@@ -237,42 +228,36 @@
           Fazer Upgrade
         </button>
       </div>
-
-      <p class="text-xs text-gray-400 text-center mt-4">* Plano gratuito renova à meia-noite</p>
     </div>
   </div>
 </div>
-<!-- Modal de Sucesso - Resumo Criado -->
-<div *ngIf="isSuccessModalOpen"
-  class="fixed inset-0 bg-black/5 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-opacity duration-300"
-  (click)="fecharSuccessModal()">
 
-  <div class="relative bg-white rounded-xl shadow-2xl w-full max-w-md animate-modal-in"
+<div *ngIf="isInfoModalOpen"
+  class="fixed inset-0 bg-black/5 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-opacity duration-300"
+  (click)="fecharInfoModal()">
+
+  <div class="relative bg-white rounded-xl shadow-xl w-full max-w-sm overflow-hidden"
     (click)="$event.stopPropagation()">
 
-    <!-- Header do Modal -->
-    <div class="px-6 py-4 border-b border-gray-200/70 flex justify-between items-center">
-      <h3 class="text-lg font-semibold text-gray-900">Resumo Criado!</h3>
-      <button (click)="fecharSuccessModal()" class="text-gray-400 hover:text-gray-600">
+    <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+      <h3 class="font-semibold text-gray-900">{{ infoModalTitle }}</h3>
+      <button (click)="fecharInfoModal()" class="text-gray-400 hover:text-gray-600">
         <fa-icon [icon]="faTimes"></fa-icon>
       </button>
     </div>
 
-    <!-- Conteúdo do Modal -->
     <div class="p-6">
-      <div class="text-center">
-        <!-- Ícone de Sucesso -->
-        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <fa-icon [icon]="faCheckCircle" class="text-green-500 text-2xl"></fa-icon>
-        </div>
-        <p class="text-gray-700 font-medium mb-2">{{ successMessage }}</p>
-        <p class="text-gray-500 text-sm">Seu resumo foi processado e salvo com sucesso.</p>
-      </div>
+      <p class="text-gray-600 text-sm">{{ infoModalMessage }}</p>
+    </div>
+
+    <div class="px-6 py-4 bg-gray-50 flex justify-end">
+      <button (click)="handleInfoModalAction()"
+        class="px-4 py-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white text-sm font-semibold rounded-lg shadow-sm cursor-pointer hover:from-red-400 hover:to-orange-400 transition-all">
+        OK
+      </button>
     </div>
   </div>
 </div>
-
-
 <app-novo-resumo-modal [isOpen]="isNovoResumoModalOpen" (fecharModal)="isNovoResumoModalOpen = false"
   (resumoSubmetido)="handleResumoSubmission($event)">
 </app-novo-resumo-modal>
