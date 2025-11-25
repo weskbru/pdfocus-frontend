@@ -1,26 +1,55 @@
+<!-- MODAL OVERLAY -->
 <div *ngIf="isOpen"
   class="fixed inset-0 bg-black/5 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-opacity duration-300"
   (click)="onFecharModal()">
 
+  <!-- MODAL CONTENT -->
   <div
     class="relative bg-white rounded-xl shadow-2xl w-full max-w-lg overflow-hidden animate-modal-in cursor-default select-none"
     (click)="$event.stopPropagation()">
 
+    <!-- 1. CABEÇALHO -->
     <div class="px-6 py-4 border-b border-gray-200/70 flex justify-between items-center select-none">
       <div>
         <h3 class="text-lg font-semibold text-gray-900">Criar novo resumo</h3>
         <p class="text-sm text-gray-500">Selecione o material que deseja resumir</p>
       </div>
-      <button (click)="onFecharModal()" class="text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
+      
+      <!-- CORREÇÃO: type="button" adicionado -->
+      <button type="button" (click)="onFecharModal()" 
+        class="text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
         aria-label="Fechar modal">
-
         <fa-icon [icon]="faTimes"></fa-icon>
       </button>
     </div>
 
+    <!-- 2. CORPO DO MODAL -->
     <div class="p-6 overflow-y-auto">
+      
+      <!-- BANNER PROMO PREMIUM -->
+      <div (click)="irParaPremium()" 
+           class="mb-6 bg-gradient-to-r from-orange-50 to-yellow-50 border border-orange-100 rounded-lg p-4 flex items-center justify-between cursor-pointer hover:shadow-md transition-all group">
+        
+        <div class="flex items-center">
+          <div class="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center text-orange-500 mr-3 group-hover:scale-110 transition-transform">
+            <fa-icon [icon]="faCrown"></fa-icon>
+          </div>
+          <div>
+            <h4 class="text-sm font-bold text-orange-800">Seja Premium 🚀</h4>
+            <p class="text-xs text-orange-600">Desbloqueie resumos ilimitados hoje.</p>
+          </div>
+        </div>
+
+        <div class="text-orange-500">
+          <svg class="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+      </div>
+
       <div class="space-y-4">
 
+        <!-- Passo 1: Seleção de Disciplina -->
         <div>
           <label for="disciplina-select" class="block text-sm font-medium text-gray-700 mb-1 select-none">
             Passo 1: Escolha a disciplina
@@ -33,22 +62,20 @@
               {{ isLoadingDisciplinas ? 'Carregando disciplinas...' : 'Selecione uma disciplina' }}
             </option>
 
-
             <option *ngFor="let d of disciplinas" [value]="d.id">
               {{ d.nome }}
             </option>
           </select>
         </div>
 
+        <!-- Passo 2: Seleção de Material -->
         <div *ngIf="!semMateriais">
-
           <label for="material-select" class="block text-sm font-medium text-gray-700 mb-1 select-none">
             Passo 2: Escolha o material
           </label>
           <select id="material-select"
             class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 cursor-pointer"
             [(ngModel)]="selectedMaterialId" [disabled]="!selectedDisciplinaId || isLoadingMateriais">
-
 
             <option [ngValue]="null" disabled>
               {{ isLoadingMateriais ? 'Carregando materiais...' : 'Selecione um material' }}
@@ -60,38 +87,44 @@
           </select>
         </div>
 
-
+        <!-- Estado Vazio (Sem Materiais) -->
         <div *ngIf="semMateriais" class="text-center bg-yellow-50 border border-yellow-200 rounded-lg p-4 select-none">
-
           <h4 class="font-medium text-yellow-800">Nenhum material encontrado</h4>
           <p class="text-sm text-yellow-700 mt-1 mb-3">
             Você precisa adicionar um material a esta disciplina antes de poder criar um resumo.
           </p>
-
-
-          <button (click)="irParaDisciplina()"
+          
+          <!-- CORREÇÃO: type="button" adicionado -->
+          <button type="button" (click)="irParaDisciplina()"
             class="px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors cursor-pointer">
-
             <fa-icon [icon]="faPlus" class="mr-2"></fa-icon>
             Adicionar Material
           </button>
         </div>
 
-
       </div>
     </div>
 
+    <!-- 3. RODAPÉ (BOTÕES DE AÇÃO) -->
     <div class="px-6 py-4 border-t border-gray-200/70 bg-gray-50 flex justify-end space-x-3 select-none">
+      
+      <!-- Botão Cancelar -->
+      <!-- CORREÇÃO: type="button" adicionado -->
       <button type="button" (click)="onFecharModal()"
         class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
         Cancelar
       </button>
 
-      <button type="button" (click)="confirmarSelecao()" [disabled]="!selectedMaterialId"
+      <!-- Botão Confirmar -->
+      <!-- CORREÇÃO: type="button" adicionado -->
+      <button type="button" 
+        (click)="confirmarSelecao()" 
+        [disabled]="!selectedMaterialId"
         class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors flex items-center cursor-pointer">
         <fa-icon [icon]="faCheck" class="mr-2"></fa-icon>
         Iniciar Resumo
       </button>
     </div>
+
   </div>
 </div>

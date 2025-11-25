@@ -49,9 +49,9 @@
         <p class="text-gray-500 text-sm mt-1">Gerencie todas as suas disciplinas em um só lugar</p>
       </div>
       <button (click)="abrirModalCriarDisciplina()"
-        class="px-5 py-2.5 text-sm font-medium text-white bg-orange-500 rounded-lg hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 flex items-center mt-4 md:mt-0 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer">
-        <fa-icon [icon]="faPlus" class="mr-2"></fa-icon> Nova Disciplina
-      </button>
+        class="px-5 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg hover:from-red-400 hover:to-orange-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 flex items-center mt-4 md:mt-0 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer">
+  <fa-icon [icon]="faPlus" class="mr-2"></fa-icon> Nova Disciplina
+</button>
     </div>
 
     <div class="fade-in">
@@ -75,7 +75,7 @@
           <p class="text-gray-500 mt-2 text-sm max-w-sm mx-auto">Parece que ainda não criou nenhuma disciplina. Comece
             agora a organizar os seus estudos!</p>
           <button (click)="abrirModalCriarDisciplina()"
-            class="mt-6 px-5 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            class="mt-6 px-5 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer">
             Criar Primeira Disciplina
           </button>
         </div>
