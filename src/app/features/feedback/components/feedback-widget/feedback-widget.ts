@@ -1,4 +1,4 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, OnInit } from '@angular/core'; // <--- Adicionado OnInit
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
@@ -12,12 +12,14 @@ import { FeedbackService, FeedbackData } from '../../services/feedback';
   templateUrl: './feedback-widget.html',
   styleUrls: ['./feedback-widget.css']
 })
-export class FeedbackWidgetComponent implements AfterViewInit {
+export class FeedbackWidgetComponent implements AfterViewInit, OnInit {
   faCommentDots = faCommentDots;
   faTimes = faTimes;
   faPaperPlane = faPaperPlane;
   faStar = faStar;
 
+  // Variáveis de estado
+  public mostrarModalLimite = false;
   public showFeedback = false;
   public feedbackText = '';
   public rating = 0;
@@ -26,6 +28,9 @@ export class FeedbackWidgetComponent implements AfterViewInit {
   public submitted = false;
   public emailUsuario = '';
 
+  // NOVA VARIÁVEL: Controla se o botão principal aparece
+  public isBlocked = false;
+
   constructor(
     private library: FaIconLibrary,
     private feedbackService: FeedbackService
@@ -33,6 +38,12 @@ export class FeedbackWidgetComponent implements AfterViewInit {
     this.library.addIcons(faCommentDots, faTimes, faPaperPlane, faStar);
   }
 
+  // --- 1. AO INICIAR: Verifica se já foi bloqueado hoje ---
+  ngOnInit(): void {
+    this.verificarBloqueioDiario();
+  }
+
+  // Lógica de Draggable (Arrastar) - Mantida intacta
   ngAfterViewInit(): void {
     const widget = document.querySelector('.feedback-widget') as HTMLElement;
     if (!widget) return;
@@ -41,12 +52,14 @@ export class FeedbackWidgetComponent implements AfterViewInit {
     let offsetX = 0;
     let offsetY = 0;
 
-    const margin = 40;            // distância mínima lateral
-    const topLimit = 120;         // não deixar encostar na navbar
-    const bottomLimit = 60;       // não deixar sumir no rodapé
+    const margin = 40;
+    const topLimit = 120;
+    const bottomLimit = 60;
 
     widget.addEventListener('mousedown', (e: MouseEvent) => {
-      if ((e.target as HTMLElement).closest('.modal-content')) return;
+      if ((e.target as HTMLElement).closest('.modal-content') ||
+        (e.target as HTMLElement).closest('input') ||
+        (e.target as HTMLElement).closest('textarea')) return;
 
       isDragging = true;
       widget.style.transition = 'none';
@@ -57,7 +70,6 @@ export class FeedbackWidgetComponent implements AfterViewInit {
 
       widget.style.left = `${rect.left}px`;
       widget.style.top = `${rect.top}px`;
-
       widget.style.right = 'auto';
       widget.style.bottom = 'auto';
     });
@@ -100,7 +112,6 @@ export class FeedbackWidgetComponent implements AfterViewInit {
     });
   }
 
-
   toggleFeedback(): void {
     this.showFeedback = !this.showFeedback;
     if (!this.showFeedback) {
@@ -121,11 +132,25 @@ export class FeedbackWidgetComponent implements AfterViewInit {
 
     this.isSubmitting = true;
 
+    // Tenta pegar o token e extrair o email
+    let emailCapturado = 'Anônimo';
+    const token = localStorage.getItem('auth_token');
+
+    if (token) {
+      const emailDoToken = this.extrairEmailDoToken(token);
+      if (emailDoToken) {
+        emailCapturado = emailDoToken;
+        console.log('✅ Email extraído do JWT:', emailCapturado);
+      }
+    } else {
+      console.warn('⚠️ Token não encontrado. Enviando como Anônimo.');
+    }
+
     const feedbackData: FeedbackData = {
       tipo: this.feedbackType.toUpperCase() as 'BUG' | 'SUGGESTION' | 'FEATURE' | 'OTHER',
       rating: this.rating > 0 ? this.rating : null,
       mensagem: this.feedbackText.trim(),
-      emailUsuario: this.emailUsuario.trim() || undefined,
+      emailUsuario: emailCapturado,
       pagina: window.location.href,
       userAgent: navigator.userAgent
     };
@@ -141,10 +166,47 @@ export class FeedbackWidgetComponent implements AfterViewInit {
         this.resetForm();
       }, 2000);
 
-    } catch (error) {
-      console.error('Erro ao enviar feedback:', error);
+    } catch (error: any) {
       this.isSubmitting = false;
+      console.error('Erro ao enviar feedback:', error);
+
+      if (error.status === 403) {
+        console.error('Token expirado ou inválido');
+      }
+      // --- TRATAMENTO DO LIMITE (429) ---
+      else if (error.status === 429) {
+        this.showFeedback = false;      // Fecha form
+        this.mostrarModalLimite = true; // Abre aviso
+        this.resetForm();
+
+        // SALVA QUE BLOQUEOU HOJE
+        this.salvarBloqueioNoStorage();
+      }
     }
+  }
+
+  private extrairEmailDoToken(token: string): string | null {
+    try {
+      const base64Url = token.split('.')[1];
+      if (!base64Url) return null;
+
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function (c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+
+      const payload = JSON.parse(jsonPayload);
+      return payload.sub || payload.email || null;
+    } catch (e) {
+      console.error('Erro ao decodificar token JWT', e);
+      return null;
+    }
+  }
+
+  // --- FECHAR MODAL E SUMIR BOTÃO ---
+  fecharModal(): void {
+    this.mostrarModalLimite = false;
+    this.isBlocked = true; // <--- Some o botão imediatamente
   }
 
   private resetForm(): void {
@@ -153,5 +215,30 @@ export class FeedbackWidgetComponent implements AfterViewInit {
     this.feedbackType = 'suggestion';
     this.submitted = false;
     this.emailUsuario = '';
+  }
+
+  // --- NOVOS MÉTODOS DE CONTROLE DIÁRIO ---
+
+  private salvarBloqueioNoStorage(): void {
+    // Salva "2025-11-27"
+    const hoje = new Date().toISOString().split('T')[0];
+    localStorage.setItem('feedback_limit_date', hoje);
+  }
+
+  private verificarBloqueioDiario(): void {
+    const dataBloqueio = localStorage.getItem('feedback_limit_date');
+    const hoje = new Date().toISOString().split('T')[0];
+
+    // Se existe data salva e é hoje, bloqueia
+    if (dataBloqueio === hoje) {
+      this.isBlocked = true;
+      console.log('🚫 Limite diário já atingido. Widget oculto.');
+    } else {
+      // Se for data velha, limpa e libera
+      if (dataBloqueio) {
+        localStorage.removeItem('feedback_limit_date');
+      }
+      this.isBlocked = false;
+    }
   }
 }
