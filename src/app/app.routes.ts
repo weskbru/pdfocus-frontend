@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
-import { authGuard } from './core/guards/auth-guard';
+import { authGuard } from '../app/core/guards/auth-guard';
 import { AssinaturaComponent } from './features/assinatura/assinatura';
+import { ConfirmarEmailComponent } from './features/auth/pages/confirmar-email/confirmar-email';
 
 export const routes: Routes = [
   // Rota de Cadastro com Carregamento Preguiçoso (Lazy Loading)
@@ -27,9 +28,8 @@ export const routes: Routes = [
   // Rota da Dashboard
   {
     path: 'dashboard',
-    loadComponent: () => import('./features/dashboard/dashboard')
-      .then(m => m.Dashboard),
-    canActivate: [authGuard]
+    loadComponent: () => import('./features/dashboard/dashboard').then(m => m.Dashboard),
+    canActivate: [authGuard] // Agora o nome bate com a const exportada
   },
 
   // Rota para a página de listagem de disciplinas (também protegida)
@@ -71,6 +71,8 @@ export const routes: Routes = [
     component: AssinaturaComponent,
     canActivate: [authGuard] 
   },
+
+  { path: 'confirmar-email', component: ConfirmarEmailComponent },
 
   // 🛑 IMPORTANTE: Rotas de redirecionamento (Wildcard) devem ficar SEMPRE POR ÚLTIMO
   { path: '**', redirectTo: '', pathMatch: 'full' }

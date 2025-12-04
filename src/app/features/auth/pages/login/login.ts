@@ -1,39 +1,49 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 
-// 1. Importamos as ferramentas do nosso core
-import { AuthService, AutenticarUsuarioCommand } from '../../../../core/auth';
+// ✅ CORREÇÃO FINAL: Importando do seu arquivo 'app/core/auth.ts'
+// (Subimos 4 níveis: pages -> auth -> features -> app -> core)
+import { AuthService, AuthenticationResponse } from '../../../../core/auth'; 
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
-  templateUrl: './login.html',
+  templateUrl: './login.html', 
   styleUrls: ['./login.css']
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
+  
   loginForm: FormGroup;
   loading = false;
-  // 2. Criamos uma propriedade para exibir mensagens de erro
+  infoMessage = '';
   errorMessage: string | null = null;
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    // 3. Injetamos o nosso AuthService para ter acesso aos seus métodos
+    private route: ActivatedRoute,
     private authService: AuthService
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      senha: ['', [Validators.required]] // A validação de minlength não é tão crucial no login
+      senha: ['', [Validators.required]]
     });
   }
 
-  // 4. Esta é a nova lógica de login que se conecta ao back-end
-  onSubmit() {
-    this.errorMessage = null; // Limpa erros antigos
+  ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      if (params['registered'] === 'true') {
+        this.infoMessage = 'Cadastro realizado! ✉️ Enviamos um link de confirmação para o seu e-mail.';
+      }
+    });
+  }
+
+  onSubmit(): void {
+    this.errorMessage = null;
+    this.infoMessage = '';
 
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
@@ -42,30 +52,48 @@ export class LoginComponent {
 
     this.loading = true;
 
-    const credenciais: AutenticarUsuarioCommand = this.loginForm.value;
+    // Se o seu AuthService espera um objeto específico ou 'any', o .value resolve
+    const credenciais = this.loginForm.value;
 
     this.authService.login(credenciais).subscribe({
-      // O que fazer em caso de SUCESSO
       next: (response) => {
-        // SUCESSO! Guardamos o token que o back-end nos enviou
-        this.authService.guardarToken(response.token);
+        // Se você já tem um método guardarToken no seu auth.ts, use ele
+        // Caso contrário, fazemos manual aqui:
+        if (response.token) {
+            // Verifica se o seu auth.ts tem o método 'guardarToken'
+            // Se não tiver, use: localStorage.setItem('auth_token', response.token);
+            if (typeof this.authService.guardarToken === 'function') {
+                this.authService.guardarToken(response.token);
+            } else {
+                localStorage.setItem('auth_token', response.token);
+            }
+            
+            // Salva usuário (opcional para UX)
+            if (response.nome) {
+                localStorage.setItem('user', JSON.stringify({ nome: response.nome, email: response.email }));
+            }
+        }
         
         this.loading = false;
-        
-        // E redirecionamos o usuário para a página principal da aplicação
         this.router.navigate(['/dashboard']);
       },
-      // O que fazer em caso de ERRO
       error: (err) => {
         this.loading = false;
-        // O back-end geralmente retorna um erro 403 (Forbidden) para credenciais inválidas
-        this.errorMessage = 'E-mail ou senha inválidos. Por favor, tente novamente.';
         console.error('Erro no login:', err);
+
+        if (err.status === 401 || err.status === 403) {
+            if (err.error && typeof err.error === 'string' && err.error.includes('confirm')) {
+                 this.errorMessage = 'E-mail não verificado. Por favor, confirme sua conta.';
+            } else {
+                 this.errorMessage = 'E-mail ou senha incorretos.';
+            }
+        } else {
+            this.errorMessage = 'Erro ao conectar ao servidor.';
+        }
       }
     });
   }
 
-  // Método para redirecionar para cadastro
   redirectToCadastro() {
     this.router.navigate(['/cadastro']);
   }

@@ -1,0 +1,48 @@
+<div class="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+  <div class="bg-white p-8 rounded-xl shadow-lg max-w-md w-full text-center border border-gray-100">
+    
+    <div *ngIf="status === 'loading'" class="space-y-6 py-4">
+      <div class="relative mx-auto w-16 h-16">
+        <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-orange-500"></div>
+      </div>
+      <div>
+        <h2 class="text-xl font-bold text-gray-800 mb-2">Validando Token...</h2>
+        <p class="text-gray-500 text-sm">Por favor, aguarde um momento.</p>
+      </div>
+    </div>
+
+    <div *ngIf="status === 'success'" class="space-y-6 py-4 animate-fade-in">
+      <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto">
+        <svg class="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+        </svg>
+      </div>
+      <div>
+        <h2 class="text-2xl font-bold text-gray-800 mb-2">E-mail Confirmado!</h2>
+        <p class="text-gray-600">{{ mensagem }}</p>
+        <p class="text-sm text-gray-400 mt-2">Você será redirecionado para o login...</p>
+      </div>
+      <button routerLink="/login" 
+        class="w-full mt-4 px-6 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-lg font-medium hover:shadow-md transition-all">
+        Ir para Login agora
+      </button>
+    </div>
+
+    <div *ngIf="status === 'error'" class="space-y-6 py-4">
+      <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto">
+        <svg class="w-10 h-10 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </div>
+      <div>
+        <h2 class="text-2xl font-bold text-gray-800 mb-2">Link Inválido</h2>
+        <p class="text-gray-600">{{ mensagem }}</p>
+      </div>
+      <button routerLink="/login" 
+        class="w-full mt-4 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-all">
+        Voltar ao Login
+      </button>
+    </div>
+
+  </div>
+</div>

@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 
-// IMPORTANTE: A CAUSA MAIS PROVÁVEL DO ERRO ESTÁ NESTA LINHA!
-// Verifique se este caminho para o seu ficheiro `core/auth.ts` está correto.
-import { AuthService, CadastrarUsuarioCommand } from '../../../../core/auth';
+// CORREÇÃO 1: O caminho correto para o AuthService
+// Estamos em: features/auth/pages/cadastro/
+// O serviço está em: features/auth/services/
+import { AuthService } from '../../../../core/auth';
 
 @Component({
   selector: 'app-cadastro',
@@ -23,7 +24,6 @@ export class CadastroComponent {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    // Aqui estamos a pedir o motor de verdade ao Angular
     private authService: AuthService
   ) {
     this.cadastroForm = this.fb.group({
@@ -31,10 +31,11 @@ export class CadastroComponent {
       email: ['', [Validators.required, Validators.email]],
       senha: ['', [Validators.required, Validators.minLength(6)]],
       confirmarSenha: ['', Validators.required]
-    }, { validator: this.senhasConferem });
+    }, { validators: this.senhasConferem }); // CORREÇÃO 2: A propriedade correta é 'validators' (plural)
   }
 
-  senhasConferem(group: FormGroup) {
+  // Validador de senhas ajustado para tipagem correta
+  senhasConferem(group: AbstractControl): ValidationErrors | null {
     const senha = group.get('senha')?.value;
     const confirmarSenha = group.get('confirmarSenha')?.value;
     return senha === confirmarSenha ? null : { senhasNaoConferem: true };
@@ -50,23 +51,33 @@ export class CadastroComponent {
     }
 
     this.loading = true;
-    
-    const dadosCadastro: CadastrarUsuarioCommand = {
-      nome: this.cadastroForm.value.nome,
-      email: this.cadastroForm.value.email,
-      senha: this.cadastroForm.value.senha
+
+    // Prepara o objeto para enviar ao Backend
+    const dadosCadastro = {
+      nome: this.cadastroForm.get('nome')?.value,
+      email: this.cadastroForm.get('email')?.value,
+      senha: this.cadastroForm.get('senha')?.value
     };
 
-    // Usamos o motor de verdade para chamar a API
     this.authService.register(dadosCadastro).subscribe({
       next: (response) => {
         this.loading = false;
-        this.successMessage = 'Conta criada com sucesso! A redirecionar...';
-        setTimeout(() => this.router.navigate(['/login']), 2500);
+      
+        // Enviamos um parâmetro na URL avisando que ele acabou de se registrar
+        this.router.navigate(['/login'], {
+          queryParams: { registered: 'true' }
+        });
       },
       error: (err) => {
         this.loading = false;
-        this.errorMessage = err.error?.message || 'Erro ao criar a conta. O e-mail já pode estar em uso.';
+        console.error('Erro no cadastro:', err);
+
+        // Tratamento de erros comuns
+        if (err.status === 409) {
+          this.errorMessage = 'Este e-mail já está cadastrado.';
+        } else {
+          this.errorMessage = 'Ocorreu um erro ao criar a conta. Tente novamente.';
+        }
       }
     });
   }
@@ -75,9 +86,9 @@ export class CadastroComponent {
     this.router.navigate(['/login']);
   }
 
+  // Getters para facilitar o acesso no HTML
   get nome() { return this.cadastroForm.get('nome'); }
   get email() { return this.cadastroForm.get('email'); }
   get senha() { return this.cadastroForm.get('senha'); }
   get confirmarSenha() { return this.cadastroForm.get('confirmarSenha'); }
 }
-
