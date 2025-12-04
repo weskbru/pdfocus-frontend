@@ -1,9 +1,11 @@
-import { Component, AfterViewInit, OnInit } from '@angular/core'; // <--- Adicionado OnInit
+import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faCommentDots, faTimes, faPaperPlane, faStar } from '@fortawesome/free-solid-svg-icons';
 import { FeedbackService, FeedbackData } from '../../services/feedback';
+import { HttpErrorResponse } from '@angular/common/http'; // Importante para tipagem de erro
+import { lastValueFrom } from 'rxjs'; // Substituto moderno do toPromise
 
 @Component({
   selector: 'app-feedback-widget',
@@ -28,7 +30,7 @@ export class FeedbackWidgetComponent implements AfterViewInit, OnInit {
   public submitted = false;
   public emailUsuario = '';
 
-  // NOVA VARIÁVEL: Controla se o botão principal aparece
+  // Controla se o botão principal aparece
   public isBlocked = false;
 
   constructor(
@@ -43,7 +45,7 @@ export class FeedbackWidgetComponent implements AfterViewInit, OnInit {
     this.verificarBloqueioDiario();
   }
 
-  // Lógica de Draggable (Arrastar) - Mantida intacta
+  // --- 2. Lógica de Draggable (Mantida) ---
   ngAfterViewInit(): void {
     const widget = document.querySelector('.feedback-widget') as HTMLElement;
     if (!widget) return;
@@ -51,7 +53,6 @@ export class FeedbackWidgetComponent implements AfterViewInit, OnInit {
     let isDragging = false;
     let offsetX = 0;
     let offsetY = 0;
-
     const margin = 40;
     const topLimit = 120;
     const bottomLimit = 60;
@@ -63,11 +64,9 @@ export class FeedbackWidgetComponent implements AfterViewInit, OnInit {
 
       isDragging = true;
       widget.style.transition = 'none';
-
       const rect = widget.getBoundingClientRect();
       offsetX = e.clientX - rect.left;
       offsetY = e.clientY - rect.top;
-
       widget.style.left = `${rect.left}px`;
       widget.style.top = `${rect.top}px`;
       widget.style.right = 'auto';
@@ -76,16 +75,12 @@ export class FeedbackWidgetComponent implements AfterViewInit, OnInit {
 
     document.addEventListener('mousemove', (e: MouseEvent) => {
       if (!isDragging) return;
-
       const rawX = e.clientX - offsetX;
       const rawY = e.clientY - offsetY;
-
       const maxX = window.innerWidth - widget.offsetWidth - margin;
       const maxY = window.innerHeight - widget.offsetHeight - bottomLimit;
-
       let newX = Math.max(margin, Math.min(rawX, maxX));
       let newY = Math.max(topLimit, Math.min(rawY, maxY));
-
       widget.style.left = `${newX}px`;
       widget.style.top = `${newY}px`;
     });
@@ -93,19 +88,15 @@ export class FeedbackWidgetComponent implements AfterViewInit, OnInit {
     document.addEventListener('mouseup', () => {
       if (!isDragging) return;
       isDragging = false;
-
       const rect = widget.getBoundingClientRect();
       const center = window.innerWidth / 2;
-
       widget.style.transition = 'left 0.2s ease';
-
       if (rect.left + rect.width / 2 < center) {
         widget.style.left = `${margin}px`;
       } else {
         widget.style.left = `auto`;
         widget.style.right = `${margin}px`;
       }
-
       setTimeout(() => {
         widget.style.transition = '';
       }, 250);
@@ -132,9 +123,11 @@ export class FeedbackWidgetComponent implements AfterViewInit, OnInit {
 
     this.isSubmitting = true;
 
-    // Tenta pegar o token e extrair o email
-    let emailCapturado = 'Anônimo';
-    const token = localStorage.getItem('auth_token');
+    // --- CORREÇÃO AQUI ---
+    // Inicializa como null. Se não tiver token, vai nulo mesmo.
+    let emailCapturado: string | null = null; 
+    
+    const token = localStorage.getItem('auth_token'); // Confirme se a chave é esta mesma
 
     if (token) {
       const emailDoToken = this.extrairEmailDoToken(token);
@@ -142,21 +135,19 @@ export class FeedbackWidgetComponent implements AfterViewInit, OnInit {
         emailCapturado = emailDoToken;
         console.log('✅ Email extraído do JWT:', emailCapturado);
       }
-    } else {
-      console.warn('⚠️ Token não encontrado. Enviando como Anônimo.');
     }
 
     const feedbackData: FeedbackData = {
       tipo: this.feedbackType.toUpperCase() as 'BUG' | 'SUGGESTION' | 'FEATURE' | 'OTHER',
       rating: this.rating > 0 ? this.rating : null,
       mensagem: this.feedbackText.trim(),
-      emailUsuario: emailCapturado,
+      emailUsuario: emailCapturado, // Agora envia o email válido ou null
       pagina: window.location.href,
       userAgent: navigator.userAgent
     };
 
     try {
-      await this.feedbackService.enviarFeedback(feedbackData).toPromise();
+      await lastValueFrom(this.feedbackService.enviarFeedback(feedbackData));
 
       this.isSubmitting = false;
       this.submitted = true;
@@ -166,36 +157,41 @@ export class FeedbackWidgetComponent implements AfterViewInit, OnInit {
         this.resetForm();
       }, 2000);
 
-    } catch (error: any) {
+    } catch (error) {
       this.isSubmitting = false;
-      console.error('Erro ao enviar feedback:', error);
+      const httpError = error as HttpErrorResponse;
+      
+      console.error('Erro ao enviar feedback:', httpError);
 
-      if (error.status === 403) {
-        console.error('Token expirado ou inválido');
+      if (httpError.status === 403) {
+        console.error('Token expirado ou inválido (Frontend enviou token?)');
       }
-      // --- TRATAMENTO DO LIMITE (429) ---
-      else if (error.status === 429) {
-        this.showFeedback = false;      // Fecha form
-        this.mostrarModalLimite = true; // Abre aviso
+      else if (httpError.status === 429) {
+        this.showFeedback = false;
+        this.mostrarModalLimite = true;
         this.resetForm();
-
-        // SALVA QUE BLOQUEOU HOJE
         this.salvarBloqueioNoStorage();
+      }
+      // Log extra para ver qual campo deu erro 400
+      else if (httpError.status === 400) {
+         console.warn('Erro de Validação (400):', httpError.error);
       }
     }
   }
-
+  
   private extrairEmailDoToken(token: string): string | null {
     try {
-      const base64Url = token.split('.')[1];
-      if (!base64Url) return null;
+      const parts = token.split('.');
+      if (parts.length !== 3) return null; // Validação básica de estrutura JWT
 
+      const base64Url = parts[1];
       const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
       const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function (c) {
         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
       }).join(''));
 
       const payload = JSON.parse(jsonPayload);
+      // Alguns JWTs usam 'sub' para o email/username, outros usam 'email'
       return payload.sub || payload.email || null;
     } catch (e) {
       console.error('Erro ao decodificar token JWT', e);
@@ -206,7 +202,7 @@ export class FeedbackWidgetComponent implements AfterViewInit, OnInit {
   // --- FECHAR MODAL E SUMIR BOTÃO ---
   fecharModal(): void {
     this.mostrarModalLimite = false;
-    this.isBlocked = true; // <--- Some o botão imediatamente
+    this.isBlocked = true; // Esconde o widget da tela
   }
 
   private resetForm(): void {
@@ -217,10 +213,8 @@ export class FeedbackWidgetComponent implements AfterViewInit, OnInit {
     this.emailUsuario = '';
   }
 
-  // --- NOVOS MÉTODOS DE CONTROLE DIÁRIO ---
-
+  // --- MÉTODOS DE CONTROLE DIÁRIO ---
   private salvarBloqueioNoStorage(): void {
-    // Salva "2025-11-27"
     const hoje = new Date().toISOString().split('T')[0];
     localStorage.setItem('feedback_limit_date', hoje);
   }
@@ -229,12 +223,11 @@ export class FeedbackWidgetComponent implements AfterViewInit, OnInit {
     const dataBloqueio = localStorage.getItem('feedback_limit_date');
     const hoje = new Date().toISOString().split('T')[0];
 
-    // Se existe data salva e é hoje, bloqueia
+    // Se a data salva é hoje, mantém bloqueado
     if (dataBloqueio === hoje) {
       this.isBlocked = true;
-      console.log('🚫 Limite diário já atingido. Widget oculto.');
     } else {
-      // Se for data velha, limpa e libera
+      // Se for data antiga ou inexistente, limpa e libera
       if (dataBloqueio) {
         localStorage.removeItem('feedback_limit_date');
       }

@@ -93,15 +93,12 @@
     </div>
 
 
-    <div class="limit-modal-overlay" *ngIf="mostrarModalLimite">
-        <div class="limit-modal-content">
-            <div class="limit-modal-icon">⏳</div>
-            <h3>Limite Diário Atingido</h3>
-            <p>Você já enviou 2 feedbacks hoje. Agradecemos muito seu apoio! Por favor, volte amanhã para enviar mais.
-            </p>
+    <div class="feedback-widget" *ngIf="!isBlocked">
+   </div>
 
-            <button (click)="fecharModal()" class="btn-fechar">Entendi</button>
-        </div>
-    </div>
+<div class="modal-limite" *ngIf="mostrarModalLimite">
+    <p>Você atingiu o limite diário...</p>
+    <button (click)="fecharModal()">Entendi</button>
+</div>
 
 </div>

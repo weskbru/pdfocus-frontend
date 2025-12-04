@@ -22,6 +22,8 @@ export interface AutenticarUsuarioCommand {
 
 export interface AuthenticationResponse {
   token: string;
+  nome: string; 
+  email: string; 
 }
 
 /**
@@ -125,5 +127,24 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem(this.TOKEN_KEY);
+  }
+
+  /**
+   * Envia o token recebido por e-mail para validação no Backend.
+   * Endpoint: POST /auth/confirm-email?token=XYZ
+   */
+  confirmarEmail(token: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/auth/confirm-email`, {}, {
+      params: { token: token }
+    });
+  }
+
+  /**
+   * Verifica se o usuário está logado (simplesmente checando se tem token).
+   * Usado pelo AuthGuard.
+   */
+  estaLogado(): boolean {
+    const token = this.obterToken();
+    return !!token; // Retorna true se tiver token, false se for null/vazio
   }
 }
