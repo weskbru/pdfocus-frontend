@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet, Router } from '@angular/router'; // <--- Adicione 'Router' aqui
+import { RouterOutlet, Router } from '@angular/router';
 import { FeedbackWidgetComponent } from './features/feedback/components/feedback-widget/feedback-widget';
 
 @Component({
